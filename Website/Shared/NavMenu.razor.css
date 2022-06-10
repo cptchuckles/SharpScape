@@ -21,16 +21,8 @@
 
 .nav-item {
     font-size: 0.9rem;
-    padding-right: 0.5rem;
+    margin: 0.5rem;
 }
-
-    .nav-item:first-of-type {
-        padding-top: 1rem;
-    }
-
-    .nav-item:last-of-type {
-        padding-bottom: 1rem;
-    }
 
     .nav-item ::deep a {
         color: #d7d7d7;
@@ -55,6 +47,20 @@
     .navbar-toggler {
         display: none;
     }
+
+    .nav-item {
+        margin: 0.5rem 0 0.5rem 0;
+        padding: 0;
+        display: inline-block;
+    }
+
+        .nav-item:first-of-type {
+            padding-left: 1rem;
+        }
+
+        .nav-item:last-of-type {
+            padding-right: 1rem;
+        }
 
     .collapse {
         /* Never collapse the sidebar for wide screens */
