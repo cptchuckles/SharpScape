@@ -1,0 +1,12 @@
+.container {
+  border-radius: 15px;
+  border: 1px solid;
+  border-color: grey;
+}
+.forum-title {
+  margin: 14px 0 15px 0;
+}
+.mid-icon {
+  font-size: 66px;
+  padding-right: 5px;
+}
