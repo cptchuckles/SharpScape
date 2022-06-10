@@ -28,8 +28,8 @@ namespace SharpScape.Website.Pages.RegistrationForm
       //  [Required(ErrorMessage = "Your password should be at least 8 characters.")]
         public string Password { get; set; }
 
-   
-
+        [Display(Name = "Herro*:")]
+        public string Avatar { get; set; }
 
         public User()
         {
