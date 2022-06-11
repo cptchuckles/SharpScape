@@ -4,12 +4,20 @@ body {
   color: #708090;
 }
 .container {
-  border-radius: 15px;
   border: 1px solid;
   border-color: grey;
+  padding: 2rem;
 }
-.icon-1x {
-  font-size: 24px !important;
+.card {
+  /* border: 1px solid; */
+  border-left: 0.5rem solid;
+  border-color: grey;
+  padding: 0.5rem;
+  border-radius: 0;
+}
+.title {
+  font-size: 2rem;
+  padding-bottom: 2rem;
 }
 a {
   text-decoration: none;
