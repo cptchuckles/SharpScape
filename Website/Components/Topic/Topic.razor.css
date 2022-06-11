@@ -1,23 +1,20 @@
 .forum-item {
-  margin: 10px 0;
-  padding: 10px 0 20px;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0 0.5rem;
   border-bottom: 1px solid grey;
 }
 .views-number {
-  font-size: 24px;
-  line-height: 18px;
+  font-size: 1rem;
+  line-height: 1rem;
   font-weight: 400;
 }
 .forum-container,
-.forum-post-container {
-  padding: 30px !important;
-}
 .forum-item small {
   color: #999;
 }
 .forum-item .forum-sub-title {
   color: #999;
-  margin-left: 50px;
+  margin-left: 3.2rem;
 }
 
 .forum-info {
@@ -28,22 +25,22 @@
 }
 .forum-icon {
   float: left;
-  width: 30px;
-  margin-right: 20px;
+  width: 2rem;
+  margin-right: 1.2rem;
   text-align: center;
 }
 a.forum-item-title {
   color: inherit;
   display: block;
-  font-size: 18px;
+  font-size: 1.3rem;
   font-weight: 600;
 }
 a.forum-item-title:hover {
   color: inherit;
 }
 .forum-icon .fa {
-  font-size: 30px;
-  margin-top: 8px;
+  font-size: 1.8rem;
+  margin-top: 0.5rem;
   color: #9b9b9b;
 }
 .forum-item.active .fa {
