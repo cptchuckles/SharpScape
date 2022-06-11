@@ -1,0 +1,14 @@
+.container {
+  border: 1px solid;
+  border-color: grey;
+  padding: 2rem;
+}
+.col-lg-12 {
+}
+.forum-title {
+  margin: 0.5rem 0 0.5rem 0;
+}
+.mid-icon {
+  font-size: 3rem;
+  padding-right: 1rem;
+}
