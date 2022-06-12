@@ -1,24 +1,31 @@
 .card {
-  /* border: 1px solid; */
-  border-left: 0.5rem solid;
+  border-left: 0.4rem solid;
   border-color: grey;
   padding: 0.5rem;
   border-radius: 0;
+  background-color: #1b2042;
+}
+.card:hover {
+  background-color: red;
 }
 .icon-1x {
   font-size: 24px !important;
+  color: white;
 }
 a {
   text-decoration: none;
 }
+span {
+  color: white;
+}
 .text-primary,
 a.text-primary:focus,
 a.text-primary:hover {
-  color: #00adbb !important;
+  color: white !important;
 }
 .text-black,
 .text-hover-black:hover {
-  color: #000 !important;
+  color: white !important;
 }
 .font-weight-bold {
   font-weight: 700 !important;

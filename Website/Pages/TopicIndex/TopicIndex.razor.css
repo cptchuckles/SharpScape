@@ -1,23 +1,27 @@
-body {
-  margin-top: 20px;
-  background: #eee;
-  color: #708090;
+.background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  padding: 2rem;
+  background-image: url(https://imgs.search.brave.com/iBN28HERkONkBG9YeVWhsk6Ju8nnYkUFScUVuUuqacA/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly9pbWFn/ZXM2LmFscGhhY29k/ZXJzLmNvbS8zNzYv/Mzc2MzM4LnBuZw);
+  background-size: cover;
 }
 .container {
-  border: 1px solid;
-  border-color: grey;
   padding: 2rem;
 }
 .card {
-  /* border: 1px solid; */
-  border-left: 0.5rem solid;
+  border-left: 0.4rem solid;
   border-color: grey;
   padding: 0.5rem;
   border-radius: 0;
+  color: white;
+  background-color: #141624;
 }
 .title {
   font-size: 2rem;
   padding-bottom: 2rem;
+  color: white;
 }
 a {
   text-decoration: none;
