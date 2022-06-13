@@ -30,3 +30,48 @@ From then on:
  - Make sure your branch is up-to-date by pulling `upstream/master` into your feature branch.
  - Push your new branch to your `origin`.  Do not merge it into your `master` branch.
  - Pull-request your feature branch against this repository's `master` branch.
+
+### File Structure: Website
+
+When you create a new page or component, please keep those new files bundled together in a new folder for that page or component.  Folder structure for the Blazor website should look something like this (this is a general example):
+```
+Website/
+| - Components/
+|   | - SomeComponent/
+|   |       SomeComponent.razor
+|   |       SomeComponent.razor.cs  (external code for the component, if needed)
+|   |       SomeComponent.razor.css  (custom styles for the component)
+|   | - AnotherComponent/
+|           AnotherComponent.razor
+|           AnotherComponent.razor.cs
+| - Pages/
+    |   Index.razor
+    |   Login.razor
+    |   Register.razor
+    | - Forum/
+            ForumIndex.razor
+            ForumIndex.razor.cs
+```
+    
+Static files for the website, like images, or global javascript or stylesheets, should go in `wwwroot/<category>/filename.*` such as:
+```
+Website/
+| - wwwroot/
+    | - css/
+    |       some-more-styles.css
+    | - scripts/
+    |       some-javascript.js
+    | - assets/
+        |   login-button.png
+        | - forum/
+                forum-titlebar.jpg
+```
+
+and so on.  These files can be linked in the markup as relative paths starting at `wwwroot`, e.g:
+```html
+<link rel="stylesheet" href="css/some-more-styles.css" />
+
+<img id="forum-title" src="assets/forum/forum-titlebar.jpg" />
+
+<img id="login" src="assets/login-button.png" />
+```
