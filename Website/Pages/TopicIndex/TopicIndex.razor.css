@@ -1,0 +1,36 @@
+body {
+  margin-top: 20px;
+  background: #eee;
+  color: #708090;
+}
+.container {
+  border: 1px solid;
+  border-color: grey;
+  padding: 2rem;
+}
+.card {
+  /* border: 1px solid; */
+  border-left: 0.5rem solid;
+  border-color: grey;
+  padding: 0.5rem;
+  border-radius: 0;
+}
+.title {
+  font-size: 2rem;
+  padding-bottom: 2rem;
+}
+a {
+  text-decoration: none;
+}
+.text-primary,
+a.text-primary:focus,
+a.text-primary:hover {
+  color: #00adbb !important;
+}
+.text-black,
+.text-hover-black:hover {
+  color: #000 !important;
+}
+.font-weight-bold {
+  font-weight: 700 !important;
+}
