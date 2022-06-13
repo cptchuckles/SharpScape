@@ -1,0 +1,150 @@
+@page "/topic/{urlName}"
+@inject NavigationManager NavManager
+@using SharpScape.Website.Components.Post
+<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+<div class="container">
+    <div class="">
+        <div class="row text-left mb-5">
+            <div class="col-lg-6 mb-3 mb-sm-0">
+                <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" style="width: 100%;">
+                    <select class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
+                        <option> Categories </option>
+                        <option> Learn </option>
+                        <option> Share </option>
+                        <option> Build </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6 text-lg-right">
+                <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" style="width: 100%;">
+                    <select class="form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" data-toggle="select" tabindex="-98">
+                        <option> Filter by </option>
+                        <option> Votes </option>
+                        <option> Replys </option>
+                        <option> Views </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="title">@UrlName</div>
+        <div class="card">
+            <div class="row align-items-center">
+                <div class="col-md-8 mb-3 mb-sm-0">
+                    <h5>
+                        <span>Topic</span>
+                    </h5>
+                </div>
+                <div class="col-md-4 op-7">
+                    <div class="row text-center op-7">
+                        <div class="col px-1"> <span class="d-block text-sm">Votes</span> </div>
+                        <div class="col px-1"> <span class="d-block text-sm">Replies</span> </div>
+                        <div class="col px-1"> <span class="d-block text-sm">Views</span> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        <Post
+            Title="Drupal 8 quick starter guide"
+            TimeInMinutes="88"
+            Author="KenyeW"
+            Votes="251"
+            Replies="200"
+            Views="199"
+        >
+        </Post>
+        </div>
+</div>
+@code{
+    [Parameter]
+    public string UrlName { get; set; }
+}
