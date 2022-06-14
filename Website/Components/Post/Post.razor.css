@@ -1,0 +1,25 @@
+.card {
+  /* border: 1px solid; */
+  border-left: 0.5rem solid;
+  border-color: grey;
+  padding: 0.5rem;
+  border-radius: 0;
+}
+.icon-1x {
+  font-size: 24px !important;
+}
+a {
+  text-decoration: none;
+}
+.text-primary,
+a.text-primary:focus,
+a.text-primary:hover {
+  color: #00adbb !important;
+}
+.text-black,
+.text-hover-black:hover {
+  color: #000 !important;
+}
+.font-weight-bold {
+  font-weight: 700 !important;
+}
