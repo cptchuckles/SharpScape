@@ -2,6 +2,11 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.collapse {
+    position: relative;
+    width: 100%;
+}
+
 .top-row {
     min-height: 100%;
     background-color: rgba(0,0,0,0.4);
@@ -60,6 +65,8 @@
 
         .nav-item:last-of-type {
             padding-right: 1rem;
+            position: absolute;
+            right: 0;
         }
 
     .collapse {
