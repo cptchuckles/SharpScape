@@ -1,0 +1,25 @@
+    <div class="d-flex flex-row comment-row ">
+        <div class="p-2"><span class="round"><img src=@Image alt="user" width="50"></span></div>
+        <div class="comment-text">
+            <h5>@Author</h5>
+            <div class="comment-footer">
+                <span class="date">@Date</span>
+                <span class="action-icons active">
+                    <a href="#" data-abc="true"><i class="oi oi-pencil"></i></a>
+                    <a href="#" data-abc="true"><i class="oi oi-thumb-up"></i></a>
+                </span>
+            </div>
+            <p class="m-b-5 m-t-10">@Body</p>
+        </div>
+    </div>
+@code{
+    [Parameter]
+    public string Author { get; set; }
+    [Parameter]
+    public string Date{ get; set; }
+
+    [Parameter]
+    public string Body{ get; set; }
+    [Parameter]
+    public string Image { get; set; }
+}

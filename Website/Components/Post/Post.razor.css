@@ -1,15 +1,26 @@
 .card {
-  /* border: 1px solid; */
-  border-left: 0.5rem solid;
+  border-left: 0.4rem solid;
   border-color: grey;
   padding: 0.5rem;
   border-radius: 0;
+  background-color: #1b2042;
+}
+.card:hover {
+  background-color: #2b4080;
 }
 .icon-1x {
-  font-size: 24px !important;
+  font-size: 1.2rem !important;
+  color: white;
 }
 a {
   text-decoration: none;
+}
+span {
+  color: white;
+  font-size: 1rem;
+}
+.like {
+  padding-bottom: 0.6rem;
 }
 .text-primary,
 a.text-primary:focus,
@@ -18,7 +29,7 @@ a.text-primary:hover {
 }
 .text-black,
 .text-hover-black:hover {
-  color: #000 !important;
+  color: white !important;
 }
 .font-weight-bold {
   font-weight: 700 !important;
