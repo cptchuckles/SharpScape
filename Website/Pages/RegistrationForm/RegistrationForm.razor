@@ -1,0 +1,115 @@
+@page "/register"
+@using Microsoft.Extensions.Logging
+@inject ILogger<RegistrationForm> Logger
+
+
+@using SharpScape.Website.Pages.RegistrationForm
+
+
+
+
+
+<div class="demo-section">
+
+
+    <EditForm model="@tUser" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="FirstName">FIRST NAME:</label>
+
+            <div class="col-sm-5">
+
+
+                <InputText class="form-control" @bind-Value="tUser.FirstName" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="MiddleName">MIDDLENAME:</label>
+            <div class="col-sm-5">
+
+
+                <InputText class="form-control" @bind-Value="tUser.MiddleName" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="LastName">LASTNAME:</label>
+            <div class="col-sm-5">
+
+
+                <InputText class="form-control" @bind-Value="tUser.LastName" />
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group row">
+
+            <label class="col-sm2 col-form-label" for="Email">EMAIL:</label>
+            <div class="col-sm-5">
+
+
+
+
+                <InputText class="form-control" @bind-Value="tUser.Email" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="Password">PASSWORD:</label>
+            <div class="col-sm-5">
+
+
+                <InputText type="password" class="form-control" @bind-Value="tUser.Password" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="Avatar">HERO:</label>
+            <div class="col-sm-5">
+                <InputText class="form-control" @bind-Value="tUser.Avatar" />
+            </div>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Save" />
+
+
+    </EditForm>
+
+    @if (SubmitResult == true)
+    {
+        <span>
+            Last submit status:   @tUser.FirstName  @tUser.LastName  register as @tUser.Avatar
+
+        </span>
+    }
+
+
+</div>
+
+
+@code
+{
+    User tUser = new User();
+
+
+
+    bool SubmitResult = false;
+
+
+    void HandleValidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+        SubmitResult = true;
+
+
+
+    }
+
+
+
+
+
+    }

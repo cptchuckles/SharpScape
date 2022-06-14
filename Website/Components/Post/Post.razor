@@ -2,7 +2,7 @@
     <div class="row align-items-center">
         <div class="col-md-8 mb-3 mb-sm-0">
             <h5>
-                <a href="#" class="text-primary">@Title</a>
+                <a href="thread/@Author/@Route" class="text-primary">@Title</a>
             </h5>
             <p class="text-sm">
                 <span class="op-6">Posted</span> 
@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-4 op-7">
             <div class="row text-center op-7">
-                <div class="col px-1"> <i class="ion-connection-bars icon-1x"></i> <span class="d-block text-sm">@Votes</span> </div>
+                <div class="col px-1"> <i class="oi oi-thumb-up icon-1x like"></i> <span class="d-block text-sm">@Votes</span> </div>
                 <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@Replies</span> </div>
                 <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm">@Views</span> </div>
             </div>
@@ -27,6 +27,8 @@
 </div>
 
 @code{
+    [Parameter]
+    public string Route { get; set; }
     [Parameter]
     public string Title { get; set; }
 
