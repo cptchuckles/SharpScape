@@ -6,16 +6,26 @@
         </button>
     </div>
 </div>
-
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-row">
-        <div class="nav-item px-3">
+        <div class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="forum" Match="NavLinkMatch.All">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Forum
+            </NavLink>
+        </div>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="/register" Match="NavLinkMatch.All">
+                <span class="oi oi-key" aria-hidden="true"></span> Register
+            </NavLink>
+        </div>
     </nav>
 </div>
+
 
 @code {
     private bool collapseNavMenu = true;
