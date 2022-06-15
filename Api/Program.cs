@@ -1,4 +1,4 @@
-global using SharpScape.Api.Data;
+using SharpScape.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
