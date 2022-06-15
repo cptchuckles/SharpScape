@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpScape.Api", "Api\Sharp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpScape.Website", "Website\SharpScape.Website.csproj", "{B0269D5D-9554-41B1-9929-F4392007DB9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpScape.Shared", "Shared\SharpScape.Shared.csproj", "{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{B0269D5D-9554-41B1-9929-F4392007DB9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0269D5D-9554-41B1-9929-F4392007DB9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0269D5D-9554-41B1-9929-F4392007DB9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
