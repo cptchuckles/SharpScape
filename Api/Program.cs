@@ -6,12 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "RemoteTesting")
 {
-    builder.Services.AddDbContext<AppDbContext>(options =>
+    builder.Services.AddDbContext<DbContext, PgDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("RemoteTestingConnection")));
 }
 else
 {
-    builder.Services.AddDbContext<AppDbContext>(options =>
+    builder.Services.AddDbContext<DbContext, SqliteDbContext>(options =>
         options.UseSqlite(builder.Configuration.GetConnectionString("LocalDevelopmentConnection")));
 }
 
