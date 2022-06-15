@@ -14,7 +14,7 @@ There are two `DbContext` implementations in this project.  One is a SQLite3 con
  In local testing and development on SQLite, use these commands:
  ```bash
  # Run a migration for the SQLite context
- dotnet ef migrations add SomeNewFancyMigration -c SqliteDbContext
+ dotnet ef migrations add SomethingNew -c SqliteDbContext
 
  # Update my local obj/app.db database for testing
  dotnet ef database update -c SqliteDbContext
