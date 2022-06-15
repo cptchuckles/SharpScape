@@ -13,6 +13,8 @@ An online multiplayer community
  - This project's root namespace is `SharpScape.Api`.
  - The default developmenet database is [SQLite3](https://www.sqlite.org/index.html) for cross-platform compatibility.  Tests will be run against a SQLite3 seeded database using the `Microsoft.EntityFrameworkCore.Sqlite` adapter.  Do not use SqlServer.  In production, the database will be completely different, and the appropriate adapter will be selected.
 
+`Shared/`: Contains objects that should be shared between `Website` and `Api` projects, such as DTOs.
+
 The game project files have not yet been created.  There are two reasons for this delay:
  - We have not reached an opinion on game engine.  Since the game will be a relatively simple project (as far as video games go), and will need to execute in WebGL, the two best contenders are [Unity](https://unity.com) and [Godot](https://godotengine.org).
  - The game engine will generate its *own* Solution file for the game project.  It will also be *loosely* coupled to our API, so I am unsure as to whether its project files should be included in this repository, or in a separate repository.
