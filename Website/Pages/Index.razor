@@ -18,12 +18,22 @@
             <div class="col-sm">
                 <button type="button" class="btn btn-outline-secondary btn-lg px-4" @onclick="@ForumFunction"> -- F O R U M -- </button>
             </div>
+            <div class="col-sm">
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4" @onclick="@ForumCategories"> -- categories-- </button>
+            </div>
         </div>
     </div>
 </div>
 
 @code
 {
+    void ForumCategories()
+    {
+
+        NavManager.NavigateTo("/forumCategories");
+
+    }
+
 
     void ForumFunction()
     {

@@ -1,0 +1,161 @@
+﻿@page "/ForumCategories"
+
+
+
+
+<h1>Forum Category</h1>
+
+  <button @onclick="@AddCategory" class="btn btn-sm btn-danger btn-delete-user">
+                            --add Category--
+                        </button>
+@if(add)
+{
+     
+    <EditForm model="@tempForum" OnSubmit="@Save">
+    <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="ForumCategoryName"> Name:</label>
+
+            <div class="col-sm-5">
+
+
+                <InputText class="form-control" @bind-Value="tempForum.ForumCategoryName" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="Description">Description:</label>
+            <div class="col-sm-5">
+
+
+                <InputText class="form-control" @bind-Value="tempForum.ForumCategoryDescription" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="CategoryAuthor">Author:</label>
+            <div class="col-sm-5">
+
+
+                <InputText class="form-control" @bind-Value="tempForum.ForumCategoryAuthor" />
+            </div>
+        </div>
+
+
+
+
+
+        <input type="submit" class="btn btn-primary" value="Save" />
+        </EditForm>
+}
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 20%"> Name</th>
+            <th style="width: 40%">Description</th>
+            <th style="width: 25%">Author</th>
+            <th style="width: 10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (forums != null)
+        {
+            foreach (var forumCategory in forums)
+            {
+                <tr>
+                    <td>@forumCategory.ForumCategoryName</td>
+                    <td>@forumCategory.ForumCategoryDescription</td>
+                    <td>@forumCategory.ForumCategoryAuthor</td>
+                    <td style="white-space: nowrap">
+
+                        <button @onclick="@(() => DeleteCategory(forumCategory.Id))" class="btn btn-sm btn-danger btn-delete-user">
+                            --delete--
+                        </button>
+
+
+
+                    </td>
+
+
+
+
+                </tr>
+            }
+        }
+        @if (loading)
+        {
+            <tr>
+                <td colspan="4" class="text-center">
+                    <span class="spinner-border spinner-border-lg align-center"></span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+        @code {
+        protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        Data();
+        loading = false;
+    }
+
+
+    public class Forum
+    {
+        public string ForumCategoryName;
+        public string Id;
+        public string ForumCategoryDescription;
+        public string ForumCategoryAuthor;
+
+    }
+
+    public Forum tempForum = new Forum();
+    private bool loading;
+    public IList<Forum> forums = new List<Forum>();
+    private bool add = false;
+
+
+    public void Data()
+    {
+        forums.Add(new Forum() { Id = "1", ForumCategoryName = "Category Name 1", ForumCategoryDescription = "Category Description 1", ForumCategoryAuthor = "Category Author 1" });
+        forums.Add(new Forum() { Id = "2", ForumCategoryName = "Category Name 2", ForumCategoryDescription = "Category Description 2", ForumCategoryAuthor = "Category Author 2" });
+        forums.Add(new Forum() { Id = "3", ForumCategoryName = "Category Name 3", ForumCategoryDescription = "Category Description 3", ForumCategoryAuthor = "Category Author 3" });
+    }
+
+
+
+
+    private async void DeleteCategory(string id)
+    {
+        var forum = forums.First(x => x.Id == id);
+
+        forums.Remove(forum);
+        StateHasChanged();
+    }
+
+    private async void AddCategory()
+    {
+        add = true;
+        StateHasChanged();
+
+
+    }
+    private async void Save()
+        {
+        tempForum.Id = (forums.Count + 1).ToString();
+        forums.Add(tempForum);
+        add = false;
+        StateHasChanged();
+
+        }
+
+
+
+
+
+
+
+
+}
