@@ -77,3 +77,21 @@ and so on.  These files can be linked in the markup as relative paths starting a
 
 <img id="login" src="assets/login-button.png" />
 ```
+
+### Forum structure
+
+The structure of the forum should be as so:
+ - Forum Index
+    - Categories
+        - Threads
+            - Posts
+
+The forum index shows the list of Categories.
+
+A Category shows a list of Threads.
+
+A Thread is a list of Posts.
+
+A Post is a message made by a User.
+
+<img src="forumdiagram.png" />
