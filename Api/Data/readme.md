@@ -9,7 +9,7 @@ There are two `DbContext` implementations in this project.  One is a SQLite3 con
  
  Keeping two contexts for the same data sets also means running migrations twice.
 
- By default, the app uses `SqliteDbContext` as the implementation for `DbContext`, which means that in order to generate migrations and run database updates against the Postgres context, you have to run the app with the environment variable `ASPNETCORE_ENVIRONMENT=RemoteTesting`.  You will also have to explicitly specify which DbContext implementation to run migrations and updates against.
+ By default, the app uses `SqliteDbContext` as the implementation for `DbContext`, which means that in order to generate migrations and run database updates against the Postgres context, you have to run the app with the environment variable `DATABASE_CONNECTION=RemoteTesting`.  You will also have to explicitly specify which DbContext implementation to run migrations and updates against.
 
  In local testing and development on SQLite, use these commands:
  ```bash
@@ -23,10 +23,10 @@ There are two `DbContext` implementations in this project.  One is a SQLite3 con
  To update the remote Postgres database, you have to run your migrations again for that context, and run the update command, with the environment variable set:
  ```bash
  # Run a migration for the Postgres context
- ASPNETCORE_ENVIRONMENT=RemoteTesting dotnet ef migrations add SomethingNew -c PgDbContext
+ DATABASE_CONNECTION=RemoteTesting dotnet ef migrations add SomethingNew -c PgDbContext
 
  # Update the remote Postgres development database
- ASPNETCORE_ENVIRONMENT=RemoteTesting dotnet ef database update -c PgDbContext
+ DATABASE_CONNECTION=RemoteTesting dotnet ef database update -c PgDbContext
  ```
 
  **Remember, you don't have to repeat this tedium until your models are designed exactly the way you need them.**  It only becomes necessary to run the redundant Postgres migrations and updates when your models are the way you want them to be for everyone to see.
