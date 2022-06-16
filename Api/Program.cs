@@ -1,27 +1,82 @@
-using SharpScape.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using SharpScape.Api.Services;
+using SharpScape.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "RemoteTesting")
+if (Environment.GetEnvironmentVariable("DATABASE_CONNECTION") == "RemoteTesting")
 {
-    builder.Services.AddDbContext<DbContext, PgDbContext>(options =>
+    Console.WriteLine("USING REMOTE TESTING CONNECTION");
+    builder.Services.AddDbContext<AppDbContext, PgDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("RemoteTestingConnection")));
 }
 else
 {
-    builder.Services.AddDbContext<DbContext, SqliteDbContext>(options =>
+    Console.WriteLine("USING SQLITE TESTING CONNECTION");
+    builder.Services.AddDbContext<AppDbContext, SqliteDbContext>(options =>
         options.UseSqlite(builder.Configuration.GetConnectionString("LocalDevelopmentConnection")));
 }
+
+builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>(sp => {
+    var rsaKeyProvider = new RsaKeyProvider();
+    rsaKeyProvider.PublicKey.ImportFromPem(File.ReadAllText(builder.Configuration["Jwt:RSA:PublicKey"]));
+    rsaKeyProvider.PrivateKey.ImportFromPem(File.ReadAllText(builder.Configuration["Jwt:RSA:PrivateKey"]));
+    return rsaKeyProvider;
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Copy-pastad a bunch of shit (well i typed it) to get Bearer authentication working in Swagger.
+builder.Services.AddSwaggerGen(options => {
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme() {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "You must type the word \"Bearer\", followed by a space, and then paste your JWT"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                    Reference = new OpenApiReference {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer" }}
+            ,
+            new string[] {}
+        }
+    });
+});
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        var rsaPublicKey = System.Security.Cryptography.RSA.Create();
+        rsaPublicKey.ImportFromPem(File.ReadAllText(builder.Configuration["Jwt:RSA:PublicKey"]));
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateLifetime = true,
+
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+
+            ValidateIssuerSigningKey = true,
+            ValidAlgorithms = builder.Configuration.GetValue<string[]>("Jwt:Algorithms"),
+            IssuerSigningKey = new RsaSecurityKey(rsaPublicKey)
+        };
+    });
 
 var app = builder.Build();
 
@@ -39,6 +94,7 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

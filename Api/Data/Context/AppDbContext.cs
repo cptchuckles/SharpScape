@@ -3,9 +3,9 @@ using SharpScape.Api.Models;
 
 namespace SharpScape.Api.Data;
 
-public class SqliteDbContext : DbContext
+public class AppDbContext : DbContext
 {
-    public SqliteDbContext(DbContextOptions options) : base(options)
+    public AppDbContext(DbContextOptions options) : base(options)
     {
     }
 
