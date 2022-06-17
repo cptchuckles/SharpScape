@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharpScape.Api.Models;
 // cant use Thread as classname cause its already used in namespace. So I name it ThreadModel
-public class ThreadModel
+public class Thread
 {
     [Key]
     public Guid Id{get;set;}
