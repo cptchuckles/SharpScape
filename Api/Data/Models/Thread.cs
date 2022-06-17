@@ -17,5 +17,5 @@ public class ThreadModel
     public string Views { get; set; }
     [Editable(false)]
     [DisplayFormat(DataFormatString = "{0:D}")]
-    public DateTime Created { get; set; } = DateTime.Now;
+    public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
 }
