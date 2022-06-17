@@ -33,6 +33,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <Comment
                             Author="Aerith"
                             Date="March 17,2020"
@@ -57,6 +58,47 @@
                             Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
                             Image="images/Avatar.png"
                         />
+
+                        @foreach (var c in Com)
+                        {
+                            <Comment
+                                Author=@c.Author
+                                Date=@c.DateFormat
+                                Body=@c.Comment
+                                Image="images/Avatar.png"
+                            />
+                        }
+
+                    </div>
+                    <div class="demo-section">
+                    <EditForm model="@tCommentor" OnValidSubmit="@HandleValidSubmit" style="background-color: #04133C">
+
+                        <div class="form-group row" style="padding-left: 30px">
+                            <label class="col-sm2 col-form-label" for="Author" style="color: white">FIRST NAME:</label>
+
+                            <div class="col-sm-5">
+                                <InputText class="form-control" @bind-Value="tCommentor.Author" />
+                            </div>
+                        </div>
+
+                        
+                         <div class="form-group row" style="padding-left: 30px">
+                            <label class="col-sm2 col-form-label" for="Comment" style="color: white">COMMENT:</label>
+                            <div class="col-sm-5">
+
+                                
+                                <InputTextArea class="form-control" id="testing1" @bind-Value="tCommentor.Comment" />
+                                
+                            </div>
+                        </div>
+
+                       
+                        <div class="col-sm2 col-form-label" style="padding-left: 30px">
+                              <input type="submit" class="btn btn-primary" value="Post" style="width: 100px"/>
+                        </div>
+                        
+
+                    </EditForm>
                     </div>
                 </div>
             </div>
@@ -68,4 +110,39 @@
     public string Author { get; set; }
     [Parameter]
     public string Title { get; set; }
+    
+    Commentor tCommentor = new Commentor();
+
+    //not sure if I'll use this later
+    bool SubmitResult = false;
+    
+    List<Commentor> Com = new List<Commentor>();
+
+
+    void HandleValidSubmit()
+    {
+        Commentor c = new Commentor();
+        c.Author = tCommentor.Author;
+        c.Comment = tCommentor.Comment;
+        c.DateFormat = Convert.ToDateTime(DateTime.Now).ToString("MMMMM dd, yyyy");
+
+        Com.Add(c);
+    }
+   
+
+    public class Commentor
+    {
+
+        public string Author { get; set; }
+
+        public string Comment { get; set; }
+
+        public string DateFormat { get; set; }
+
+        public Commentor()
+        {
+        }
+    }
+
+    
 }
