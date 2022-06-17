@@ -19,9 +19,22 @@ public class ThreadController : ControllerBase
     }
     // Api to return all threads since we dont have category table it will return threads of all categories
     [HttpGet,Route("threads")]
-    public async Task<ActionResult<IEnumerable<Thread>>> GetThreads()
+    public async Task<ActionResult<IEnumerable<ThreadInfoDto>>> GetThreads()
     {
-        return await _context.Threads.ToListAsync();
+        // return await _context.Threads.ToListAsync();
+        List<ThreadInfoDto> Threads = new List<ThreadInfoDto>();
+        var list = await _context.Threads.ToListAsync();
+        foreach(Thread thread in list){
+            var threadInfo = new ThreadInfoDto() {
+                Id = thread.Id,
+                Title = thread.Title,
+                Votes = thread.Votes,
+                Replies = thread.Replies,
+                Views = thread.Views 
+            };
+            Threads.Add(threadInfo);
+        }
+        return Ok(Threads);
     }
     [HttpGet("{id}")]
     // Api to return info about a thread (title, author, body.. no posts since we dont have post table)
