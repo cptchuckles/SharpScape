@@ -13,6 +13,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                 name: "ThreadModels",
                 columns: table => new
                 {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Body = table.Column<string>(type: "TEXT", nullable: false),
@@ -23,7 +24,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ThreadModels", x => x.UserId);
+                    table.PrimaryKey("PK_ThreadModels", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ThreadModels_Users_UserId",
                         column: x => x.UserId,
@@ -31,6 +32,11 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ThreadModels_UserId",
+                table: "ThreadModels",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

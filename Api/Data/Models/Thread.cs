@@ -6,6 +6,7 @@ namespace SharpScape.Api.Models;
 public class ThreadModel
 {
     [Key]
+    public Guid Id{get;set;}
     [ForeignKey("User")]
     public Guid UserId {get;set;}
     public User User{get;set;}
