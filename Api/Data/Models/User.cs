@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 
 namespace SharpScape.Api.Models;
 
@@ -18,4 +19,25 @@ public class User
     [Editable(false)]
     [DisplayFormat(DataFormatString = "{0:D}")]
     public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
+
+    public User() { }
+
+    public User(string username, string email, string password)
+    {
+        Username = username;
+        Email = email;
+
+        CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
+    }
+
+    private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+    {
+        using (var hmac = new HMACSHA512())
+        {
+            passwordSalt = hmac.Key;
+            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        }
+    }
 }
