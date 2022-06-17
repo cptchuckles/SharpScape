@@ -23,15 +23,23 @@ public class ThreadController : ControllerBase
     {
         return await _context.ThreadModels.ToListAsync();
     }
-    [HttpGet,Route("threads")]
+    [HttpGet("{id}")]
     // Api to return info about a thread (title, author, body.. no posts since we dont have post table)
     // @para ThreadId
-    public ActionResult<ThreadModel> GetThreadInfo([FromBody] ThreadDto request)
+    public ActionResult<ThreadInfoDto> GetThread(Guid id)
     {
-        var threadInfo = _context.ThreadModels.FirstOrDefault(thread => thread.Id == request.Id);
-        if (threadInfo is null){
+        var thread = _context.Threads.FirstOrDefault(thread => thread.Id == id);
+        if (thread is null){
             return BadRequest("Thread not found!!");
         }
+        
+        var threadInfo = new ThreadInfoDto() {
+            Id = thread.Id,
+            Title = thread.Title,
+            Votes = thread.Votes,
+            Replies = thread.Replies,
+            Views = thread.Views });
+        
         return Ok(threadInfo);
     }
 }
