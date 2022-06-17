@@ -63,7 +63,7 @@
                         {
                             <Comment
                                 Author=@c.Author
-                                Date=@c.DF
+                                Date=@c.DateFormat
                                 Body=@c.Comment
                                 Image="images/Avatar.png"
                             />
@@ -92,45 +92,7 @@
                             </div>
                         </div>
 
-                        @*<div class="form-group row">
-                            <label class="col-sm2 col-form-label" for="LastName">LASTNAME:</label>
-                            <div class="col-sm-5">
-
-
-                                <InputText class="form-control" @bind-Value="tUser.LastName" />
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="form-group row">
-
-                            <label class="col-sm2 col-form-label" for="Email">EMAIL:</label>
-                            <div class="col-sm-5">
-
-
-
-
-                                <InputText class="form-control" @bind-Value="tUser.Email" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm2 col-form-label" for="Password">PASSWORD:</label>
-                            <div class="col-sm-5">
-
-
-                                <InputText type="password" class="form-control" @bind-Value="tUser.Password" />
-                            </div>
-                        </div>
-
-
-                        <div class="form-group row">
-                            <label class="col-sm2 col-form-label" for="Avatar">HERO:</label>
-                            <div class="col-sm-5">
-                                <InputText class="form-control" @bind-Value="tUser.Avatar" />
-                            </div>
-                        </div>*@ 
+                       
                         <div class="col-sm2 col-form-label" style="padding-left: 30px">
                               <input type="submit" class="btn btn-primary" value="Post" style="width: 100px"/>
                         </div>
@@ -148,9 +110,7 @@
     public string Author { get; set; }
     [Parameter]
     public string Title { get; set; }
-    //[Parameter]
-    //public string Comment { get; set; }
-    User tUser = new User();
+    
     Commentor tCommentor = new Commentor();
 
     //not sure if I'll use this later
@@ -161,40 +121,14 @@
 
     void HandleValidSubmit()
     {
-        //User user1 = new User();
-        //user1.Avatar = User.Avatar;
-        //commentList.add(user1);
-
         Commentor c = new Commentor();
         c.Author = tCommentor.Author;
         c.Comment = tCommentor.Comment;
-        c.DF = Convert.ToDateTime(DateTime.Now).ToString("MMMMM dd, yyyy");
+        c.DateFormat = Convert.ToDateTime(DateTime.Now).ToString("MMMMM dd, yyyy");
 
         Com.Add(c);
-
-        
     }
-    public class User
-    {
-        public string FirstName { get; set; }
-
-
-        public string MiddleName { get; set; }
-
-        public string LastName { get; set; }
-
-
-        public string Email { get; set; }
-
-
-        public string Password { get; set; }
-
-        public string Avatar { get; set; }
-
-        public User()
-        {
-        }
-    }
+   
 
     public class Commentor
     {
@@ -203,7 +137,7 @@
 
         public string Comment { get; set; }
 
-        public string DF { get; set; }
+        public string DateFormat { get; set; }
 
         public Commentor()
         {
