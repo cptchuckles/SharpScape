@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SharpScape.Api.Controllers;
 
 [ApiController]
-[Route("api/")]
+[Route("api/[controller]")]
 public class ThreadController : ControllerBase
 {
     private readonly AppDbContext _context;
