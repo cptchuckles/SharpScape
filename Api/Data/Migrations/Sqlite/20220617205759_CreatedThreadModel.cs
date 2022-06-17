@@ -10,23 +10,23 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ThreadModels",
+                name: "Threads",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Body = table.Column<string>(type: "TEXT", nullable: false),
-                    Votes = table.Column<string>(type: "TEXT", nullable: false),
-                    Relies = table.Column<string>(type: "TEXT", nullable: false),
-                    Views = table.Column<string>(type: "TEXT", nullable: false),
+                    Votes = table.Column<int>(type: "INTEGER", nullable: false),
+                    Replies = table.Column<int>(type: "INTEGER", nullable: false),
+                    Views = table.Column<int>(type: "INTEGER", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ThreadModels", x => x.Id);
+                    table.PrimaryKey("PK_Threads", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ThreadModels_Users_UserId",
+                        name: "FK_Threads_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -34,15 +34,15 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ThreadModels_UserId",
-                table: "ThreadModels",
+                name: "IX_Threads_UserId",
+                table: "Threads",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ThreadModels");
+                name: "Threads");
         }
     }
 }

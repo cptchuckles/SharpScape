@@ -11,7 +11,7 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Data.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20220617180457_CreatedThreadModel")]
+    [Migration("20220617205759_CreatedThreadModel")]
     partial class CreatedThreadModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
 
-            modelBuilder.Entity("SharpScape.Api.Models.ThreadModel", b =>
+            modelBuilder.Entity("SharpScape.Api.Models.Thread", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,9 +32,8 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Relies")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Replies")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -43,19 +42,17 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Views")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Views")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Votes")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Votes")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ThreadModels");
+                    b.ToTable("Threads");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.User", b =>
@@ -88,7 +85,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SharpScape.Api.Models.ThreadModel", b =>
+            modelBuilder.Entity("SharpScape.Api.Models.Thread", b =>
                 {
                     b.HasOne("SharpScape.Api.Models.User", "User")
                         .WithMany()

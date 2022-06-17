@@ -4,7 +4,7 @@ using SharpScape.Shared.Dto;
 using SharpScape.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using Thread = SharpScape.Api.Models.Thread;
 namespace SharpScape.Api.Controllers;
 
 [ApiController]
@@ -19,9 +19,9 @@ public class ThreadController : ControllerBase
     }
     // Api to return all threads since we dont have category table it will return threads of all categories
     [HttpGet,Route("threads")]
-    public async Task<ActionResult<IEnumerable<ThreadModel>>> GetThreads()
+    public async Task<ActionResult<IEnumerable<Thread>>> GetThreads()
     {
-        return await _context.ThreadModels.ToListAsync();
+        return await _context.Threads.ToListAsync();
     }
     [HttpGet("{id}")]
     // Api to return info about a thread (title, author, body.. no posts since we dont have post table)
@@ -32,14 +32,13 @@ public class ThreadController : ControllerBase
         if (thread is null){
             return BadRequest("Thread not found!!");
         }
-        
         var threadInfo = new ThreadInfoDto() {
             Id = thread.Id,
             Title = thread.Title,
             Votes = thread.Votes,
             Replies = thread.Replies,
-            Views = thread.Views });
-        
+            Views = thread.Views 
+        };
         return Ok(threadInfo);
     }
 }
