@@ -1,4 +1,4 @@
-@page "/thread/{Author}/{Title}"
+@page "/thread/{Author}/{Title}/{Body}/{Date}"
 @inject NavigationManager NavManager
 @using SharpScape.Website.Components.Comment
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
@@ -16,13 +16,22 @@
                             <div class="comment-text w-100">
                                 <h5>@Author</h5>
                                 <div class="comment-footer">
-                                    <span class="date">April 14, 2019</span>
+                                    @if(Date.Length >0){
+                                        <span class="date">@Date</span>
+                                    }else{
+                                        <span class="date">Saturday, June 18, 2022</span>
+                                    }
                                     <span class="action-icons">
                                             <a href="#" data-abc="true"><i class="oi oi-pencil"></i></a>
                                             <a href="#" data-abc="true"><i class="oi oi-rotate-right"></i></a>
                                     </span>
                                 </div>
-                                <p class="m-b-5 m-t-10">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it</p>
+                                @if (Body.Length >0)
+                                {
+                                    <p>@Body</p>
+                                }else{
+                                    <p class="m-b-5 m-t-10">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it</p>
+                                }
                                 <div class="col-md-3">
                                     <span class="action-icons"></span>
                                     <div class="row">
@@ -110,7 +119,10 @@
     public string Author { get; set; }
     [Parameter]
     public string Title { get; set; }
-    
+    [Parameter]
+    public string Body { get; set; }
+    [Parameter]
+    public string Date { get; set; }
     Commentor tCommentor = new Commentor();
 
     //not sure if I'll use this later
