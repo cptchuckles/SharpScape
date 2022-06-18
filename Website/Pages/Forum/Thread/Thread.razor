@@ -1,6 +1,7 @@
 @page "/thread/{Author}/{Title}/{Body}/{Date}"
 @inject NavigationManager NavManager
-@using SharpScape.Website.Components.Comment
+@using SharpScape.Website.Components.Forum
+
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
     <div class="container d-flex justify-content-center mt-100 mb-100">
@@ -43,25 +44,25 @@
                             </div>
                         </div>
                         
-                        <Comment
+                        <Post
                             Author="Aerith"
                             Date="March 17,2020"
                             Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
                             Image="images/Avatar.png"
                         />
-                        <Comment
+                        <Post
                             Author="Cloud"
                             Date="May13,2020"
                             Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
                             Image="images/Avatar.png"
                         />
-                        <Comment
+                        <Post
                             Author="Tifa"
                             Date="March 13,2020"
                             Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
                             Image="images/Avatar.png"
                         />
-                        <Comment
+                        <Post
                             Author="Joker"
                             Date="August 13,2020"
                             Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
@@ -70,33 +71,33 @@
 
                         @foreach (var c in Com)
                         {
-                            <Comment
+                            <Post
                                 Author=@c.Author
                                 Date=@c.DateFormat
-                                Body=@c.Comment
+                                Body=@c.Post
                                 Image="images/Avatar.png"
                             />
                         }
 
                     </div>
                     <div class="demo-section">
-                    <EditForm model="@tCommentor" OnValidSubmit="@HandleValidSubmit" style="background-color: #04133C">
+                    <EditForm model="@tPoster" OnValidSubmit="@HandleValidSubmit" style="background-color: #04133C">
 
                         <div class="form-group row" style="padding-left: 30px">
                             <label class="col-sm2 col-form-label" for="Author" style="color: white">FIRST NAME:</label>
 
                             <div class="col-sm-5">
-                                <InputText class="form-control" @bind-Value="tCommentor.Author" />
+                                <InputText class="form-control" @bind-Value="tPoster.Author" />
                             </div>
                         </div>
 
                         
                          <div class="form-group row" style="padding-left: 30px">
-                            <label class="col-sm2 col-form-label" for="Comment" style="color: white">COMMENT:</label>
+                            <label class="col-sm2 col-form-label" for="Post" style="color: white">COMMENT:</label>
                             <div class="col-sm-5">
 
                                 
-                                <InputTextArea class="form-control" id="testing1" @bind-Value="tCommentor.Comment" />
+                                <InputTextArea class="form-control" id="testing1" @bind-Value="tPoster.Post" />
                                 
                             </div>
                         </div>
@@ -123,35 +124,35 @@
     public string Body { get; set; }
     [Parameter]
     public string Date { get; set; }
-    Commentor tCommentor = new Commentor();
+    Poster tPoster = new Poster();
 
     //not sure if I'll use this later
     bool SubmitResult = false;
     
-    List<Commentor> Com = new List<Commentor>();
+    List<Poster> Com = new List<Poster>();
 
 
     void HandleValidSubmit()
     {
-        Commentor c = new Commentor();
-        c.Author = tCommentor.Author;
-        c.Comment = tCommentor.Comment;
-        c.DateFormat = Convert.ToDateTime(DateTime.Now).ToString("MMMMM dd, yyyy");
+        Poster p = new Poster();
+        p.Author = tPoster.Author;
+        p.Post = tPoster.Post;
+        p.DateFormat = Convert.ToDateTime(DateTime.Now).ToString("MMMMM dd, yyyy");
 
-        Com.Add(c);
+        Com.Add(p);
     }
    
 
-    public class Commentor
+    public class Poster
     {
 
         public string Author { get; set; }
 
-        public string Comment { get; set; }
+        public string Post { get; set; }
 
         public string DateFormat { get; set; }
 
-        public Commentor()
+        public Poster()
         {
         }
     }
