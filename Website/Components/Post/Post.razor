@@ -2,7 +2,7 @@
     <div class="row align-items-center">
         <div class="col-md-8 mb-3 mb-sm-0">
             <h5>
-                <a href="thread/@Author/@Route" class="text-primary">@Title</a>
+                <a href="thread/@Author/@Route/@Body/@Date" class="text-primary">@Title</a>
             </h5>
             <p class="text-sm">
                 <span class="op-6">Posted</span> 
@@ -31,6 +31,8 @@
     public string Route { get; set; }
     [Parameter]
     public string Title { get; set; }
+    [Parameter]
+    public string Body { get; set; }
 
     [Parameter]
     public string Date{ get; set; }
