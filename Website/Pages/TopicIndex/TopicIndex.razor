@@ -46,7 +46,7 @@
         <Post
             Route="Drupal 8 quick starter guide"
             Title="Drupal 8 quick starter guide"
-            TimeInMinutes="88"
+            Date="08/17/2000 16:32:32"
             Author="KenyeW"
             Votes="251"
             Replies="200"
@@ -55,7 +55,7 @@
         <Post
             Route="Drupal 8 quick starter guide"
             Title="Drupal 8 quick starter guide"
-            TimeInMinutes="88"
+            Date="08/17/2000 16:32:32"
             Author="KenyeW"
             Votes="251"
             Replies="200"
@@ -64,7 +64,7 @@
         <Post
             Route="Drupal 8 quick starter guide"
             Title="Drupal 8 quick starter guide"
-            TimeInMinutes="88"
+            Date="08/17/2000 16:32:32"
             Author="KenyeW"
             Votes="251"
             Replies="200"
@@ -73,33 +73,105 @@
         <Post
             Route="Drupal 8 quick starter guide"
             Title="Drupal 8 quick starter guide"
-            TimeInMinutes="88"
+            Date="08/17/2000 16:32:32"
             Author="KenyeW"
             Votes="251"
             Replies="200"
             Views="199"
         />
-        <Post
-            Route="Drupal 8 quick starter guide"
-            Title="Drupal 8 quick starter guide"
-            TimeInMinutes="88"
-            Author="KenyeW"
-            Votes="251"
-            Replies="200"
-            Views="199"
-        />
-        <Post
-            Route="Drupal 8 quick starter guide"
-            Title="Drupal 8 quick starter guide"
-            TimeInMinutes="88"
-            Author="KenyeW"
-            Votes="251"
-            Replies="200"
-            Views="199"
-        />
+        @foreach (Topic item in TopicList)
+        {
+            <Post
+                Route=@item.Title
+                Title=@item.Title
+                Date=@item.Date
+                Author="Anonymous"
+                Votes="251"
+                Replies="200"
+                Views="199"
+            />
+        }
         </div>
+        <div class="row createbutton">
+            <button type="button" class="btn btn-primary" s @onclick="@OpenCreatePost">Create Post</button>
+        </div>
+        @if(CreatePost){
+            <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Create A Topic</h4>
+                        </div>
+                                <EditForm Model="@tTopic" OnValidSubmit=@HandleValidSubmit>
+                        <div class="modal-body">
+                            @* <form model="@tTopic"> *@
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Title:</label>
+                                    @* <input type="text" class="form-control" id="recipient-name" /> *@
+                                <InputText class="form-control" @bind-Value="tTopic.Title" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Content:</label>
+                                    @* <textarea class="form-control" id="message-text"></textarea> *@
+                                    <InputTextArea class="form-control" id="testing1" @bind-Value="tTopic.Body" />
+                                </div>
+                            @* </form> *@
+                        </div>
+                        <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" @onclick="@CloseCreatePost">Close</button>
+                                <button type="submit" class="btn btn-primary">Send message</button>
+                        </div>
+                                </EditForm>
+                    </div>
+                </div>
+            </div>
+        }
 </div>
 @code{
     [Parameter]
     public string UrlName { get; set; }
+    public bool CreatePost {get;set;} = false;
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; } 
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+    private void OpenCreatePost()
+    {
+        CreatePost = true;
+        StateHasChanged();
+    }
+    private void CloseCreatePost()
+    {
+        CreatePost = false;
+        StateHasChanged();
+    }
+    Topic tTopic = new Topic();
+    List<Topic> TopicList = new List<Topic>();
+    private void HandleValidSubmit()
+    {
+        Topic Topic = new Topic();
+        Topic.Title= tTopic.Title;
+        Topic.Body = tTopic.Body;
+        Topic.Date = Convert.ToDateTime(DateTime.Now).ToString("G");
+
+        TopicList.Add(Topic);
+        tTopic = new Topic();
+        CreatePost= false;
+    }
+    public class  Topic
+    {
+
+        public string Title { get; set; }
+        public string Author { get; set; }
+
+        public string Body { get; set; }
+
+        public string  Date { get; set; }
+
+        public Topic()
+        {
+        }
+    }
 }

@@ -23,6 +23,13 @@
   padding-bottom: 2rem;
   color: white;
 }
+.modal-dialog {
+  padding-top: 5rem;
+}
+.createbutton {
+  padding-left: 30%;
+  padding-right: 30%;
+}
 a {
   text-decoration: none;
 }
