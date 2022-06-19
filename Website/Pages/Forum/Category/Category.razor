@@ -1,6 +1,8 @@
 @page "/category/{urlName}"
 @inject NavigationManager NavManager
+@inject HttpClient Http
 @using SharpScape.Website.Components.Forum
+@using SharpScape.Website.Components.Forum.Pagination
 
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
@@ -44,46 +46,6 @@
                 </div>
             </div>
         </div>
-        <Thread
-            Route="Drupal 8 quick starter guide"
-            Title="Drupal 8 quick starter guide"
-            Body="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it"
-            Date="Saturday, June 18, 2022"
-            Author="KenyeW"
-            Votes="251"
-            Replies="200"
-            Views="199"
-        />
-        <Thread
-            Route="Drupal 8 quick starter guide"
-            Title="Drupal 8 quick starter guide"
-            Body="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it"
-            Date="Saturday, June 18, 2022"
-            Author="KenyeW"
-            Votes="251"
-            Replies="200"
-            Views="199"
-        />
-        <Thread
-            Route="Drupal 8 quick starter guide"
-            Title="Drupal 8 quick starter guide"
-            Body="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it"
-            Date="Saturday, June 18, 2022"
-            Author="KenyeW"
-            Votes="251"
-            Replies="200"
-            Views="199"
-        />
-        <Thread
-            Route="Drupal 8 quick starter guide"
-            Title="Drupal 8 quick starter guide"
-            Body="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it"
-            Date="Saturday, June 18, 2022"
-            Author="KenyeW"
-            Votes="251"
-            Replies="200"
-            Views="199"
-        />
         @foreach (ThreadItem item in TopicList)
         {
             <Thread
@@ -97,9 +59,27 @@
                 Views="199"
             />
         }
-        </div>
-        <div class="row createbutton">
+        @foreach (Comment item in comments)
+        {
+            <Thread
+            Route=@item.Name
+            Title=@item.Name
+            Body=@item.Body
+            Date="Saturday, June 18, 2022"
+            Author=@item.Email
+            Votes="251"
+            Replies="200"
+            Views="199"
+        />    
+        }
+        <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
+                    PageIndex="@pageIndex"
+                    Radius="3"
+                    OnSelectedPage="@SelectedPage">
+        </Pagination>
+        <div class="row createbutton justify-content-center">
             <button type="button" class="btn btn-primary" s @onclick="@OpenCreateThread">Create Thread</button>
+        </div>
         </div>
         @if(CreateThread){
             <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
@@ -141,6 +121,32 @@
     [Parameter]
     public EventCallback<bool> OnClose { get; set; } 
 
+    private int pageIndex = 1;
+    private int itemsPerPage = 10;
+    private int totalPages = 1;
+    private IEnumerable<Comment> allComments = null;
+    private IEnumerable<Comment> comments = Enumerable.Empty<Comment>(); 
+    protected override async Task OnInitializedAsync()
+    {
+        allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
+        if (allComments != null)
+        {
+            // Initialize the number of "totalPages"
+            totalPages = (int)(allComments.Count() / itemsPerPage);
+
+            // Initialize the "comments" which will be displayed when the page loaded first time.
+            comments = allComments.Skip(0).Take(itemsPerPage);
+        }
+    }
+    private void SelectedPage(int selectedPageIndex)
+    {
+        if (allComments != null)
+        {
+            pageIndex = selectedPageIndex;
+            var skipCount = itemsPerPage * (pageIndex - 1);
+            comments = allComments.Skip(skipCount).Take(itemsPerPage);
+        }
+    }
     private Task ModalCancel()
     {
         return OnClose.InvokeAsync(false);
@@ -186,5 +192,13 @@
         public ThreadItem()
         {
         }
+    }
+    public class Comment
+    {
+        public int PostId { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Body { get; set; }
     }
 }
