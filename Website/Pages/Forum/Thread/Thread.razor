@@ -1,0 +1,161 @@
+@page "/thread/{Author}/{Title}/{Body}/{Date}"
+@inject NavigationManager NavManager
+@using SharpScape.Website.Components.Forum
+
+<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+<div class="background">
+    <div class="container d-flex justify-content-center mt-100 mb-100">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">@Title</h4>
+                    </div>
+                    <div class="comment-widgets m-b-20">
+                        <div class="d-flex flex-row comment-row">
+                            <div class="p-2"><span class="round"><img src="images/Avatar.png" alt="user" width="50"></span></div>
+                            <div class="comment-text w-100">
+                                <h5>@Author</h5>
+                                <div class="comment-footer">
+                                    @if(Date.Length >0){
+                                        <span class="date">@Date</span>
+                                    }else{
+                                        <span class="date">Saturday, June 18, 2022</span>
+                                    }
+                                    <span class="action-icons">
+                                            <a href="#" data-abc="true"><i class="oi oi-pencil"></i></a>
+                                            <a href="#" data-abc="true"><i class="oi oi-rotate-right"></i></a>
+                                    </span>
+                                </div>
+                                @if (Body.Length >0)
+                                {
+                                    <p>@Body</p>
+                                }else{
+                                    <p class="m-b-5 m-t-10">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it</p>
+                                }
+                                <div class="col-md-3">
+                                    <span class="action-icons"></span>
+                                    <div class="row">
+                                        <div class="col"> <a href="#"><i class="oi oi-thumb-up"></i></a><span class="d-block text-sm">20</span> </div>
+                                        <div class="col"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">4</span> </div>
+                                        <div class="col"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm">30</span> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <Post
+                            Author="Aerith"
+                            Date="March 17,2020"
+                            Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
+                            Image="images/Avatar.png"
+                        />
+                        <Post
+                            Author="Cloud"
+                            Date="May13,2020"
+                            Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
+                            Image="images/Avatar.png"
+                        />
+                        <Post
+                            Author="Tifa"
+                            Date="March 13,2020"
+                            Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
+                            Image="images/Avatar.png"
+                        />
+                        <Post
+                            Author="Joker"
+                            Date="August 13,2020"
+                            Body="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites"
+                            Image="images/Avatar.png"
+                        />
+
+                        @foreach (var c in Com)
+                        {
+                            <Post
+                                Author=@c.Author
+                                Date=@c.DateFormat
+                                Body=@c.Post
+                                Image="images/Avatar.png"
+                            />
+                        }
+
+                    </div>
+                    <div class="demo-section">
+                    <EditForm model="@tPoster" OnValidSubmit="@HandleValidSubmit" style="background-color: #04133C">
+
+                        <div class="form-group row" style="padding-left: 30px">
+                            <label class="col-sm2 col-form-label" for="Author" style="color: white">FIRST NAME:</label>
+
+                            <div class="col-sm-5">
+                                <InputText class="form-control" @bind-Value="tPoster.Author" />
+                            </div>
+                        </div>
+
+                        
+                         <div class="form-group row" style="padding-left: 30px">
+                            <label class="col-sm2 col-form-label" for="Post" style="color: white">COMMENT:</label>
+                            <div class="col-sm-5">
+
+                                
+                                <InputTextArea class="form-control" id="testing1" @bind-Value="tPoster.Post" />
+                                
+                            </div>
+                        </div>
+
+                       
+                        <div class="col-sm2 col-form-label" style="padding-left: 30px">
+                              <input type="submit" class="btn btn-primary" value="Post" style="width: 100px"/>
+                        </div>
+                        
+
+                    </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+    [Parameter]
+    public string Author { get; set; }
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public string Body { get; set; }
+    [Parameter]
+    public string Date { get; set; }
+    Poster tPoster = new Poster();
+
+    //not sure if I'll use this later
+    bool SubmitResult = false;
+    
+    List<Poster> Com = new List<Poster>();
+
+
+    void HandleValidSubmit()
+    {
+        Poster p = new Poster();
+        p.Author = tPoster.Author;
+        p.Post = tPoster.Post;
+        p.DateFormat = Convert.ToDateTime(DateTime.Now).ToString("MMMMM dd, yyyy");
+
+        Com.Add(p);
+    }
+   
+
+    public class Poster
+    {
+
+        public string Author { get; set; }
+
+        public string Post { get; set; }
+
+        public string DateFormat { get; set; }
+
+        public Poster()
+        {
+        }
+    }
+
+    
+}
