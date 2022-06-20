@@ -1,0 +1,31 @@
+.background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  padding: 2rem;
+  background-image: url("images/Background.png");
+  background-size: cover;
+}
+.container {
+  border: 1px solid;
+  border-color: grey;
+  padding: 2rem;
+  background-color: #1b2042;
+}
+
+.container h2 {
+  color: #1ab394;
+}
+.container span {
+  color: white;
+}
+.forum-title {
+  margin: 0.5rem 0 0.5rem 0;
+  color: white;
+}
+.mid-icon {
+  font-size: 3rem;
+  padding-right: 1rem;
+  color: white;
+}
