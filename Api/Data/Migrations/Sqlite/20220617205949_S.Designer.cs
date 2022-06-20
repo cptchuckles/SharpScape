@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharpScape.Api.Data;
 
@@ -10,9 +11,10 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Data.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220617205949_S")]
+    partial class S
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
@@ -23,18 +25,6 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ForumCategoryAuthor")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ForumCategoryDescription")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ForumCategoryName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.ToTable("ForumCategorys");
@@ -42,24 +32,15 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1d45d377-770b-4f25-99bc-7993e69c5cb3"),
-                            ForumCategoryAuthor = "Category Author 1",
-                            ForumCategoryDescription = "Category Description 1",
-                            ForumCategoryName = "Category Name 1"
+                            Id = new Guid("c3429b33-bcb2-4dc3-9975-ab1dfcb026b3")
                         },
                         new
                         {
-                            Id = new Guid("b9878eed-e852-451a-a893-885b2d2fec68"),
-                            ForumCategoryAuthor = "Category Author 2",
-                            ForumCategoryDescription = "Category Description 2",
-                            ForumCategoryName = "Category Name 2"
+                            Id = new Guid("556073be-f19b-4f09-a928-41f4ca3f88b2")
                         },
                         new
                         {
-                            Id = new Guid("5c616052-2596-4cc4-8a8b-1cab79c698c4"),
-                            ForumCategoryAuthor = "Category Author 3",
-                            ForumCategoryDescription = "Category Description 3",
-                            ForumCategoryName = "Category Name 3"
+                            Id = new Guid("b89fc9f0-f242-4088-80c9-1c4c1696fc6a")
                         });
                 });
 
@@ -69,12 +50,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ForumCategoryId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ForumCategoryId");
 
                     b.ToTable("ForumThreads");
                 });
@@ -107,18 +83,6 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("SharpScape.Api.Models.ForumThread", b =>
-                {
-                    b.HasOne("SharpScape.Api.Models.ForumCategory", null)
-                        .WithMany("Threads")
-                        .HasForeignKey("ForumCategoryId");
-                });
-
-            modelBuilder.Entity("SharpScape.Api.Models.ForumCategory", b =>
-                {
-                    b.Navigation("Threads");
                 });
 #pragma warning restore 612, 618
         }

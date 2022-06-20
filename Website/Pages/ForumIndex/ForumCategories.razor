@@ -1,7 +1,7 @@
 ﻿@page "/ForumCategories"
-
-
-
+@using SharpScape.Website.Services
+@using SharpScape.Shared.Dto
+@inject HttpClient Http
 
 <h1>Forum Category</h1>
 
@@ -64,20 +64,15 @@
             {
                 <tr>
                     <td>@forumCategory.ForumCategoryName</td>
+                    <td>@forumCategory.Id</td>
                     <td>@forumCategory.ForumCategoryDescription</td>
                     <td>@forumCategory.ForumCategoryAuthor</td>
                     <td style="white-space: nowrap">
 
-                        <button @onclick="@(() => DeleteCategory(forumCategory.Id))" class="btn btn-sm btn-danger btn-delete-user">
+                        <button @onclick="@(() => DeleteCategory(forumCategory))" class="btn btn-sm btn-danger btn-delete-user">
                             --delete--
                         </button>
-
-
-
                     </td>
-
-
-
 
                 </tr>
             }
@@ -93,50 +88,49 @@
     </tbody>
 </table>
 
-        @code {
-        protected override async Task OnInitializedAsync()
+@code {
+
+    protected override async Task OnInitializedAsync()
     {
         loading = true;
+
         Data();
+
+
         loading = false;
     }
 
 
-    public class Forum
-    {
-        public string ForumCategoryName;
-        public string Id;
-        public string ForumCategoryDescription;
-        public string ForumCategoryAuthor;
 
-    }
 
-    public Forum tempForum = new Forum();
+    public ForumCategoryDto tempForum = new ForumCategoryDto();
     private bool loading;
-    public IList<Forum> forums = new List<Forum>();
+
     private bool add = false;
 
-
+    public IList<ForumCategoryDto> forums = new List<ForumCategoryDto>();
     public void Data()
     {
-        forums.Add(new Forum() { Id = "1", ForumCategoryName = "Category Name 1", ForumCategoryDescription = "Category Description 1", ForumCategoryAuthor = "Category Author 1" });
-        forums.Add(new Forum() { Id = "2", ForumCategoryName = "Category Name 2", ForumCategoryDescription = "Category Description 2", ForumCategoryAuthor = "Category Author 2" });
-        forums.Add(new Forum() { Id = "3", ForumCategoryName = "Category Name 3", ForumCategoryDescription = "Category Description 3", ForumCategoryAuthor = "Category Author 3" });
+
+       // forums = ForumCategoryServices.GetForumCategories();
+        forums.Add(new ForumCategoryDto() { Id = Guid.NewGuid(), ForumCategoryName = "Category Name 11", ForumCategoryDescription = "Category Description 11", ForumCategoryAuthor = "Category Author 1" });
+        forums.Add(new ForumCategoryDto() { Id = Guid.NewGuid(), ForumCategoryName = "Category Name 21", ForumCategoryDescription = "Category Description 21", ForumCategoryAuthor = "Category Author 2" });
+        forums.Add(new ForumCategoryDto() { Id = Guid.NewGuid(), ForumCategoryName = "Category Name 31", ForumCategoryDescription = "Category Description 31", ForumCategoryAuthor = "Category Author 3" });
     }
 
 
 
 
-    private async void DeleteCategory(string id)
+    private async void DeleteCategory(ForumCategoryDto x)
     {
-        var forum = forums.First(x => x.Id == id);
-
-        forums.Remove(forum);
+        forums.Remove(x);
         StateHasChanged();
     }
 
     private async void AddCategory()
     {
+
+      //  forums.Add( Http.GetFromJsonAsync<List<ForumCategoryDto>>("api/ForumCategories"));
         add = true;
         StateHasChanged();
 
@@ -144,18 +138,11 @@
     }
     private async void Save()
         {
-        tempForum.Id = (forums.Count + 1).ToString();
+        tempForum.Id =Guid.NewGuid();
         forums.Add(tempForum);
         add = false;
         StateHasChanged();
 
         }
-
-
-
-
-
-
-
 
 }
