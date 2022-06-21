@@ -8,13 +8,13 @@ namespace SharpScape.Api.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = " x ")]
-        public string ForumCategoryName { get; set; }
+        public string ForumCategoryName { get; set; } = "";
         [Required(ErrorMessage = " x ")]
-        public string ForumCategoryDescription { get; set; }
+        public string ForumCategoryDescription { get; set; } = "";
         [Required(ErrorMessage = " x ")]
-        public string ForumCategoryAuthor { get; set; }
+        public string ForumCategoryAuthor { get; set; } = "";
         [Required(ErrorMessage = " x ")]
-        public virtual List<ForumThread> Threads { get; set; }
+        public List<ForumThread> Threads { get; set; }= new List<ForumThread>();
 
     }
 }

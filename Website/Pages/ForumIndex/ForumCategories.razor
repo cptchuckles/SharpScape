@@ -52,9 +52,10 @@
     <thead>
         <tr>
             <th style="width: 20%"> Name</th>
-            <th style="width: 40%">Description</th>
+            <th style="width: 20%">Id</th>
+            <th style="width: 35%">Description</th>
             <th style="width: 25%">Author</th>
-            <th style="width: 10%"></th>
+            
         </tr>
     </thead>
     <tbody>
@@ -93,9 +94,8 @@
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-
-        Data();
-
+       forums = await Http.GetFromJsonAsync<List<ForumCategoryDto>>("https://localhost:7193/api/ForumCategories");
+        forums.Add(new ForumCategoryDto() { Id = Guid.NewGuid(), ForumCategoryName = "Category Name 11", ForumCategoryDescription = "Category Description 11", ForumCategoryAuthor = "Category Author 1" });
 
         loading = false;
     }
@@ -109,14 +109,7 @@
     private bool add = false;
 
     public IList<ForumCategoryDto> forums = new List<ForumCategoryDto>();
-    public void Data()
-    {
-
-       // forums = ForumCategoryServices.GetForumCategories();
-        forums.Add(new ForumCategoryDto() { Id = Guid.NewGuid(), ForumCategoryName = "Category Name 11", ForumCategoryDescription = "Category Description 11", ForumCategoryAuthor = "Category Author 1" });
-        forums.Add(new ForumCategoryDto() { Id = Guid.NewGuid(), ForumCategoryName = "Category Name 21", ForumCategoryDescription = "Category Description 21", ForumCategoryAuthor = "Category Author 2" });
-        forums.Add(new ForumCategoryDto() { Id = Guid.NewGuid(), ForumCategoryName = "Category Name 31", ForumCategoryDescription = "Category Description 31", ForumCategoryAuthor = "Category Author 3" });
-    }
+    
 
 
 
@@ -130,7 +123,7 @@
     private async void AddCategory()
     {
 
-      //  forums.Add( Http.GetFromJsonAsync<List<ForumCategoryDto>>("api/ForumCategories"));
+      
         add = true;
         StateHasChanged();
 

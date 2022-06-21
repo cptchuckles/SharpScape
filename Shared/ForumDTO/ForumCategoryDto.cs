@@ -12,11 +12,15 @@ namespace SharpScape.Shared.Dto
        
         public Guid Id { get; set; } = Guid.NewGuid();
 
+       
+        
+        
+        public string ForumCategoryAuthor { get; set; }
+        
+        public string ForumCategoryName{ get; set; }
+    public string ForumCategoryDescription { get; set; }
 
-        public string ForumCategoryName;
-        public string ForumCategoryDescription;
-        public string ForumCategoryAuthor;
-        public  List<Thread> Threads;
+    public  List<Thread> Threads;
 
     }
 }

@@ -32,22 +32,22 @@ namespace SharpScape.Api.Controllers
             
             
             
-            if (_context.ForumCategorys == null)
+            if (_context.ForumCategories == null)
           {
               return NotFound();
           }
-            return await _context.ForumCategorys.ToListAsync();
+            return await _context.ForumCategories.ToListAsync();
         }
 
         // GET: api/ForumCategories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ForumCategory>> GetForumCategory(Guid id)
         {
-          if (_context.ForumCategorys == null)
+          if (_context.ForumCategories == null)
           {
               return NotFound();
           }
-            var forumCategory = await _context.ForumCategorys.FindAsync(id);
+            var forumCategory = await _context.ForumCategories.FindAsync(id);
 
             if (forumCategory == null)
             {
@@ -93,11 +93,11 @@ namespace SharpScape.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ForumCategory>> PostForumCategory(ForumCategory forumCategory)
         {
-          if (_context.ForumCategorys == null)
+          if (_context.ForumCategories == null)
           {
               return Problem("Entity set 'AppDbContext.ForumCategorys'  is null.");
           }
-            _context.ForumCategorys.Add(forumCategory);
+            _context.ForumCategories.Add(forumCategory);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetForumCategory", new { id = forumCategory.Id }, forumCategory);
@@ -107,17 +107,17 @@ namespace SharpScape.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteForumCategory(Guid id)
         {
-            if (_context.ForumCategorys == null)
+            if (_context.ForumCategories == null)
             {
                 return NotFound();
             }
-            var forumCategory = await _context.ForumCategorys.FindAsync(id);
+            var forumCategory = await _context.ForumCategories.FindAsync(id);
             if (forumCategory == null)
             {
                 return NotFound();
             }
 
-            _context.ForumCategorys.Remove(forumCategory);
+            _context.ForumCategories.Remove(forumCategory);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -125,7 +125,7 @@ namespace SharpScape.Api.Controllers
 
         private bool ForumCategoryExists(Guid id)
         {
-            return (_context.ForumCategorys?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.ForumCategories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

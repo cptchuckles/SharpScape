@@ -29,5 +29,9 @@
     <ProjectReference Include="..\Shared\SharpScape.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\Sqlite\" />
+  </ItemGroup>
+
 </Project>
 

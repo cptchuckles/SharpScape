@@ -2,20 +2,47 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharpScape.Api.Data;
 
 #nullable disable
 
-namespace SharpScape.Api.Data.Migrations.Sqlite
+namespace SharpScape.Api.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220621221833_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
+
+            modelBuilder.Entity("SharpScape.Api.Data.Models.ForumPost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ForumAuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ForumPostBody")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ForumPostTitle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ForumThreadId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ForumPosts");
+                });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumCategory", b =>
                 {
@@ -37,30 +64,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
 
                     b.HasKey("Id");
 
-                    b.ToTable("ForumCategorys");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("1d45d377-770b-4f25-99bc-7993e69c5cb3"),
-                            ForumCategoryAuthor = "Category Author 1",
-                            ForumCategoryDescription = "Category Description 1",
-                            ForumCategoryName = "Category Name 1"
-                        },
-                        new
-                        {
-                            Id = new Guid("b9878eed-e852-451a-a893-885b2d2fec68"),
-                            ForumCategoryAuthor = "Category Author 2",
-                            ForumCategoryDescription = "Category Description 2",
-                            ForumCategoryName = "Category Name 2"
-                        },
-                        new
-                        {
-                            Id = new Guid("5c616052-2596-4cc4-8a8b-1cab79c698c4"),
-                            ForumCategoryAuthor = "Category Author 3",
-                            ForumCategoryDescription = "Category Description 3",
-                            ForumCategoryName = "Category Name 3"
-                        });
+                    b.ToTable("ForumCategories");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumThread", b =>
@@ -69,12 +73,37 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ForumCategoryId")
+                    b.Property<string>("Body")
+                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Replies")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Views")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Votes")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ForumCategoryId");
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ForumThreads");
                 });
@@ -111,9 +140,21 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumThread", b =>
                 {
-                    b.HasOne("SharpScape.Api.Models.ForumCategory", null)
+                    b.HasOne("SharpScape.Api.Models.ForumCategory", "ForumCategory")
                         .WithMany("Threads")
-                        .HasForeignKey("ForumCategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharpScape.Api.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("ForumCategory");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumCategory", b =>
