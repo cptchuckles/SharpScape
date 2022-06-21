@@ -61,8 +61,10 @@ public class AuthController : ControllerBase
     private string CreateToken(User user)
     {
         var claims = new List<Claim> {
+            new Claim("Id", user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, "NA")
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, "NA") //TODO: Pull this from a Roles table
         };
 
         var key = new RsaSecurityKey(_rsaKeyProvider.PrivateKey);

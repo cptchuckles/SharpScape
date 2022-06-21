@@ -12,24 +12,18 @@ namespace SharpScape.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-    private readonly AppDbContext _context;
-
+        private readonly AppDbContext _context;
 
         public UserController(AppDbContext context)
         {
             _context = context;
         }
+
         // GET: api/<ValuesController>
         [HttpGet]
         public async Task<ActionResult<List<UserInfoDto>>> Get()
         {
-            var users = await _context.Users.Select(user=>new UserInfoDto()
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Created = user.Created,
-                Username = user.Username
-            }).ToListAsync();
+            var users = await _context.Users.Select(user => new UserInfoDto().FromUser(user)).ToListAsync();
 
             return Ok(users);
         }
@@ -43,13 +37,8 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-               var userinfo = new UserInfoDto()
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Created = user.Created,
-                Username = user.Username
-            };
+
+            var userinfo = new UserInfoDto().FromUser(user);
 
             return Ok(userinfo);
         }
@@ -80,11 +69,6 @@ namespace SharpScape.Api.Controllers
             }
             return NoContent();
         }
-        private bool UserExist(Guid id)
-        {
-            return _context.Users.Any(user => user.Id == id);   
-        }
-
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
@@ -98,6 +82,11 @@ namespace SharpScape.Api.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        private bool UserExist(Guid id)
+        {
+            return _context.Users.Any(user => user.Id == id);   
         }
     }
 }
