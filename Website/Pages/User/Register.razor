@@ -1,5 +1,9 @@
 @page "/register"
 @using SharpScape.Shared.Dto
+@inject IAuthTokenProvider TokenProvider
+@inject AuthenticationStateProvider AuthStateProvider
+@inject HttpClient Http
+@inject NavigationManager NavManager
 
 <style>
     .form-section
@@ -12,6 +16,11 @@
 <div class="form-section">
     <EditForm model="@tUser" OnValidSubmit="@HandleValidSubmit">
         <h1>Create an account</h1>
+
+        @if (requestError is not null)
+        {
+            <p class="text-danger">@requestError</p>
+        }
 
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -44,22 +53,29 @@
             <a href="/login">Already have an account?</a>
         </div>
     </EditForm>
-
-    @if (SubmitResult == true)
-    {
-        <span>
-            Last submit status: @tUser.Username @tUser.Email register @* as @tUser.Avatar *@
-        </span>
-    }
 </div>
 
 
 @code
 {
     UserRegisterDto tUser = new UserRegisterDto();
-    bool SubmitResult = false;
-    void HandleValidSubmit()
+
+    private string? requestError;
+
+    private async Task HandleValidSubmit()
     {
-        SubmitResult = true;
+        var result = await Http.PostAsJsonAsync("api/register", tUser);
+
+        if (result.IsSuccessStatusCode)
+        {
+            var token = await result.Content.ReadAsStringAsync();
+            TokenProvider.Token = token;
+            await AuthStateProvider.GetAuthenticationStateAsync();
+            NavManager.NavigateTo("/");
+        }
+        else
+        {
+            requestError = await result.Content.ReadAsStringAsync();
+        }
     }
 }
