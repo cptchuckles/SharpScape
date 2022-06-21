@@ -6,16 +6,40 @@
         </button>
     </div>
 </div>
-
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-row">
-        <div class="nav-item px-3">
+        <div class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="forum" Match="NavLinkMatch.All">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Forum
+            </NavLink>
+        </div>
+          <div class="nav-item">
+            <NavLink class="nav-link" href="PlayGame" Match="NavLinkMatch.All">
+                <span class="oi oi-play-circle" aria-hidden="true"></span> Play
+            </NavLink>
+        </div>
+        <div class="nav-item">
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="nav-link" href="/account" Match="NavLinkMatch.All">
+                        <span class="oi oi-person" aria-hidden="true"></span> @context.User.Identity.Name
+                    </NavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="nav-link" href="/login" Match="NavLinkMatch.All">
+                        <span class="oi oi-key" aria-hidden="true"></span> Login
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
     </nav>
 </div>
+
 
 @code {
     private bool collapseNavMenu = true;

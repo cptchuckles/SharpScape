@@ -1,0 +1,62 @@
+@page "/login"
+@using SharpScape.Shared.Dto
+@inject HttpClient Http
+@inject IAuthTokenProvider TokenProvider
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+
+<style>
+    .form-section {
+        max-width: 40rem;
+        margin: auto;
+    }
+</style>
+
+<div class="form-section">
+    <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
+        <h1>Login</h1>
+
+        @if (requestError is not null)
+        {
+            <p class="text-danger">@requestError</p>
+        }
+
+        <DataAnnotationsValidator />
+        
+        <div class="form-group row">
+            <label for="username" class="col-sm-2 col-form-label">Username:</label>
+            <InputText class="form-control mx-2" id="username" @bind-Value="@userLoginDto.Username" />
+            <ValidationMessage For="() => userLoginDto.Username" />
+        </div>
+        <div class="form-group row">
+            <label for="password" class="col-sm2 col-form-label">Password:</label>
+            <InputText class="form-control mx-2" type="password" id="password" @bind-Value="@userLoginDto.Password" />
+            <ValidationMessage For="() => userLoginDto.Password" />
+        </div>
+        <div class="d-flex flex-row justify-content-between align-items-baseline mt-2">
+            <button type="submit" class="btn btn-primary">Login</button>
+            <a href="/register">Create an account</a>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private UserLoginDto userLoginDto = new();
+    private string? requestError;
+
+    private async Task TryLogin()
+    {
+        var result = await Http.PostAsJsonAsync("api/login", userLoginDto);
+
+        if (result.IsSuccessStatusCode)
+        {
+            TokenProvider.Token = await result.Content.ReadAsStringAsync();
+            await AuthStateProvider.GetAuthenticationStateAsync();
+            NavManager.NavigateTo("/");
+        }
+        else
+        {
+            requestError = await result.Content.ReadAsStringAsync();
+        }
+    }
+}
