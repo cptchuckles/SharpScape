@@ -95,3 +95,9 @@ A Thread is a list of Posts.
 A Post is a message made by a User.
 
 <img src="forumdiagram.png" />
+
+### Game architecture
+
+Here is a tentative diagram of how the game client+server and backend API+DB are going to work together:
+
+<img src="sharpscape-architecture.svg" style="background-color: white; padding: 5px;" />
