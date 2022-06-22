@@ -15,7 +15,6 @@ namespace SharpScape.Api.Data.Models
        
         public int ForumThreadId { get; set; }
         
-        
         public int ForumAuthorId { get; set; }
     }
 }
