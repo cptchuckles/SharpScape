@@ -9,7 +9,6 @@ namespace SharpScape.Api.Data.Models
         [Key]
         public int Id { get; set; } 
 
-
         public string ForumPostTitle { get; set; }
 
         public string ForumPostBody { get; set; }
