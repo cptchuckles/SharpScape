@@ -24,7 +24,6 @@ else
     Console.WriteLine("USING SQLITE TESTING CONNECTION");
     builder.Services.AddDbContext<AppDbContext, SqliteDbContext>(options =>
         options.UseSqlite(builder.Configuration.GetConnectionString("LocalDevelopmentConnection")));
-
 }
 
 builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>(sp => {
