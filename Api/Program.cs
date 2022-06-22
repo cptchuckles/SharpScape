@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.StaticFiles;
 using SharpScape.Api.Services;
 using SharpScape.Api.Data;
 
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -30,7 +33,9 @@ builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>(sp => {
     return rsaKeyProvider;
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -49,15 +54,14 @@ builder.Services.AddSwaggerGen(options => {
             new OpenApiSecurityScheme {
                     Reference = new OpenApiReference {
                         Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer" }}
-            ,
+                        Id = "Bearer" }},
+            
             new string[] {}
         }
     });
 });
 
 
-builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
