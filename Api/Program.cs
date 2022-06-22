@@ -22,8 +22,6 @@ if (Environment.GetEnvironmentVariable("DATABASE_CONNECTION") == "RemoteTesting"
 else
 {
     Console.WriteLine("USING SQLITE TESTING CONNECTION");
-   
-    
     builder.Services.AddDbContext<AppDbContext, SqliteDbContext>(options =>
         options.UseSqlite(builder.Configuration.GetConnectionString("LocalDevelopmentConnection")));
 
