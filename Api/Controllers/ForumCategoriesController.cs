@@ -86,10 +86,10 @@ namespace SharpScape.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ForumCategory>> PostForumCategory(ForumCategory forumCategory)
         {
-          if (_context.ForumCategories == null)
-          {
-              return Problem("Entity set 'AppDbContext.ForumCategories'  is null.");
-          }
+            if (_context.ForumCategories is null)
+            {
+                return Problem("Entity set 'AppDbContext.ForumCategories'  is null.");
+            }
             _context.ForumCategories.Add(forumCategory);
             await _context.SaveChangesAsync();
 
