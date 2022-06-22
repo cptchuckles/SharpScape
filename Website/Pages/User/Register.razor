@@ -1,0 +1,81 @@
+@page "/register"
+@using SharpScape.Shared.Dto
+@inject IAuthTokenProvider TokenProvider
+@inject AuthenticationStateProvider AuthStateProvider
+@inject HttpClient Http
+@inject NavigationManager NavManager
+
+<style>
+    .form-section
+    {
+        max-width: 40rem;
+        margin: auto;
+    }
+</style>
+
+<div class="form-section">
+    <EditForm model="@tUser" OnValidSubmit="@HandleValidSubmit">
+        <h1>Create an account</h1>
+
+        @if (requestError is not null)
+        {
+            <p class="text-danger">@requestError</p>
+        }
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="Username">Username:</label>
+            <InputText class="form-control mx-2" @bind-Value="tUser.Username" />
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="Email">Email:</label>
+            <InputText class="form-control mx-2" @bind-Value="tUser.Email" />
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="Password">Password:</label>
+            <InputText type="password" class="form-control mx-2" @bind-Value="tUser.Password" />
+        </div>
+
+        @* TODO: Add avatar information *@
+        @* <div class="form-group row">
+            <label class="col-sm2 col-form-label" for="Avatar">HERO:</label>
+            <div class="col-sm-5">
+                <InputText class="form-control" @bind-Value="tUser.Avatar" />
+            </div>
+        </div> *@
+
+        <div class="d-flex justify-content-between align-items-baseline mt-2">
+            <input type="submit" class="btn btn-primary" value="Register" />
+            <a href="/login">Already have an account?</a>
+        </div>
+    </EditForm>
+</div>
+
+
+@code
+{
+    UserRegisterDto tUser = new UserRegisterDto();
+
+    private string? requestError;
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await Http.PostAsJsonAsync("api/register", tUser);
+
+        if (result.IsSuccessStatusCode)
+        {
+            var token = await result.Content.ReadAsStringAsync();
+            TokenProvider.Token = token;
+            await AuthStateProvider.GetAuthenticationStateAsync();
+            NavManager.NavigateTo("/");
+        }
+        else
+        {
+            requestError = await result.Content.ReadAsStringAsync();
+        }
+    }
+}

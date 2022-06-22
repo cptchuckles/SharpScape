@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.StaticFiles;
 using SharpScape.Api.Services;
 using SharpScape.Api.Data;
 
@@ -92,7 +94,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new RsaSecurityKey(rsaPublicKey)
         };
     });
-
+var provider=new FileExtensionContentTypeProvider();
+provider.Mappings.Add(".pck","application/octet-stream");
+builder.Services.Configure<StaticFileOptions>(options=>
+{
+    options.ContentTypeProvider=provider;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

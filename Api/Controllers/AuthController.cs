@@ -36,14 +36,7 @@ public class AuthController : ControllerBase
         if (_context.Users.Any(u => u.Username.ToLower() == request.Username.ToLower()))
             return BadRequest($"Username {request.Username} already exists");
 
-        CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-        var user = new User() {
-            Username = request.Username,
-            Email = request.Email,
-            PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
-        };
+        var user = new User(request.Username, request.Email, request.Password);
         _context.Add(user);
         _context.SaveChanges();
 
@@ -68,8 +61,10 @@ public class AuthController : ControllerBase
     private string CreateToken(User user)
     {
         var claims = new List<Claim> {
+            new Claim("Id", user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, "NA")
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, "NA") //TODO: Pull this from a Roles table
         };
 
         var key = new RsaSecurityKey(_rsaKeyProvider.PrivateKey);
@@ -85,15 +80,6 @@ public class AuthController : ControllerBase
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return jwt;
-    }
-
-    private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-    {
-        using (var hmac = new HMACSHA512())
-        {
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
     }
 
     private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
