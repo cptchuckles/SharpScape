@@ -25,8 +25,6 @@ namespace SharpScape.Api.Controllers
         [HttpGet]
         public async Task<List<ForumCategory>> GetForumCategories()
         {
-          
-
             var forumCategories= await _context.ForumCategories.ToListAsync();
             forumCategories.ForEach(async category => category.Threads = await _context.ForumThreads.Where(x => x.CategoryId == category.Id).ToListAsync());
 
