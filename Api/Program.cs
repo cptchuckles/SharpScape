@@ -62,9 +62,6 @@ builder.Services.AddSwaggerGen(options => {
 });
 
 
-
-
-//builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
