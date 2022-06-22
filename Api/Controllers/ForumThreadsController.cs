@@ -32,9 +32,36 @@ namespace SharpScape.Api.Controllers
             return await _context.ForumThreads.ToListAsync();
         }
 
+
+        // GET: api/ForumThreads/5
+        [HttpGet("category{id}")]
+        public async Task<ActionResult<List<ForumThread>>> GetForumThreadbyCategory(int id)
+        {
+            if (_context.ForumThreads == null)
+            {
+                return NotFound();
+            }
+            var forumThread = await _context.ForumThreads.Where(x => x.CategoryId == id).ToListAsync();
+
+            if (forumThread == null)
+            {
+                return NotFound();
+            }
+
+            return forumThread;
+        }
+
+
+
+
+
+
+
+
+
         // GET: api/ForumThreads/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ForumThread>> GetForumThread(Guid id)
+        public async Task<ActionResult<ForumThread>> GetForumThread(int id)
         {
           if (_context.ForumThreads == null)
           {
@@ -100,7 +127,7 @@ namespace SharpScape.Api.Controllers
 
         // DELETE: api/ForumThreads/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteForumThread(Guid id)
+        public async Task<IActionResult> DeleteForumThread(int id)
         {
             if (_context.ForumThreads == null)
             {

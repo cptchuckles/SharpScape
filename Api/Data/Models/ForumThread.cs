@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharpScape.Api.Models
@@ -16,6 +17,7 @@ namespace SharpScape.Api.Models
         
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
+      //  [JsonIgnore]
         public ForumCategory ForumCategory { get; set; }
         public string Title { get; set; } 
             public string Body { get; set; }

@@ -14,7 +14,7 @@ namespace SharpScape.Api.Models
         [Required(ErrorMessage = " x ")]
         public string ForumCategoryAuthor { get; set; } = "";
         
-        public List<ForumThread>? Threads { get; set; }
+        public List<ForumThread> Threads { get; set; }
 
     }
 }

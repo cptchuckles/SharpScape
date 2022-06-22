@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
-using SharpScape.Shared.Dto;
 
 namespace SharpScape.Api.Controllers
 {
@@ -24,30 +23,26 @@ namespace SharpScape.Api.Controllers
 
         // GET: api/ForumCategories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ForumCategory>>> GetForumCategorys()
+        public async Task<List<ForumCategory>> GetForumCategories()
         {
+          
 
+            var forumCategories= await _context.ForumCategories.ToListAsync();
+            forumCategories.ForEach(async category => category.Threads = await _context.ForumThreads.Where(x => x.CategoryId == category.Id).ToListAsync());
 
-           
-            
-            
-            
-            if (_context.ForumCategories == null)
-          {
-              return NotFound();
-          }
-            return await _context.ForumCategories.ToListAsync();
+            return forumCategories;
         }
 
         // GET: api/ForumCategories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ForumCategory>> GetForumCategory(Guid id)
+        public async Task<ActionResult<ForumCategory>> GetForumCategory(int id)
         {
           if (_context.ForumCategories == null)
           {
               return NotFound();
           }
             var forumCategory = await _context.ForumCategories.FindAsync(id);
+            forumCategory.Threads= await _context.ForumThreads.Where(x => x.CategoryId == id).ToListAsync();
 
             if (forumCategory == null)
             {
@@ -95,7 +90,7 @@ namespace SharpScape.Api.Controllers
         {
           if (_context.ForumCategories == null)
           {
-              return Problem("Entity set 'AppDbContext.ForumCategorys'  is null.");
+              return Problem("Entity set 'AppDbContext.ForumCategories'  is null.");
           }
             _context.ForumCategories.Add(forumCategory);
             await _context.SaveChangesAsync();
@@ -105,7 +100,7 @@ namespace SharpScape.Api.Controllers
 
         // DELETE: api/ForumCategories/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteForumCategory(Guid id)
+        public async Task<IActionResult> DeleteForumCategory(int id)
         {
             if (_context.ForumCategories == null)
             {
