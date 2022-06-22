@@ -66,13 +66,6 @@ public class AppDbContext : DbContext
               new ForumPost() { Id = 5, ForumPostBody = "post5  Body", ForumPostTitle = "post5 title", ForumAuthorId = 2, ForumThreadId = 4 },
               new ForumPost() { Id = 6, ForumPostBody = "post6  Body", ForumPostTitle = "post6 title", ForumAuthorId = 3, ForumThreadId = 5 },
               new ForumPost() { Id = 7, ForumPostBody = "post7  Body", ForumPostTitle = "post7 title", ForumAuthorId = 3, ForumThreadId = 5 }
-
-
-
-
-
-
-
                  );
         });
 
