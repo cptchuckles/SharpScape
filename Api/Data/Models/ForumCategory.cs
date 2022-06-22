@@ -5,7 +5,7 @@ namespace SharpScape.Api.Models
     public class ForumCategory
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; } 
 
         [Required(ErrorMessage = " x ")]
         public string ForumCategoryName { get; set; } = "";
@@ -13,8 +13,8 @@ namespace SharpScape.Api.Models
         public string ForumCategoryDescription { get; set; } = "";
         [Required(ErrorMessage = " x ")]
         public string ForumCategoryAuthor { get; set; } = "";
-        [Required(ErrorMessage = " x ")]
-        public List<ForumThread> Threads { get; set; }= new List<ForumThread>();
+        
+        public List<ForumThread>? Threads { get; set; }
 
     }
 }

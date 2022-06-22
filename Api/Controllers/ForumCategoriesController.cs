@@ -60,7 +60,7 @@ namespace SharpScape.Api.Controllers
         // PUT: api/ForumCategories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutForumCategory(Guid id, ForumCategory forumCategory)
+        public async Task<IActionResult> PutForumCategory(int id, ForumCategory forumCategory)
         {
             if (id != forumCategory.Id)
             {
@@ -123,7 +123,7 @@ namespace SharpScape.Api.Controllers
             return NoContent();
         }
 
-        private bool ForumCategoryExists(Guid id)
+        private bool ForumCategoryExists(int id)
         {
             return (_context.ForumCategories?.Any(e => e.Id == id)).GetValueOrDefault();
         }

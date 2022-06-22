@@ -7,17 +7,17 @@ namespace SharpScape.Api.Data.Models
     {
 
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; } 
 
 
-        public string ForumPostTitle { get; set; } = "-";
+        public string ForumPostTitle { get; set; }
 
-        public string ForumPostBody { get; set; } = "-";
+        public string ForumPostBody { get; set; }
        
-        public Guid ForumThreadId { get; set; }
+        public int ForumThreadId { get; set; }
         
         
-        public Guid ForumAuthorId { get; set; }
+        public int ForumAuthorId { get; set; }
 
 
 

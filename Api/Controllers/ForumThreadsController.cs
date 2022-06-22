@@ -53,7 +53,7 @@ namespace SharpScape.Api.Controllers
         // PUT: api/ForumThreads/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutForumThread(Guid id, ForumThread forumThread)
+        public async Task<IActionResult> PutForumThread(int id, ForumThread forumThread)
         {
             if (id != forumThread.Id)
             {
@@ -68,18 +68,20 @@ namespace SharpScape.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ForumThreadExists(id))
+                if (ForumThreadExists(id))
                 {
-                    return NotFound();
+                    throw;
                 }
                 else
                 {
-                    throw;
+                    return NotFound();
                 }
             }
 
             return NoContent();
         }
+
+       
 
         // POST: api/ForumThreads
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -116,7 +118,7 @@ namespace SharpScape.Api.Controllers
             return NoContent();
         }
 
-        private bool ForumThreadExists(Guid id)
+        private bool ForumThreadExists(int id)
         {
             return (_context.ForumThreads?.Any(e => e.Id == id)).GetValueOrDefault();
         }

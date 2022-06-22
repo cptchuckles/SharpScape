@@ -7,19 +7,19 @@ namespace SharpScape.Api.Models
     {
       
             [Key]
-            public Guid Id { get; set; }= Guid.NewGuid();
+            public int Id { get; set; }
             
-            public Guid UserId { get; set; }
+            public int UserId { get; set; }
         [ForeignKey("UserId")]
         public  User Author { get; set; }
 
         
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public ForumCategory ForumCategory { get; set; }
-        public string Title { get; set; } = "-";
-            public string Body { get; set; }="-";
-        public int Votes { get; set; } = 0;
+        public string Title { get; set; } 
+            public string Body { get; set; }
+        public int Votes { get; set; }
         public int Replies { get; set; } 
             public int Views { get; set; }
             [Editable(false)]

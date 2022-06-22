@@ -19,12 +19,12 @@ namespace SharpScape.Api.Migrations
 
             modelBuilder.Entity("SharpScape.Api.Data.Models.ForumPost", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("ForumAuthorId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ForumAuthorId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ForumPostBody")
                         .IsRequired()
@@ -34,19 +34,77 @@ namespace SharpScape.Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ForumThreadId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ForumThreadId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.ToTable("ForumPosts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ForumAuthorId = 1,
+                            ForumPostBody = "post1  Body",
+                            ForumPostTitle = "post1 title",
+                            ForumThreadId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ForumAuthorId = 1,
+                            ForumPostBody = "post2  Body",
+                            ForumPostTitle = "post2 title",
+                            ForumThreadId = 3
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ForumAuthorId = 1,
+                            ForumPostBody = "post3  Body",
+                            ForumPostTitle = "post3 title",
+                            ForumThreadId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ForumAuthorId = 2,
+                            ForumPostBody = "post4  Body",
+                            ForumPostTitle = "post4 title",
+                            ForumThreadId = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ForumAuthorId = 2,
+                            ForumPostBody = "post5  Body",
+                            ForumPostTitle = "post5 title",
+                            ForumThreadId = 4
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ForumAuthorId = 3,
+                            ForumPostBody = "post6  Body",
+                            ForumPostTitle = "post6 title",
+                            ForumThreadId = 5
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ForumAuthorId = 3,
+                            ForumPostBody = "post7  Body",
+                            ForumPostTitle = "post7 title",
+                            ForumThreadId = 5
+                        });
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumCategory", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ForumCategoryAuthor")
                         .IsRequired()
@@ -67,21 +125,21 @@ namespace SharpScape.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5b0d08c2-bf6b-4711-98e7-ab0567d4244e"),
+                            Id = 1,
                             ForumCategoryAuthor = "Category Author 1 ",
                             ForumCategoryDescription = "Category Description 1",
                             ForumCategoryName = "Category Name 1"
                         },
                         new
                         {
-                            Id = new Guid("4bae1f58-9a20-4d09-88a9-d319f416c4c7"),
+                            Id = 2,
                             ForumCategoryAuthor = "Category Author 2",
                             ForumCategoryDescription = "Category Description 2",
                             ForumCategoryName = "Category Name 2"
                         },
                         new
                         {
-                            Id = new Guid("e27e288d-4065-4f65-9f67-e7b4a6830dcf"),
+                            Id = 3,
                             ForumCategoryAuthor = "Category Author 3",
                             ForumCategoryDescription = "Category Description 3",
                             ForumCategoryName = "Category Name 3"
@@ -90,16 +148,16 @@ namespace SharpScape.Api.Migrations
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumThread", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Body")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
@@ -111,8 +169,8 @@ namespace SharpScape.Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Views")
                         .HasColumnType("INTEGER");
@@ -131,13 +189,49 @@ namespace SharpScape.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dd74bfbb-1874-437b-9fe0-140846e90399"),
+                            Id = 5,
                             Body = " body 1",
-                            CategoryId = new Guid("61464988-a9df-46f9-a348-1d316b311a15"),
-                            Created = new DateTime(2022, 6, 21, 18, 58, 56, 399, DateTimeKind.Local).AddTicks(2896),
+                            CategoryId = 2,
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3656),
                             Replies = 0,
                             Title = "tr1",
-                            UserId = new Guid("a7c720f9-48bd-4d6c-b234-e9cdfadd16b3"),
+                            UserId = 2,
+                            Views = 0,
+                            Votes = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Body = " body 1",
+                            CategoryId = 2,
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3666),
+                            Replies = 0,
+                            Title = "tr1",
+                            UserId = 1,
+                            Views = 0,
+                            Votes = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Body = " body 1",
+                            CategoryId = 1,
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3675),
+                            Replies = 0,
+                            Title = "tr1",
+                            UserId = 1,
+                            Views = 0,
+                            Votes = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Body = " body 1",
+                            CategoryId = 3,
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3682),
+                            Replies = 0,
+                            Title = "tr1",
+                            UserId = 3,
                             Views = 0,
                             Votes = 0
                         });
@@ -145,9 +239,9 @@ namespace SharpScape.Api.Migrations
 
             modelBuilder.Entity("SharpScape.Api.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
@@ -175,8 +269,8 @@ namespace SharpScape.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2077c0a9-17c8-49cf-8ec5-3c0d0524b162"),
-                            Created = new DateTime(2022, 6, 21, 18, 58, 56, 399, DateTimeKind.Local).AddTicks(1913),
+                            Id = 1,
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3386),
                             Email = "ss1@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -184,8 +278,8 @@ namespace SharpScape.Api.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d8b3c298-9915-4b79-8ebd-b01f39a7df05"),
-                            Created = new DateTime(2022, 6, 21, 18, 58, 56, 399, DateTimeKind.Local).AddTicks(1928),
+                            Id = 2,
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3398),
                             Email = "ss2@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -193,8 +287,8 @@ namespace SharpScape.Api.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7dd53e52-ae89-4be2-995d-f730b509d90b"),
-                            Created = new DateTime(2022, 6, 21, 18, 58, 56, 399, DateTimeKind.Local).AddTicks(1948),
+                            Id = 3,
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3408),
                             Email = "ss3@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },

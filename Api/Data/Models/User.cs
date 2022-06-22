@@ -5,7 +5,7 @@ namespace SharpScape.Api.Models;
 public class User
 {
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public int Id { get; set; }
 
     public string Username { get; set; }
 
