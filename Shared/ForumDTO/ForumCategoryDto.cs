@@ -12,15 +12,11 @@ namespace SharpScape.Shared.Dto
        
         public int Id { get; set; }
 
-       
-        
-        
         public string ForumCategoryAuthor { get; set; }
         
         public string ForumCategoryName{ get; set; }
-    public string ForumCategoryDescription { get; set; }
+        public string ForumCategoryDescription { get; set; }
 
-    public  List<Thread> Threads;
-
+        public  List<Thread> Threads;
     }
 }
