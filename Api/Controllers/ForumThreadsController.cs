@@ -51,14 +51,6 @@ namespace SharpScape.Api.Controllers
             return forumThread;
         }
 
-
-
-
-
-
-
-
-
         // GET: api/ForumThreads/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ForumThread>> GetForumThread(int id)
