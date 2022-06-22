@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-<<<<<<< HEAD
-VisualStudioVersion = 17.1.32319.34
-=======
 VisualStudioVersion = 17.2.32516.85
->>>>>>> 55a68ebb902b89578f87a9d182752aa68dfd553b
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpScape.Api", "Api\SharpScape.Api.csproj", "{0B8B1DD9-2DF2-4C93-A502-602C50BDD767}"
 EndProject
