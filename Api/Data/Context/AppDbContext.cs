@@ -60,12 +60,12 @@ public class AppDbContext : DbContext
         {
            x.HasData(
                  new ForumPost() { Id =1, ForumPostBody="post1  Body", ForumPostTitle="post1 title", ForumAuthorId=1, ForumThreadId=2 },
-              new ForumPost() { Id = 2, ForumPostBody = "post2  Body", ForumPostTitle = "post2 title", ForumAuthorId =1, ForumThreadId =3 },
-              new ForumPost() { Id = 3, ForumPostBody = "post3  Body", ForumPostTitle = "post3 title", ForumAuthorId = 1, ForumThreadId =3 },
-              new ForumPost() { Id = 4, ForumPostBody = "post4  Body", ForumPostTitle = "post4 title", ForumAuthorId = 2, ForumThreadId = 3 },
-              new ForumPost() { Id = 5, ForumPostBody = "post5  Body", ForumPostTitle = "post5 title", ForumAuthorId = 2, ForumThreadId = 4 },
-              new ForumPost() { Id = 6, ForumPostBody = "post6  Body", ForumPostTitle = "post6 title", ForumAuthorId = 3, ForumThreadId = 5 },
-              new ForumPost() { Id = 7, ForumPostBody = "post7  Body", ForumPostTitle = "post7 title", ForumAuthorId = 3, ForumThreadId = 5 }
+                new ForumPost() { Id = 2, ForumPostBody = "post2  Body", ForumPostTitle = "post2 title", ForumAuthorId =1, ForumThreadId =3 },
+                new ForumPost() { Id = 3, ForumPostBody = "post3  Body", ForumPostTitle = "post3 title", ForumAuthorId = 1, ForumThreadId =3 },
+                new ForumPost() { Id = 4, ForumPostBody = "post4  Body", ForumPostTitle = "post4 title", ForumAuthorId = 2, ForumThreadId = 3 },
+                new ForumPost() { Id = 5, ForumPostBody = "post5  Body", ForumPostTitle = "post5 title", ForumAuthorId = 2, ForumThreadId = 4 },
+                new ForumPost() { Id = 6, ForumPostBody = "post6  Body", ForumPostTitle = "post6 title", ForumAuthorId = 3, ForumThreadId = 5 },
+                new ForumPost() { Id = 7, ForumPostBody = "post7  Body", ForumPostTitle = "post7 title", ForumAuthorId = 3, ForumThreadId = 5 }
                  );
         });
 
