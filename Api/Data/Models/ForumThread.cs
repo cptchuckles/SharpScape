@@ -6,27 +6,25 @@ namespace SharpScape.Api.Models
 {
     public class ForumThread
     {
-      
-            [Key]
-            public int Id { get; set; }
-            
-            public int UserId { get; set; }
+        [Key]
+        public int Id { get; set; }
+
+        public int UserId { get; set; }
         [ForeignKey("UserId")]
         public  User Author { get; set; }
 
-        
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
-      //  [JsonIgnore]
         public ForumCategory ForumCategory { get; set; }
-        public string Title { get; set; } 
-            public string Body { get; set; }
+
+        public string Title { get; set; }
+        public string Body { get; set; }
         public int Votes { get; set; }
-        public int Replies { get; set; } 
-            public int Views { get; set; }
-            [Editable(false)]
-            [DisplayFormat(DataFormatString = "{0:D}")]
-            public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
-        
+        public int Replies { get; set; }
+        public int Views { get; set; }
+
+        [Editable(false)]
+        [DisplayFormat(DataFormatString = "{0:D}")]
+        public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
     }
 }
