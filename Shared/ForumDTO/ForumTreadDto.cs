@@ -10,6 +10,6 @@ namespace SharpScape.Shared.Dto
     internal class ForumTreadDto
     {
      
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
     }
 }

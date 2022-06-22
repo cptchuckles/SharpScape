@@ -10,7 +10,7 @@ namespace SharpScape.Shared.Dto
     public class ForumCategoryDto
     {
        
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
 
        
         
