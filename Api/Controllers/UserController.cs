@@ -45,7 +45,7 @@ namespace SharpScape.Api.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(Guid id,[FromBody] UserRegisterDto value)
+        public async Task<IActionResult> UpdateUser(int id,[FromBody] UserRegisterDto value)
         {
             var user = await _context.Users.FindAsync(id);
             if (user is null)
@@ -84,7 +84,7 @@ namespace SharpScape.Api.Controllers
             return NoContent();
         }
 
-        private bool UserExist(Guid id)
+        private bool UserExist(int id)
         {
             return _context.Users.Any(user => user.Id == id);   
         }
