@@ -1,0 +1,25 @@
+﻿.item1 { grid-area: header; }
+.item2 { grid-area: leftSideEmpty; }
+.item3 { grid-area: leftImg; }
+.item4 { grid-area: leftMid; }
+.item5 { grid-area: rightImg; }
+.item6 { grid-area: rightMid; }
+.item7 { grid-area: rightSideEmpty; }
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        'leftSideEmpty header header rightSideEmpty'
+        'leftSideEmpty leftImg rightImg rightSideEmpty'
+        'leftSideEmpty leftMid rightMid rightSideEmpty';
+    grid-row-gap: 10px;
+    grid-column-gap: 100px;
+    /*background-color: #2196F3;*/
+    padding: 10px;
+}
+
+.grid-container > div {
+    /*background-color: rgba(255, 255, 255, 0.8);*/
+    text-align: center;
+    padding: 20px;
+}

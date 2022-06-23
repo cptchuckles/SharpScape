@@ -3,7 +3,6 @@
 @inject HttpClient Http
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
-
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
     <div class="container">
@@ -120,12 +119,17 @@
     public bool CreateThread {get;set;} = false;
     [Parameter]
     public EventCallback<bool> OnClose { get; set; } 
+    ThreadItem tTopic = new ThreadItem();
+    List<ThreadItem> TopicList = new List<ThreadItem>();
 
+
+    // pagination stuff and dummy data
     private int pageIndex = 1;
     private int itemsPerPage = 10;
     private int totalPages = 1;
     private IEnumerable<Comment> allComments = null;
     private IEnumerable<Comment> comments = Enumerable.Empty<Comment>(); 
+    // methods for pagination
     protected override async Task OnInitializedAsync()
     {
         allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
@@ -147,6 +151,7 @@
             comments = allComments.Skip(skipCount).Take(itemsPerPage);
         }
     }
+    // methods for popup modal
     private Task ModalCancel()
     {
         return OnClose.InvokeAsync(false);
@@ -164,9 +169,6 @@
         StateHasChanged();
     }
 
-    ThreadItem tTopic = new ThreadItem();
-    List<ThreadItem> TopicList = new List<ThreadItem>();
-
     private void HandleValidSubmit()
     {
         ThreadItem Thread = new ThreadItem();
@@ -178,7 +180,6 @@
         tTopic = new ThreadItem();
         CreateThread= false;
     }
-
     private class  ThreadItem
     {
 

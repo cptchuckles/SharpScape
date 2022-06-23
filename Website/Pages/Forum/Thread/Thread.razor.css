@@ -7,6 +7,9 @@
   background-image: url("images/Background.png");
   background-size: cover;
 }
+.pagination_background {
+  background-color: #1b2042;
+}
 .card-body {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;

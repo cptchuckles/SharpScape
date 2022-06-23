@@ -7,8 +7,11 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions options) : base(options)
     {
-    }
 
+    }
     public DbSet<User> Users { get; set; }
-    public DbSet<SharpScape.Api.Models.Thread> Threads { get; set; }
+    
+    public DbSet<ForumCategory> ForumCategories { get; set; }
+    public DbSet<ForumThread> ForumThreads { get; set; }
+    public DbSet<ForumPost> ForumPosts { get; set; }
 }

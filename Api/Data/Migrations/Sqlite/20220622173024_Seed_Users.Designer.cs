@@ -11,8 +11,8 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Data.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20220617205759_CreatedThreadModel")]
-    partial class CreatedThreadModel
+    [Migration("20220622173024_Seed_Users")]
+    partial class Seed_Users
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
 
             modelBuilder.Entity("SharpScape.Api.Models.Thread", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
@@ -39,7 +39,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Views")
@@ -57,7 +57,7 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
 
             modelBuilder.Entity("SharpScape.Api.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 

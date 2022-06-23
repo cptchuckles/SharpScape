@@ -8,9 +8,9 @@ namespace SharpScape.Api.Data.Migrations.Sqlite
     public partial class Seed_Users : Migration
     {
         List<User> seedUsers = new() {
-            new User("Admin", "admin@sharpscape.net", "StrongPassword12345"),
-            new User("Pringleton", "pringle@example.com", "StrongPringle"),
-            new User("John Dotnet", "john@dot.net", "ilovedotnet123")
+            new User("Admin", "admin@sharpscape.net", "StrongPassword12345") { Id = 10 },
+            new User("Pringleton", "pringle@example.com", "StrongPringle") { Id = 20 },
+            new User("John Dotnet", "john@dot.net", "ilovedotnet123") { Id = 30 }
         };
 
         protected override void Up(MigrationBuilder migrationBuilder)

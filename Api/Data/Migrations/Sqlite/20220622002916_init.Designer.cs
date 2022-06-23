@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharpScape.Api.Data;
 
@@ -10,9 +11,10 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220622002916_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
@@ -40,64 +42,6 @@ namespace SharpScape.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ForumPosts");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ForumAuthorId = 1,
-                            ForumPostBody = "post1  Body",
-                            ForumPostTitle = "post1 title",
-                            ForumThreadId = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ForumAuthorId = 1,
-                            ForumPostBody = "post2  Body",
-                            ForumPostTitle = "post2 title",
-                            ForumThreadId = 3
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ForumAuthorId = 1,
-                            ForumPostBody = "post3  Body",
-                            ForumPostTitle = "post3 title",
-                            ForumThreadId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ForumAuthorId = 2,
-                            ForumPostBody = "post4  Body",
-                            ForumPostTitle = "post4 title",
-                            ForumThreadId = 3
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ForumAuthorId = 2,
-                            ForumPostBody = "post5  Body",
-                            ForumPostTitle = "post5 title",
-                            ForumThreadId = 4
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ForumAuthorId = 3,
-                            ForumPostBody = "post6  Body",
-                            ForumPostTitle = "post6 title",
-                            ForumThreadId = 5
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ForumAuthorId = 3,
-                            ForumPostBody = "post7  Body",
-                            ForumPostTitle = "post7 title",
-                            ForumThreadId = 5
-                        });
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumCategory", b =>
@@ -192,46 +136,10 @@ namespace SharpScape.Api.Migrations
                             Id = 5,
                             Body = " body 1",
                             CategoryId = 2,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8768),
+                            Created = new DateTime(2022, 6, 21, 20, 29, 16, 273, DateTimeKind.Local).AddTicks(6685),
                             Replies = 0,
                             Title = "tr1",
                             UserId = 2,
-                            Views = 0,
-                            Votes = 0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Body = " body 1",
-                            CategoryId = 2,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8776),
-                            Replies = 0,
-                            Title = "tr1",
-                            UserId = 1,
-                            Views = 0,
-                            Votes = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Body = " body 1",
-                            CategoryId = 1,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8783),
-                            Replies = 0,
-                            Title = "tr1",
-                            UserId = 1,
-                            Views = 0,
-                            Votes = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Body = " body 1",
-                            CategoryId = 3,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8790),
-                            Replies = 0,
-                            Title = "tr1",
-                            UserId = 3,
                             Views = 0,
                             Votes = 0
                         });
@@ -270,7 +178,7 @@ namespace SharpScape.Api.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8617),
+                            Created = new DateTime(2022, 6, 21, 20, 29, 16, 273, DateTimeKind.Local).AddTicks(6528),
                             Email = "ss1@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -279,7 +187,7 @@ namespace SharpScape.Api.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8626),
+                            Created = new DateTime(2022, 6, 21, 20, 29, 16, 273, DateTimeKind.Local).AddTicks(6535),
                             Email = "ss2@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -288,7 +196,7 @@ namespace SharpScape.Api.Migrations
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8634),
+                            Created = new DateTime(2022, 6, 21, 20, 29, 16, 273, DateTimeKind.Local).AddTicks(6540),
                             Email = "ss3@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },

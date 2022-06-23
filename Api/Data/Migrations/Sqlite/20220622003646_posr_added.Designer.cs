@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharpScape.Api.Data;
 
@@ -10,9 +11,10 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220622003646_posr_added")]
+    partial class posr_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
@@ -192,7 +194,7 @@ namespace SharpScape.Api.Migrations
                             Id = 5,
                             Body = " body 1",
                             CategoryId = 2,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8768),
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3656),
                             Replies = 0,
                             Title = "tr1",
                             UserId = 2,
@@ -204,7 +206,7 @@ namespace SharpScape.Api.Migrations
                             Id = 4,
                             Body = " body 1",
                             CategoryId = 2,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8776),
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3666),
                             Replies = 0,
                             Title = "tr1",
                             UserId = 1,
@@ -216,7 +218,7 @@ namespace SharpScape.Api.Migrations
                             Id = 3,
                             Body = " body 1",
                             CategoryId = 1,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8783),
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3675),
                             Replies = 0,
                             Title = "tr1",
                             UserId = 1,
@@ -228,7 +230,7 @@ namespace SharpScape.Api.Migrations
                             Id = 2,
                             Body = " body 1",
                             CategoryId = 3,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8790),
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3682),
                             Replies = 0,
                             Title = "tr1",
                             UserId = 3,
@@ -270,7 +272,7 @@ namespace SharpScape.Api.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8617),
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3386),
                             Email = "ss1@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -279,7 +281,7 @@ namespace SharpScape.Api.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8626),
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3398),
                             Email = "ss2@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -288,7 +290,7 @@ namespace SharpScape.Api.Migrations
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2022, 6, 22, 19, 17, 16, 390, DateTimeKind.Local).AddTicks(8634),
+                            Created = new DateTime(2022, 6, 21, 20, 36, 46, 319, DateTimeKind.Local).AddTicks(3408),
                             Email = "ss3@ss.ss",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
