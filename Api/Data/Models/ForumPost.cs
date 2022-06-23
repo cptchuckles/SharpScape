@@ -1,7 +1,7 @@
 ﻿using SharpScape.Api.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace SharpScape.Api.Data.Models
+namespace SharpScape.Api.Models
 {
     public class ForumPost
     {
