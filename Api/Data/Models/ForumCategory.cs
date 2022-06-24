@@ -8,11 +8,10 @@ namespace SharpScape.Api.Models
         public int Id { get; set; } 
 
         [Required(ErrorMessage = " x ")]
-        public string ForumCategoryName { get; set; } = "";
+        public string Name { get; set; } = "";
         [Required(ErrorMessage = " x ")]
-        public string ForumCategoryDescription { get; set; } = "";
+        public string Description { get; set; } = "";
         [Required(ErrorMessage = " x ")]
-        public string ForumCategoryAuthor { get; set; } = "";
         
         public List<ForumThread> Threads { get; set; }
 
