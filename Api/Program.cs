@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.StaticFiles;
 using SharpScape.Api.Services;
 using SharpScape.Api.Data;
 
-using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
