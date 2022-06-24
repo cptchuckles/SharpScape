@@ -30,7 +30,7 @@ namespace SharpScape.Api.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserInfoDto>> Get(Guid id)
+        public async Task<ActionResult<UserInfoDto>> Get(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user is null)
@@ -72,7 +72,7 @@ namespace SharpScape.Api.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if(user is null)

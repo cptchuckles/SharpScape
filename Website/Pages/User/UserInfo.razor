@@ -1,8 +1,11 @@
-﻿@page "/UserProfile"
-@inject NavigationManager NavManager
+﻿@page "/UserProfile/{id}"
+@using SharpScape.Shared.Dto
+@inject HttpClient http
 
 
 <div class="container rounded bg-white mt-5 mb-5">
+    <h1>@_userinfo.Username</h1>
+
     <div class="row">
         <div class="col-md-5 border-right">
             <div class="p-3 py-5">
@@ -10,8 +13,8 @@
                     <h4 class="text-right">Account Summary Information</h4>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Username</label><div></div></div>
-                    <div class="col-md-6"><label class="labels">Email</label><div></div></div>
+                    <div class="col-md-6"><label class="labels">Created</label><div>@_userinfo.Created.ToString()</div></div>
+                    <div class="col-md-6"><label class="labels">Email</label><div>@_userinfo.Email</div></div>
                 </div>
                 
             </div>
@@ -22,5 +25,15 @@
 
 
 @code {
+    private UserInfoDto? _userinfo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{id}");
+        
+    }
+    [Parameter]
+    public string id { get; set; }
+
 
 }
