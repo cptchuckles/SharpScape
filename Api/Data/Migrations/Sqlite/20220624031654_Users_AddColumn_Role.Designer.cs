@@ -2,17 +2,19 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharpScape.Api.Data;
 
 #nullable disable
 
-namespace SharpScape.Api.Migrations
+namespace SharpScape.Api.Data.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220624031654_Users_AddColumn_Role")]
+    partial class Users_AddColumn_Role
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
