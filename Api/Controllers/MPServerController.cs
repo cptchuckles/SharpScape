@@ -53,7 +53,7 @@ public class MPServerController : ControllerBase
         var loginRequest = JsonSerializer.Deserialize<UserLoginDto>(
                 Encoding.UTF8.GetString(data),
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-        if (loginRequest is null) {
+        if (loginRequest is null || loginRequest.Username is null || loginRequest.Password is null) {
             return BadRequest("Verified payload was malformed: could not parse JSON");
         }
 
