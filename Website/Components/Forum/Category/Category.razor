@@ -1,5 +1,6 @@
 @namespace SharpScape.Website.Components.Forum
 
+
 <div class=@Status>
     <div class="row">
         <div class="col-md-9">
@@ -39,20 +40,21 @@
 </div>
 @code {
     [Parameter]
-    public string Route { get; set; }
+    public string Route { get; set; } = "r";
     [Parameter]
-    public string Status{get;set;}
+    public string Status{get;set;} = "s";
 
     [Parameter]
-    public string Icon{get;set;}
+    public string Icon{get;set;} = "i";
+    
     [Parameter]
-    public string Title{get;set;}
+    public string Title{get;set;} = "t";
     [Parameter]
-    public string SubTitle{get;set;}
+    public string SubTitle{get;set;} = "st";
     [Parameter]
-    public string ViewsNumber{get;set;}
+    public string ViewsNumber{get;set;} = "vn";
     [Parameter]
-    public string TopicsNumber{get;set;}
+    public string TopicsNumber{get;set;} = "tn";
     [Parameter]
-    public string PostsNumber{get;set;}
+    public string PostsNumber{get;set;} = "pn";
 }

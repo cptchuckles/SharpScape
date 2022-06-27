@@ -10,16 +10,16 @@ namespace SharpScape.Website.Services
     public class ForumCategoryServices : IForumCategoryServices
     {
        
-            private readonly HttpClient httpClient;
+            private readonly HttpClient _httpClient;
 
             public ForumCategoryServices(HttpClient httpClient)
             {
-                this.httpClient = httpClient;
+                this._httpClient = httpClient;
             }
 
-            public async Task<IEnumerable<ForumCategoryDto>> GetForumCategories()
+            public async Task<List<ForumCategoryDto>> GetForumCategories()
             {
-                return await httpClient.GetFromJsonAsync<List<ForumCategoryDto>>("api/ForumCategories");
+                return await _httpClient.GetFromJsonAsync<List<ForumCategoryDto>>("https://localhost:7193/api/ForumCategories");
             }
     }
 }

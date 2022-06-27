@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace SharpScape.Shared.Dto
 {
-    internal class ForumTreadDto
-    {
+    public class ForumThreadDto
+    { 
      
         public int Id { get; set; }
     }

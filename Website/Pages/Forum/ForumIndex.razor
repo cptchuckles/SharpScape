@@ -1,6 +1,10 @@
 @page "/forum"
+@inject HttpClient Http
 @inject NavigationManager NavManager
+@inject IForumCategoryServices ForumCategoryServices
+@using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
+
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="background">
@@ -23,92 +27,21 @@
                         </div>
                         <h3>General subjects</h3>
                     </div>
-                    <Category 
-                        Route="General Subjects"
-                        Status="forum-item"
-                        Icon="fa fa-shield"
-                        Title="General Discussion" 
-                        SubTitle="Talk about sports, entertainment, music, movies, your favorite color, talk about enything." 
-                        ViewsNumber="123"
-                        PostsNumber="123"
-                        >
-                    </Category>
-                    <Category 
-                        Route="Introductions"
-                        Status="forum-item"
-                        Icon="fa fa-bolt"
-                        Title="Introductions" 
-                        SubTitle="New to the community? Please stop by, say hi and tell us a bit about yourself." 
-                        ViewsNumber="123"
-                        PostsNumber="123"
-                        >
-                    </Category>
-                    <Category 
-                        Route="Announcements"
-                        Status="forum-item"
-                        Icon="fa fa-calendar"
-                        Title="Announcements" 
-                        SubTitle="This forum features announcements from the community staff. If there is a new post in this forum, please check it out." 
-                        ViewsNumber="123"
-                        PostsNumber="123"
-                        >
-                    </Category>
-                    <Category 
-                        Route="StaffDiscussion"
-                        Status="forum-item"
-                        Icon="fa fa-star"
-                        Title="Staff Discussion" 
-                        SubTitle="This forum is for private, staff member only discussions, usually pertaining to the community itself." 
-                        ViewsNumber="123"
-                        PostsNumber="123"
-                        >
-                    </Category>
+                          
+                    <Categories forums=_forums></Categories>
+
+                            
+                    
+                 
                     <div class="forum-title">
                         <div class="pull-right forum-desc">
                             <samll>Total posts: 17,800,600</samll>
                         </div>
                         <h3>Other subjects</h3>
                     </div>
-                    <Category 
-                        Route="Anything"
-                        Status="forum-item"
-                        Icon="fa fa-clock-o"
-                        Title="Lorem Ipsum is simply dummy text." 
-                        SubTitle="Various versions have evolved over the years, sometimes by accident, sometimes on purpose passage of Lorem Ipsum (injected humour and the like)." 
-                        ViewsNumber="123"
-                        PostsNumber="123"
-                        >
-                    </Category>
-                    <Category 
-                        Route="IDK"
-                        Status="forum-item"
-                        Icon="fa fa-bomb"
-                        Title="There are many variations of passages" 
-                        SubTitle="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the ." 
-                        ViewsNumber="123"
-                        PostsNumber="123"
-                        >
-                    </Category>
-                    <Category 
-                        Route="123"
-                        Status="forum-item"
-                        Icon="fa fa-bookmark"
-                        Title="The standard chunk of Lorem Ipsum" 
-                        SubTitle="Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet." 
-                        ViewsNumber="123"
-                        PostsNumber="123"
-                        >
-                    </Category>
-                    <Category 
-                        Route="something"
-                        Status="forum-item"
-                        Icon="fa fa-ambulance"
-                        Title="Lorem Ipsum, you need to be sure there" 
-                        SubTitle="Internet tend to repeat predefined chunks as necessary, making this the." 
-                        ViewsNumber="123"
-                        PostsNumber="123"
-                        >
-                    </Category>
+                   
+                  
+               
                 </div>
             </div>
         </div>
@@ -116,4 +49,36 @@
 </div>
 
 @code {
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //   loading = true;
+      //  forums = await Http.GetFromJsonAsync<List<ForumCategoryDto>>("https://localhost:7193/api/ForumCategories");
+       // forums.Add(new ForumCategoryDto() { Id = 0, ForumCategoryName = "Category Name 11", ForumCategoryDescription = "Category Description 11", ForumCategoryAuthor = "Category Author 1" });
+
+        loading = false;
+    }
+
+
+
+
+    public ForumCategoryDto tempForum = new ForumCategoryDto();
+    private bool loading;
+
+    private bool add = false;
+
+
+    public List<ForumCategoryDto> _forums= new List<ForumCategoryDto>();
+
+
+
+
+
+   
+
+
+
+
+
 }

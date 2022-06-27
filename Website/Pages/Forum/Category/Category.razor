@@ -80,6 +80,8 @@
             <button type="button" class="btn btn-primary" s @onclick="@OpenCreateThread">Create Thread</button>
         </div>
         </div>
+        @*
+
         @if(CreateThread){
             <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
                 <div class="modal-dialog">
@@ -87,20 +89,20 @@
                         <div class="modal-header">
                             <h4 class="modal-title">Create A Thread</h4>
                         </div>
-                                <EditForm Model="@tTopic" OnValidSubmit=@HandleValidSubmit>
+                               <EditForm Model="@tTopic" OnValidSubmit=@HandleValidSubmit>
                         <div class="modal-body">
-                            @* <form model="@tTopic"> *@
+                             <form model="@tTopic"> 
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Title:</label>
-                                    @* <input type="text" class="form-control" id="recipient-name" /> *@
+                                     <input type="text" class="form-control" id="recipient-name" /> 
                                 <InputText class="form-control" @bind-Value="tTopic.Title" />
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">Content:</label>
-                                    @* <textarea class="form-control" id="message-text"></textarea> *@
+                                     <textarea class="form-control" id="message-text"></textarea> 
                                     <InputTextArea class="form-control" id="testing1" @bind-Value="tTopic.Body" />
                                 </div>
-                            @* </form> *@
+                             </form> 
                         </div>
                         <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
@@ -110,10 +112,15 @@
                     </div>
                 </div>
             </div>
-        }
+        }*@
 </div>
 
 @code{
+
+
+
+    ///*
+    // * 
     [Parameter]
     public string UrlName { get; set; }
     public bool CreateThread {get;set;} = false;
@@ -123,16 +130,16 @@
     List<ThreadItem> TopicList = new List<ThreadItem>();
 
 
-    // pagination stuff and dummy data
+    //// pagination stuff and dummy data
     private int pageIndex = 1;
     private int itemsPerPage = 10;
     private int totalPages = 1;
     private IEnumerable<Comment> allComments = null;
     private IEnumerable<Comment> comments = Enumerable.Empty<Comment>(); 
-    // methods for pagination
+    //// methods for pagination
     protected override async Task OnInitializedAsync()
     {
-        allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
+       allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
         if (allComments != null)
         {
             // Initialize the number of "totalPages"
@@ -149,11 +156,11 @@
             pageIndex = selectedPageIndex;
             var skipCount = itemsPerPage * (pageIndex - 1);
             comments = allComments.Skip(skipCount).Take(itemsPerPage);
-        }
+       }
     }
-    // methods for popup modal
+   /// methods for popup modal
     private Task ModalCancel()
-    {
+   {
         return OnClose.InvokeAsync(false);
     }
 
@@ -163,28 +170,28 @@
         StateHasChanged();
     }
 
-    private void CloseCreateThread()
-    {
-        CreateThread = false;
-        StateHasChanged();
-    }
+    //private void CloseCreateThread()
+    //{
+    //    CreateThread = false;
+    //    StateHasChanged();
+    //}
 
     private void HandleValidSubmit()
     {
-        ThreadItem Thread = new ThreadItem();
+       ThreadItem Thread = new ThreadItem();
         Thread.Title= tTopic.Title;
         Thread.Body = tTopic.Body;
-        Thread.Date = Convert.ToDateTime(DateTime.Now).ToString("D");
+       Thread.Date = Convert.ToDateTime(DateTime.Now).ToString("D");
 
-        TopicList.Add(Thread);
-        tTopic = new ThreadItem();
-        CreateThread= false;
+       TopicList.Add(Thread);
+      tTopic = new ThreadItem();
+       CreateThread= false;
     }
     private class  ThreadItem
     {
 
         public string Title { get; set; }
-        public string Author { get; set; }
+       public string Author { get; set; }
 
         public string Body { get; set; }
 
@@ -196,10 +203,16 @@
     }
     public class Comment
     {
-        public int PostId { get; set; }
+       public int PostId { get; set; }
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Body { get; set; }
+      public string Name { get; set; }
+      public string Email { get; set; }
+       public string Body { get; set; }
     }
+
+
+
+    //*/
+
+
 }

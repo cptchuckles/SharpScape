@@ -1,0 +1,90 @@
+﻿@page "/Categories"
+@inject IForumCategoryServices ForumCategoryServices
+@using SharpScape.Shared.Dto
+@inject HttpClient Http
+
+<div style="color: yellow">
+<h3>Categories List</h3>
+@if (forums == null)
+{
+    <span>categories are loading</span>
+}
+else
+{
+
+
+   <div >
+            @if (forums != null)
+            {
+                foreach (var forumCategory in forums)
+                {
+                    
+                    
+                   
+                        <SharpScape.Website.Components.Forum.Category Title=@forumCategory.ForumCategoryName SubTitle=@forumCategory.ForumCategoryDescription Status="---" >
+                           
+                        </SharpScape.Website.Components.Forum.Category>
+                      
+                        
+                }
+            }
+            @if (loading)
+            {
+                <tr>
+                    <td colspan="4" class="text-center">
+                        <span class="spinner-border spinner-border-lg align-center"></span>
+                    </td>
+                </tr>
+            }
+
+</div>
+
+
+
+}
+</div>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        // forums = await Http.GetFromJsonAsync<List<ForumCategoryDto>>("https://localhost:7193/api/ForumCategories");
+        forums = await ForumCategoryServices.GetForumCategories();
+        loading = false;
+    }
+
+   
+
+    private bool loading;
+
+    private bool add = false;
+
+    [Parameter]
+
+    public List<ForumCategoryDto> forums { get; set; }
+
+
+    public class Ct{
+     [Parameter]
+    public string Route { get; set; } = "r";
+    [Parameter]
+    public string Status{get;set;} = "s";
+
+    [Parameter]
+    public string Icon{get;set;} = "i";
+    
+    [Parameter]
+    public string Title{get;set;} = "t";
+    [Parameter]
+    public string SubTitle{get;set;} = "st";
+    [Parameter]
+    public string ViewsNumber{get;set;} = "vn";
+    [Parameter]
+    public string TopicsNumber{get;set;} = "tn";
+    [Parameter]
+    public string PostsNumber{get;set;} = "pn";
+
+    }
+
+}

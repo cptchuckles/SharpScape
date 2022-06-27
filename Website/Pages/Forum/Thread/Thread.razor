@@ -99,13 +99,13 @@
 </div>
 @code{
     [Parameter]
-    public string Author { get; set; }
+    public string Author { get; set; } = "";
     [Parameter]
-    public string Title { get; set; }
+    public string Title { get; set; } = "";
     [Parameter]
-    public string Body { get; set; }
+    public string Body { get; set; } = "";
     [Parameter]
-    public string Date { get; set; }
+    public string Date { get; set; } = "";
     Poster tPoster = new Poster();
 
     //not sure if I'll use this later
