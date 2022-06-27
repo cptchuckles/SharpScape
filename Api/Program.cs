@@ -21,16 +21,14 @@ if (Environment.GetEnvironmentVariable("DATABASE_CONNECTION") == "RemoteTesting"
 else
 {
     Console.WriteLine("USING SQLITE TESTING CONNECTION");
-    builder.Services.AddDbContext<AppDbContext, SqliteDbContext>(options =>
-        options.UseSqlite(builder.Configuration.GetConnectionString("LocalDevelopmentConnection")));
+    builder.Services.AddDbContext<AppDbContext, SqliteDbContext>(options => {
+        options.EnableSensitiveDataLogging();
+        options.UseSqlite(builder.Configuration.GetConnectionString("LocalDevelopmentConnection"));
+    });
 }
 
-builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>(sp => {
-    var rsaKeyProvider = new RsaKeyProvider();
-    rsaKeyProvider.PublicKey.ImportFromPem(File.ReadAllText(builder.Configuration["Jwt:RSA:PublicKey"]));
-    rsaKeyProvider.PrivateKey.ImportFromPem(File.ReadAllText(builder.Configuration["Jwt:RSA:PrivateKey"]));
-    return rsaKeyProvider;
-});
+builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>();
+builder.Services.AddScoped<Crypto>();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
