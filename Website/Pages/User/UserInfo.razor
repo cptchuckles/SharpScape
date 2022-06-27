@@ -4,11 +4,7 @@
 
 
 <div class="container rounded bg-white mt-5 mb-5">
-@if (_userinfo is null)
-{
-    <h1>Loading...</h1>
-}
-else
+@if (_userinfo is not null)
 {
     <h1>@_userinfo.Username</h1>
 
@@ -28,19 +24,34 @@ else
         
     </div>
 }
+else if (_error is not null)
+{
+    <h1>Error</h1>
+    <p>@_error</p>
+}
+else
+{
+    <h1>Loading...</h1>
+}
 </div>
 
 
 @code {
     private UserInfoDto? _userinfo;
+    private string? _error;
 
     protected override async Task OnInitializedAsync()
     {
-        _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{id}");
-        
+        try
+        {
+            _error = null;
+            _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{id}");
+        }
+        catch (HttpRequestException e)
+        {
+            _error = e.Message;
+        }
     }
     [Parameter]
     public string id { get; set; }
-
-
 }
