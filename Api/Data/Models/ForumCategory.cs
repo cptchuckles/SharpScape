@@ -13,7 +13,7 @@ namespace SharpScape.Api.Models
         public string Description { get; set; } = "";
         [Required(ErrorMessage = " x ")]
         
-        public List<ForumThread> Threads { get; set; }
+        public List<ForumThread> Threads { get; set; }= new List<ForumThread>();
 
     }
 }

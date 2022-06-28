@@ -93,7 +93,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        loading = true;
+     //   loading = true;
        forums = await Http.GetFromJsonAsync<List<ForumCategoryDto>>("https://localhost:7193/api/ForumCategories");
         forums.Add(new ForumCategoryDto() { Id = 0, ForumCategoryName = "Category Name 11", ForumCategoryDescription = "Category Description 11", ForumCategoryAuthor = "Category Author 1" });
 

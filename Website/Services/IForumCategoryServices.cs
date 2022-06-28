@@ -4,6 +4,6 @@ namespace SharpScape.Website.Services
 {
     public interface IForumCategoryServices
     {
-        Task<IEnumerable<ForumCategoryDto>> GetForumCategories();
+        Task<List<ForumCategoryDto>> GetForumCategories();
     }
 }
