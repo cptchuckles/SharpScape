@@ -96,7 +96,7 @@ namespace SharpScape.Api.Controllers
                 return NotFound();
             }
 
-            return new ForumThreadDto()
+            return Ok(new ForumThreadDto()
             {
                 Id = f.Id,
                 AuthorId = f.UserId,
