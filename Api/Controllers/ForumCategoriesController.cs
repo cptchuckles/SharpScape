@@ -39,7 +39,7 @@ namespace SharpScape.Api.Controllers
                        
            // forumCategories.ForEach(async category => category.Threads = await _context.ForumThreads.Where(x => x.CategoryId == category.Id).ToListAsync());
 
-            return forumCategoriesDto;
+            return Ok(forumCategoriesDto);
         }
 
         // GET: api/ForumCategories/5
