@@ -1,8 +1,3 @@
-using System.Text;
-using System.Security.Cryptography;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using SharpScape.Api.Models;
@@ -16,15 +11,13 @@ namespace SharpScape.Api.Controllers;
 [Route("api/")]
 public class AuthController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
-    private readonly IRsaKeyProvider _rsaKeyProvider;
     private readonly AppDbContext _context;
+    private readonly Crypto _crypto;
 
-    public AuthController(IConfiguration configuration, IRsaKeyProvider rsaKeyProvider, AppDbContext context)
+    public AuthController(AppDbContext context, Crypto crypto)
     {
-        _configuration = configuration;
-        _rsaKeyProvider = rsaKeyProvider;
         _context = context;
+        _crypto = crypto;
     }
 
     [AllowAnonymous]
@@ -40,7 +33,7 @@ public class AuthController : ControllerBase
         _context.Add(user);
         _context.SaveChanges();
 
-        return Ok(CreateToken(user));
+        return Ok(_crypto.CreateToken(user));
     }
 
     [AllowAnonymous]
@@ -52,42 +45,9 @@ public class AuthController : ControllerBase
         if (user is null)
             return BadRequest("Username/Email or Password incorrect");
         
-        if (! VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+        if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             return BadRequest("Username/Email or Password incorrect");
 
-        return Ok(CreateToken(user));
-    }
-
-    private string CreateToken(User user)
-    {
-        var claims = new List<Claim> {
-            new Claim("Id", user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, "NA") //TODO: Pull this from a Roles table
-        };
-
-        var key = new RsaSecurityKey(_rsaKeyProvider.PrivateKey);
-        var cred = new SigningCredentials(key, SecurityAlgorithms.RsaSha512);
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration.GetSection("Jwt:Issuer").Value,
-            audience: _configuration.GetSection("Jwt:Audience").Value,
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(5),
-            signingCredentials: cred);
-        
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
-    }
-
-    private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-    {
-        using (var hmac = new HMACSHA512(passwordSalt))
-        {
-            var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return computeHash.SequenceEqual(passwordHash);
-        }
+        return Ok(_crypto.CreateToken(user));
     }
 }

@@ -1,0 +1,57 @@
+﻿@page "/UserProfile/{id}"
+@using SharpScape.Shared.Dto
+@inject HttpClient http
+
+
+<div class="container rounded bg-white mt-5 mb-5">
+@if (_userinfo is not null)
+{
+    <h1>@_userinfo.Username</h1>
+
+    <div class="row">
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Account Summary Information</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Created</label><div>@_userinfo.Created.ToString()</div></div>
+                    <div class="col-md-6"><label class="labels">Email</label><div>@_userinfo.Email</div></div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+}
+else if (_error is not null)
+{
+    <h1>Error</h1>
+    <p>@_error</p>
+}
+else
+{
+    <h1>Loading...</h1>
+}
+</div>
+
+
+@code {
+    private UserInfoDto? _userinfo;
+    private string? _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _error = null;
+            _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{id}");
+        }
+        catch (HttpRequestException e)
+        {
+            _error = e.Message;
+        }
+    }
+    [Parameter]
+    public string id { get; set; }
+}

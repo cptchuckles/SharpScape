@@ -4,7 +4,7 @@ namespace SharpScape.Shared.Dto;
 
 public class UserInfoDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     public string Username { get; set; }
 

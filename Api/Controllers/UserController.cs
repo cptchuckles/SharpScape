@@ -30,7 +30,7 @@ namespace SharpScape.Api.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserInfoDto>> Get(Guid id)
+        public async Task<ActionResult<UserInfoDto>> Get(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user is null)
@@ -45,7 +45,7 @@ namespace SharpScape.Api.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(Guid id,[FromBody] UserRegisterDto value)
+        public async Task<IActionResult> UpdateUser(int id,[FromBody] UserRegisterDto value)
         {
             var user = await _context.Users.FindAsync(id);
             if (user is null)
@@ -72,7 +72,7 @@ namespace SharpScape.Api.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if(user is null)
@@ -84,7 +84,7 @@ namespace SharpScape.Api.Controllers
             return NoContent();
         }
 
-        private bool UserExist(Guid id)
+        private bool UserExist(int id)
         {
             return _context.Users.Any(user => user.Id == id);   
         }
