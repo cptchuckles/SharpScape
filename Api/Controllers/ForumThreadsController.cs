@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
+using SharpScape.Shared.Dto;
 
 namespace SharpScape.Api.Controllers
 {
@@ -23,92 +24,102 @@ namespace SharpScape.Api.Controllers
 
         // GET: api/ForumThreads
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ForumThread>>> GetForumThreads()
+        public async Task<ActionResult<List<ForumThreadDto>>> GetForumThreads()
         {
-          if (_context.ForumThreads == null)
-          {
-              return NotFound();
-          }
-            return await _context.ForumThreads.ToListAsync();
+            var ft = await _context.ForumThreads.ToListAsync();
+            List<ForumThreadDto> forumThreadDto = new List<ForumThreadDto>();
+            foreach (var f in ft)
+            {
+                forumThreadDto.Add(new ForumThreadDto()
+                {
+                    Id = f.Id,
+                    AuthorId = f.UserId,
+                    CategoryId = f.CategoryId,
+                    Replies = f.Replies,
+                    Title = f.Title,
+                    Views = f.Views,
+                    Votes = f.Votes
+                });
+            }
+
+
+
+            return Ok(forumThreadDto);
         }
 
+      
 
         // GET: api/ForumThreads/5
         [HttpGet("category{id}")]
-        public async Task<ActionResult<List<ForumThread>>> GetForumThreadbyCategory(int id)
+        public async Task<ActionResult<List<ForumThreadDto>>> GetForumThreadbyCategory(int id)
         {
             if (_context.ForumThreads == null)
             {
                 return NotFound();
             }
-            var forumThread = await _context.ForumThreads.Where(x => x.CategoryId == id).ToListAsync();
+            var ft = await _context.ForumThreads.Where(x => x.CategoryId == id).ToListAsync();
 
-            if (forumThread == null)
+            List<ForumThreadDto> forumThreadDto = new List<ForumThreadDto>();
+            foreach (var f in ft)
             {
-                return NotFound();
+                forumThreadDto.Add(new ForumThreadDto()
+                {
+                    Id = f.Id,
+                    AuthorId = f.UserId,
+                    CategoryId = f.CategoryId,
+                    Replies = f.Replies,
+                    Title = f.Title,
+                    Views = f.Views,
+                    Votes = f.Votes
+                });
             }
 
-            return forumThread;
+
+
+            return Ok(forumThreadDto);
         }
+
 
         // GET: api/ForumThreads/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ForumThread>> GetForumThread(int id)
+        public async Task<ActionResult<ForumThreadDto>> GetForumThread(int id)
         {
-          if (_context.ForumThreads == null)
-          {
-              return NotFound();
-          }
-            var forumThread = await _context.ForumThreads.FindAsync(id);
-
-            if (forumThread == null)
+            if (_context.ForumCategories == null)
             {
                 return NotFound();
             }
 
-            return forumThread;
+            var f = await _context.ForumThreads.FindAsync(id);
+
+            if (f == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new ForumThreadDto()
+            {
+                Id = f.Id,
+                AuthorId = f.UserId,
+                CategoryId = f.CategoryId,
+                Replies = f.Replies,
+                Title = f.Title,
+                Views = f.Views,
+                Votes = f.Votes
+            });
         }
 
-        // PUT: api/ForumThreads/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutForumThread(int id, ForumThread forumThread)
-        {
-            if (id != forumThread.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(forumThread).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (ForumThreadExists(id))
-                {
-                    throw;
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-
-            return NoContent();
-        }
+       
 
         // POST: api/ForumThreads
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ForumThread>> PostForumThread(ForumThread forumThread)
+        public async Task<ActionResult<ForumThreadDto>> PostForumThread(ForumThreadDto forumThreadDto)
         {
-          if (_context.ForumThreads == null)
-          {
-              return Problem("Entity set 'AppDbContext.ForumThreads'  is null.");
-          }
+            ForumThread forumThread = new ForumThread() { Author = _context.Users.Find(forumThreadDto.AuthorId), UserId = forumThreadDto.AuthorId, ForumCategory = _context.ForumCategories.Find(forumThreadDto.CategoryId), Body = "", CategoryId = forumThreadDto.CategoryId, Created = DateTime.Now, Title = forumThreadDto.Title };
+            if (_context.ForumThreads == null)
+            {
+                return Problem("Entity set 'AppDbContext.ForumThreads'  is null.");
+            }
             _context.ForumThreads.Add(forumThread);
             await _context.SaveChangesAsync();
 
