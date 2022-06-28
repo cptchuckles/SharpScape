@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
+using SharpScape.Shared.Dto;
 
 namespace SharpScape.Api.Controllers
 {
@@ -103,9 +104,10 @@ namespace SharpScape.Api.Controllers
         // POST: api/ForumThreads
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ForumThread>> PostForumThread(ForumThread forumThread)
+        public async Task<ActionResult<ForumThreadDto>> PostForumThread(ForumThreadDto forumThreadDto)
         {
-          if (_context.ForumThreads == null)
+            ForumThread forumThread = new ForumThread() { Author = _context.Users.Find(forumThreadDto.AuthorId), UserId = forumThreadDto.AuthorId, ForumCategory = _context.ForumCategories.Find(forumThreadDto.CategoryId), Body = "", CategoryId=forumThreadDto.CategoryId, Created=DateTime.Now, Title=forumThreadDto.Title};
+            if (_context.ForumThreads == null)
           {
               return Problem("Entity set 'AppDbContext.ForumThreads'  is null.");
           }
