@@ -49,7 +49,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        // forums = await Http.GetFromJsonAsync<List<ForumCategoryDto>>("https://localhost:7193/api/ForumCategories");
         forums = await ForumCategoryServices.GetForumCategories();
         loading = false;
     }
