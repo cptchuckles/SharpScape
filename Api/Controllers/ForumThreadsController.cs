@@ -105,7 +105,7 @@ namespace SharpScape.Api.Controllers
                 Title = f.Title,
                 Views = f.Views,
                 Votes = f.Votes
-            };
+            });
         }
 
        
