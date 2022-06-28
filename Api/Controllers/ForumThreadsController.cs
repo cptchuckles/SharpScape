@@ -24,7 +24,7 @@ namespace SharpScape.Api.Controllers
 
         // GET: api/ForumThreads
         [HttpGet]
-        public async Task<List<ForumThreadDto>> GetForumThreads()
+        public async Task<ActionResult<List<ForumThreadDto>>> GetForumThreads()
         {
             var ft = await _context.ForumThreads.ToListAsync();
             List<ForumThreadDto> forumThreadDto = new List<ForumThreadDto>();
