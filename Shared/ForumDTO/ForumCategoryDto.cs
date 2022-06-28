@@ -18,25 +18,5 @@ namespace SharpScape.Shared.Dto
         public string ForumCategoryDescription { get; set; }
 
         public  List<Thread> Threads;
-
-        //[Parameter]
-        //public string Route { get; set; } = "r";
-        //[Parameter]
-        //public string Status { get; set; } = "s";
-
-        //[Parameter]
-        //public string Icon { get; set; } = "i";
-
-        //[Parameter]
-        //public string Title { get; set; } = "t";
-        //[Parameter]
-        //public string SubTitle { get; set; } = "st";
-        //[Parameter]
-        //public string ViewsNumber { get; set; } = "vn";
-        //[Parameter]
-        //public string TopicsNumber { get; set; } = "tn";
-        //[Parameter]
-        //public string PostsNumber { get; set; } = "pn";
-
     }
 }
