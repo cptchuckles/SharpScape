@@ -134,7 +134,7 @@
     //// methods for pagination
     protected override async Task OnInitializedAsync()
     {
-       allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
+        allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
         if (allComments != null)
         {
             // Initialize the number of "totalPages"
