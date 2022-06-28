@@ -44,7 +44,7 @@ namespace SharpScape.Api.Controllers
 
 
 
-            return forumThreadDto;
+            return Ok(forumThreadDto);
         }
 
       
