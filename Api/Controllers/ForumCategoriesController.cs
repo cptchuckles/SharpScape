@@ -24,7 +24,7 @@ namespace SharpScape.Api.Controllers
 
         // GET: api/ForumCategories
         [HttpGet]
-        public async Task<List<ForumCategoryDto>> GetForumCategories()
+        public async Task<ActionResult<List<ForumCategoryDto>>> GetForumCategories()
         {
               
             
