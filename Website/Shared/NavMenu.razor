@@ -19,14 +19,23 @@
             </NavLink>
         </div>
           <div class="nav-item">
-            <NavLink class="nav-link" href="PlayGame" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="GameWorld" Match="NavLinkMatch.All">
                 <span class="oi oi-play-circle" aria-hidden="true"></span> Play
             </NavLink>
         </div>
         <div class="nav-item">
-            <NavLink class="nav-link" href="/register" Match="NavLinkMatch.All">
-                <span class="oi oi-key" aria-hidden="true"></span> Register
-            </NavLink>
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="nav-link" href="/account" Match="NavLinkMatch.All">
+                        <span class="oi oi-person" aria-hidden="true"></span> @context.User.Identity.Name
+                    </NavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="nav-link" href="/login" Match="NavLinkMatch.All">
+                        <span class="oi oi-key" aria-hidden="true"></span> Login
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
     </nav>
 </div>

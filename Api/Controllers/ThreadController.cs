@@ -1,10 +1,8 @@
 using SharpScape.Api.Models;
 using SharpScape.Api.Data;
 using SharpScape.Shared.Dto;
-using SharpScape.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Thread = SharpScape.Api.Models.Thread;
 namespace SharpScape.Api.Controllers;
 
 [ApiController]
@@ -23,8 +21,8 @@ public class ThreadController : ControllerBase
     {
         // return await _context.Threads.ToListAsync();
         List<ThreadInfoDto> Threads = new List<ThreadInfoDto>();
-        var list = await _context.Threads.ToListAsync();
-        foreach(Thread thread in list){
+        var list = await _context.ForumThreads.ToListAsync();
+        foreach(ForumThread thread in list){
             var threadInfo = new ThreadInfoDto() {
                 Id = thread.Id,
                 Title = thread.Title,
@@ -36,12 +34,13 @@ public class ThreadController : ControllerBase
         }
         return Ok(Threads);
     }
+
     [HttpGet("{id}")]
     // Api to return info about a thread (title, author, body.. no posts since we dont have post table)
     // @para ThreadId
-    public ActionResult<ThreadInfoDto> GetThread(Guid id)
+    public ActionResult<ThreadInfoDto> GetThread(int id)
     {
-        var thread = _context.Threads.FirstOrDefault(thread => thread.Id == id);
+        var thread = _context.ForumThreads.FirstOrDefault(thread => thread.Id == id);
         if (thread is null){
             return BadRequest("Thread not found!!");
         }

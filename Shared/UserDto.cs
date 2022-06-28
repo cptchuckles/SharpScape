@@ -2,15 +2,15 @@
 
 namespace SharpScape.Shared.Dto;
 
-public record class UserInfoDto
+public class UserInfoDto
 {
-    public Guid Id { get; }
+    public int Id { get; set; }
 
-    public string Username { get; }
+    public string Username { get; set; }
 
-    public string Email { get; }
+    public string Email { get; set; }
 
-    public DateTime Created { get; }
+    public DateTime Created { get; set; }
 }
 
 public class UserRegisterDto
