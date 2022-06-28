@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
+using SharpScape.Shared.Dto;
 
 namespace SharpScape.Api.Controllers
 {
@@ -23,73 +24,55 @@ namespace SharpScape.Api.Controllers
 
         // GET: api/ForumCategories
         [HttpGet]
-        public async Task<List<ForumCategory>> GetForumCategories()
+        public async Task<List<ForumCategoryDto>> GetForumCategories()
         {
+              
+            
+            
             var forumCategories= await _context.ForumCategories.ToListAsync();
-            forumCategories.ForEach(async category => category.Threads = await _context.ForumThreads.Where(x => x.CategoryId == category.Id).ToListAsync());
+            List<ForumCategoryDto> forumCategoriesDto = new List<ForumCategoryDto>();
+            
+            foreach (var category in forumCategories)
+            {
+                forumCategoriesDto.Add(new ForumCategoryDto() { Id=category.Id, Name=category.Name, Description=category.Description });
+            }
+                       
+           // forumCategories.ForEach(async category => category.Threads = await _context.ForumThreads.Where(x => x.CategoryId == category.Id).ToListAsync());
 
-            return forumCategories;
+            return forumCategoriesDto;
         }
 
         // GET: api/ForumCategories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ForumCategory>> GetForumCategory(int id)
+        public async Task<ActionResult<ForumCategoryDto>> GetForumCategory(int id)
         {
           if (_context.ForumCategories == null)
           {
               return NotFound();
           }
-            var forumCategory = await _context.ForumCategories.FindAsync(id);
-            forumCategory.Threads= await _context.ForumThreads.Where(x => x.CategoryId == id).ToListAsync();
+            var category = await _context.ForumCategories.FindAsync(id);
+            //category.Threads= await _context.ForumThreads.Where(x => x.CategoryId == id).ToListAsync();
 
-            if (forumCategory == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return forumCategory;
+            return new ForumCategoryDto() { Id = category.Id, Name = category.Name, Description = category.Description };
         }
 
-        // PUT: api/ForumCategories/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutForumCategory(int id, ForumCategory forumCategory)
-        {
-            if (id != forumCategory.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(forumCategory).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ForumCategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+       
 
         // POST: api/ForumCategories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ForumCategory>> PostForumCategory(ForumCategory forumCategory)
+        public async Task<ActionResult<ForumCategoryDto>> PostForumCategory(ForumCategoryDto category)
         {
             if (_context.ForumCategories is null)
             {
                 return Problem("Entity set 'AppDbContext.ForumCategories'  is null.");
             }
+            ForumCategory forumCategory= new ForumCategory() { Name = category.Name, Description = category.Description, Threads= new List<ForumThread>() };
             _context.ForumCategories.Add(forumCategory);
             await _context.SaveChangesAsync();
 

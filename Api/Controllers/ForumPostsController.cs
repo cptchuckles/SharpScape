@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
+using SharpScape.Shared.Dto;
+
 
 namespace SharpScape.Api.Controllers
 {
@@ -21,82 +23,52 @@ namespace SharpScape.Api.Controllers
             _context = context;
         }
 
-        // GET: api/ForumPosts
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ForumPost>>> GetForumPosts()
-        {
-          if (_context.ForumPosts == null)
-          {
-              return NotFound();
-          }
-            return await _context.ForumPosts.ToListAsync();
-        }
-
         // GET: api/ForumPosts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ForumPost>> GetForumPost(int id)
+        public async Task<ActionResult<ForumPostDto>> GetForumPost(int id)
         {
           if (_context.ForumPosts == null)
           {
               return NotFound();
           }
-            var forumPost = await _context.ForumPosts.FindAsync(id);
+            var fp = await _context.ForumPosts.FindAsync(id);
 
-            if (forumPost == null)
+            if (fp == null)
             {
                 return NotFound();
             }
 
-            return forumPost;
+            return new ForumPostDto(){Id=fp.Id, AuthorId=fp.AuthorId, 
+            Body=fp.Body, Created=fp.Created, ThreadId=fp.ThreadId};
         }
 
-        // PUT: api/ForumPosts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutForumPost(int id, ForumPost forumPost)
-        {
-            if (id != forumPost.Id)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(forumPost).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ForumPostExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         // GET: api/Threads/5
         [HttpGet("Thread{id}")]
-        public async Task<ActionResult<List<ForumPost>>> GetForumThreadbyCategory(int id)
+        public async Task<ActionResult<List<ForumPostDto>>> GetForumThreadbyCategory(int id)
         {
             if (_context.ForumPosts == null)
             {
                 return NotFound();
             }
-            var forumPosts = await _context.ForumPosts.Where(x => x.ThreadId == id).ToListAsync();
+            var fpl = await _context.ForumPosts.Where(x => x.ThreadId == id).ToListAsync();
 
-            if (forumPosts == null)
+            List<ForumPostDto> forumPostDtos = new List<ForumPostDto>();
+            foreach (var fp in fpl)
             {
-                return NotFound();
-            }
+                forumPostDtos.Add(new ForumPostDto()
+                {
+                    Id = fp.Id,
+                    AuthorId = fp.AuthorId,
+                    Body = fp.Body,
+                    Created = fp.Created,
+                    ThreadId = fp.ThreadId
+                });
 
-            return forumPosts;
+
+            }
+                return forumPostDtos;
         }
 
 
@@ -104,16 +76,23 @@ namespace SharpScape.Api.Controllers
         // POST: api/ForumPosts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ForumPost>> PostForumPost(ForumPost forumPost)
+        public async Task<ActionResult<ForumPostDto>> PostForumPost(ForumPostDto fp)
         {
           if (_context.ForumPosts == null)
           {
               return Problem("Entity set 'AppDbContext.ForumPosts'  is null.");
           }
-            _context.ForumPosts.Add(forumPost);
+            _context.ForumPosts.Add(new ForumPost()
+            {
+                Id = fp.Id,
+                AuthorId = fp.AuthorId,
+                Body = fp.Body,
+                Created = fp.Created,
+                ThreadId = fp.ThreadId
+            });
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetForumPost", new { id = forumPost.Id }, forumPost);
+            return CreatedAtAction("GetForumPost", new { id = fp.Id }, fp);
         }
 
         // DELETE: api/ForumPosts/5
