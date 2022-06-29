@@ -7,8 +7,8 @@
             <div class="forum-icon">
                 <i class=@Icon></i>
             </div>
-            <a href="category/@Route" class="forum-item-title">
-            @Title
+            <a href="category/@Route/@fcdId" class="forum-item-title">
+                @Title
             </a>
             <div class="forum-sub-title">@SubTitle</div>
         </div>
@@ -42,19 +42,20 @@
     [Parameter]
     public string Route { get; set; } = "r";
     [Parameter]
-    public string Status{get;set;} = "s";
+    public string Status { get; set; } = "s";
 
     [Parameter]
-    public string Icon{get;set;} = "i";
-    
+    public string Icon { get; set; } = "i";
     [Parameter]
-    public string Title{get;set;} = "t";
+    public string Title { get; set; } = "t";
     [Parameter]
-    public string SubTitle{get;set;} = "st";
+    public string SubTitle { get; set; } = "st";
     [Parameter]
-    public string ViewsNumber{get;set;} = "vn";
+    public string ViewsNumber { get; set; } = "vn";
     [Parameter]
-    public string TopicsNumber{get;set;} = "tn";
+    public string TopicsNumber { get; set; } = "tn";
     [Parameter]
-    public string PostsNumber{get;set;} = "pn";
+    public string PostsNumber { get; set; } = "pn";
+    [Parameter]
+    public string fcdId { get; set; }
 }

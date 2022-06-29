@@ -19,23 +19,16 @@ else
                 foreach (var forumCategory in forums)
                 {
                     
-                    
+                    string x= forumCategory.Id.ToString();
                    
-                        <SharpScape.Website.Components.Forum.Category Title=@forumCategory.Name SubTitle=@forumCategory.Description Status="---" >
+                        <SharpScape.Website.Components.Forum.Category Title=@forumCategory.Name SubTitle=@forumCategory.Description Status="---" fcdId=@x Route=@forumCategory.Name >
                            
                         </SharpScape.Website.Components.Forum.Category>
                       
                         
                 }
             }
-            @if (loading)
-            {
-                <tr>
-                    <td colspan="4" class="text-center">
-                        <span class="spinner-border spinner-border-lg align-center"></span>
-                    </td>
-                </tr>
-            }
+           
 
 </div>
 
@@ -53,15 +46,11 @@ else
         loading = false;
     }
 
-   
-
     private bool loading;
-
-    private bool add = false;
 
     [Parameter]
 
-    public List<ForumCategoryDto> forums { get; set; }
+    public List<ForumCategoryDto> forums{ get; set; }
 
 
     public class Ct{
