@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using SharpScape.Shared.Dto;
-using SharpScape.Shared.UserRole;
 
 namespace SharpScape.Api.Models;
 
@@ -14,7 +13,7 @@ public class User
 
     public string Email { get; set; }
 
-    public string Role { get; set; } = "User";
+    public string Role { get; set; } = UserRole.User;
 
     public byte[] PasswordHash { get; set; }
 
@@ -35,12 +34,12 @@ public class User
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;
     }
-    public User(string username, string email, string password, UserRole.Role role) : this (username,email,password)
+    public User(string username, string email, string password, string role) : this (username,email,password)
     {
-        this.UpdateRole(role);
+        this.Role = role;
     }
-    public void UpdateRole(UserRole.Role role) {
-        Role = UserRole.RoleType(role);
+    public void UpdateRole(string role) {
+        Role = role;
     }
     private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {

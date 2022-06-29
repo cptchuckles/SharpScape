@@ -4,7 +4,6 @@ using SharpScape.Api.Models;
 using SharpScape.Api.Data;
 using SharpScape.Shared.Dto;
 using SharpScape.Api.Services;
-using SharpScape.Shared.UserRole;
 
 namespace SharpScape.Api.Controllers;
 
@@ -45,7 +44,7 @@ public class AuthController : ControllerBase
         if (_context.Users.Any(u => u.Username.ToLower() == request.Username.ToLower()))
             return BadRequest($"Username {request.Username} already exists");
 
-        var user = new User(request.Username, request.Email, request.Password, UserRole.Role.Admin);
+        var user = new User(request.Username, request.Email, request.Password, UserRole.Admin);
         _context.Add(user);
         _context.SaveChanges();
 
