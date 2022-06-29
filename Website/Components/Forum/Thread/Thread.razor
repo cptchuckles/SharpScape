@@ -1,16 +1,16 @@
 @namespace SharpScape.Website.Components.Forum
-
+@inject SharpScape.Shared.Dto.Data Data
 <div class="card">
     <div class="row align-items-center">
         <div class="col-md-8 mb-3 mb-sm-0">
             <h5>
-                <a href="thread/@Author/@Route/@Body/@Date" class="text-primary">@Title</a>
+                <a href="thread/@AuthorId/@Route/@Body/@Date" class="text-primary" onclick="@UpdateId">@Title</a>
             </h5>
             <p class="text-sm">
                 <span class="op-6">Posted</span> 
                 <a class="text-black" href="#">@Date</a> 
                 <span class="op-6">by</span> 
-                <a class="text-black" href="#">@Author</a>
+                <a class="text-black" href="#">@AuthorId</a>
             </p>
             <div class="text-sm op-5"> 
                 <a class="text-black mr-2" href="#">#C++</a> 
@@ -39,11 +39,17 @@
     [Parameter]
     public string Date{ get; set; }
     [Parameter]
-    public string Author { get; set; }
+    public int AuthorId { get; set; }
+    [Parameter]
+    public int ThreadId{ get; set; }
     [Parameter]
     public string Votes { get; set; }
     [Parameter]
     public string Replies { get; set; }
     [Parameter]
     public string Views { get; set; }
+    private void UpdateId()
+    {
+        Data.ThreadId = ThreadId;
+    }
 }

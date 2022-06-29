@@ -41,13 +41,15 @@ public class AuthController : ControllerBase
     public ActionResult<string> Login([FromBody] UserLoginDto request)
     {
         var user = _context.Users.FirstOrDefault(u => u.Username.ToLower() == request.Username.ToLower());
-
+        UserLoginResponseDto response = new UserLoginResponseDto();
         if (user is null)
             return BadRequest("Username/Email or Password incorrect");
         
         if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             return BadRequest("Username/Email or Password incorrect");
-
-        return Ok(_crypto.CreateToken(user));
+        response.accessToken = _crypto.CreateToken(user);
+        response.Id = user.Id;
+        response.Username = user.Username;
+        return Ok(response);
     }
 }
