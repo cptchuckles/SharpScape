@@ -35,9 +35,10 @@ public class AuthController : ControllerBase
 
         return Ok(_crypto.CreateToken(user));
     }
+
     [Authorize(Roles="Admin")]
     [HttpPost("RegisterAdmin")]
-    public ActionResult<string> RegisterAdim([FromBody] UserRegisterDto request)
+    public ActionResult<string> RegisterAdmin([FromBody] UserRegisterDto request)
     {
         if (_context.Users.Any(u => u.Email.ToLower() == request.Email.ToLower()))
             return BadRequest($"User with email {request.Email} already exists");
