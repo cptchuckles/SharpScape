@@ -2,6 +2,12 @@
 
 namespace SharpScape.Shared.Dto;
 
+public static class UserRole
+{
+    public const string Admin = "Admin";
+    public const string User = "User";
+}
+
 public class UserInfoDto
 {
     public int Id { get; set; }
