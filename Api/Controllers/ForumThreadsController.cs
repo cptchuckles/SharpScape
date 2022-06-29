@@ -37,6 +37,7 @@ namespace SharpScape.Api.Controllers
                     CategoryId = f.CategoryId,
                     Replies = f.Replies,
                     Title = f.Title,
+                    Body = f.Body,
                     Views = f.Views,
                     Votes = f.Votes
                 });
@@ -69,6 +70,7 @@ namespace SharpScape.Api.Controllers
                     CategoryId = f.CategoryId,
                     Replies = f.Replies,
                     Title = f.Title,
+                    Body = f.Body,
                     Views = f.Views,
                     Votes = f.Votes
                 });

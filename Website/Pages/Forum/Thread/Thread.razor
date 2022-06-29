@@ -1,6 +1,7 @@
 @page "/thread/{Author}/{Title}/{Body}/{Date}"
 @inject NavigationManager NavManager
 @inject HttpClient Http
+@inject SharpScape.Shared.Dto.Data Data
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
@@ -10,7 +11,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">@Title</h4>
+                        <h4 class="card-title">@Title @Data.ThreadId @Data.UserId</h4>
                     </div>
                     <div class="comment-widgets m-b-20">
                         <div class="d-flex flex-row comment-row">
