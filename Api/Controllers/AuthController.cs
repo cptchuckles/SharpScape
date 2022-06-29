@@ -4,6 +4,7 @@ using SharpScape.Api.Models;
 using SharpScape.Api.Data;
 using SharpScape.Shared.Dto;
 using SharpScape.Api.Services;
+using SharpScape.Shared.UserRole;
 
 namespace SharpScape.Api.Controllers;
 
@@ -30,6 +31,21 @@ public class AuthController : ControllerBase
             return BadRequest($"Username {request.Username} already exists");
 
         var user = new User(request.Username, request.Email, request.Password);
+        _context.Add(user);
+        _context.SaveChanges();
+
+        return Ok(_crypto.CreateToken(user));
+    }
+    [Authorize(Roles="Admin")]
+    [HttpPost("RegisterAdmin")]
+    public ActionResult<string> RegisterAdim([FromBody] UserRegisterDto request)
+    {
+        if (_context.Users.Any(u => u.Email.ToLower() == request.Email.ToLower()))
+            return BadRequest($"User with email {request.Email} already exists");
+        if (_context.Users.Any(u => u.Username.ToLower() == request.Username.ToLower()))
+            return BadRequest($"Username {request.Username} already exists");
+
+        var user = new User(request.Username, request.Email, request.Password, UserRole.Role.Admin);
         _context.Add(user);
         _context.SaveChanges();
 

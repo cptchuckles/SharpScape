@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
 using SharpScape.Shared.Dto;
+using SharpScape.Shared.UserRole;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -82,6 +84,19 @@ namespace SharpScape.Api.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        [Authorize(Roles="Admin")]
+        [HttpPut("UpdateRole")]
+        public async Task<IActionResult> UpdateRole(int id, UserRole.Role role)
+        {
+            var user=await _context.Users.FindAsync(id);
+            if(user is null)
+                return NotFound();
+            user.UpdateRole(role);
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         private bool UserExist(int id)
