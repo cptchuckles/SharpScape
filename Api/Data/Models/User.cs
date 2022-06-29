@@ -46,9 +46,6 @@ public class User
     {
         this.Role = role;
     }
-    public void UpdateRole(string role) {
-        Role = role;
-    }
     private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
         using (var hmac = new HMACSHA512())
