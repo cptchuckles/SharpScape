@@ -1,6 +1,7 @@
 @page "/category/{urlName}"
 @inject NavigationManager NavManager
 @inject HttpClient Http
+@inject SharpScape.Shared.Dto.Data Data
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
@@ -28,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="title">@UrlName</div>
+        <div class="title">@UrlName @Data.CategoryId</div>
         <div class="card">
             <div class="row align-items-center">
                 <div class="col-md-8 mb-3 mb-sm-0">
@@ -45,7 +46,7 @@
                 </div>
             </div>
         </div>
-        @foreach (ThreadItem item in TopicList)
+        @* @foreach (ThreadItem item in TopicList)
         {
             <Thread
                 Route=@item.Title
@@ -57,7 +58,7 @@
                 Replies="200"
                 Views="199"
             />
-        }
+        } *@
         @foreach (Comment item in comments)
         {
             <Thread
