@@ -9,14 +9,13 @@
   font-weight: 400;
 }
 .forum-container,
-.forum-item small {
+.small {
   color: white;
 }
-.forum-item .forum-sub-title {
+.forum-sub-title {
   color: white;
   margin-left: 3.2rem;
 }
-
 .forum-info {
   text-align: center;
 }
