@@ -59,7 +59,6 @@ namespace SharpScape.Api.Controllers
                 return NotFound();
             }
             var ft = await _context.ForumThreads.Where(x => x.CategoryId == id).ToListAsync();
-
             List<ForumThreadDto> forumThreadDto = new List<ForumThreadDto>();
             foreach (var f in ft)
             {

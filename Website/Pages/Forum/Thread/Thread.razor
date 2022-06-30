@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                       @foreach (ForumPostDto post in posts)
+                        @foreach (ForumPostDto post in posts)
                         {
                             <Post
                             Author=@post.AuthorId
@@ -55,15 +55,6 @@
                             Image="images/Avatar.png"
                         />    
                         }
-                        @* @foreach (var c in Com)
-                        {
-                            <Post
-                                Author=@c.Author
-                                Date=@c.DateFormat
-                                Body=@c.Post
-                                Image="images/Avatar.png"
-                            />
-                        }*@
                        @* <div class="pagination_background">
                             <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
                                         PageIndex="@pageIndex"
@@ -100,19 +91,14 @@
     [Parameter]
     public string Date { get; set; } = "";
     ForumPostDto tempPost = new ForumPostDto();
-
-    //not sure if I'll use this later
     bool SubmitResult = false;
-
     List<ForumPostDto> posts = new List<ForumPostDto>();
     private async void HandleValidSubmit()
     {
-
         if (Data.UserId > 0 && Data.ThreadId != null && tempPost.Body != "")
         {
             SubmitResult = true;
         }
-
         if (SubmitResult)
         {
             ForumPostDto post = new ForumPostDto();
@@ -129,7 +115,6 @@
             {
                 
                 posts = await result.Content.ReadAsAsync<List<ForumPostDto>>();
-               
             }
             else
             {
@@ -137,33 +122,7 @@
             }
 
         }
-
-        //Com.Add(p);
     }
-
-    // private async void Save(CommentorInfoDto p)
-    //{
-    //    if (add == true)
-    //    {
-    //        Console.WriteLine("Start");
-    //        //tempForum.Id =Guid.NewGuid();
-    //        await Http.PostAsJsonAsync("https://localhost:7193/api/Commentors", p);
-    //        //comments.Add(p);
-
-    //        //await Http.DeleteAsync("https://localhost:7193/api/Commentors/" + p.PostId);
-    //        //await Http.DeleteAsync("https://localhost:7193/api/Commentors/" + 4);
-            
-
-    //        comments = await Http.GetFromJsonAsync<List<CommentorInfoDto>>("https://localhost:7193/api/Commentors");
-    //        Console.WriteLine("End");
-    //        add = false;
-    //        StateHasChanged();
-    //    }
-    //    else
-    //    {
-    //        Console.WriteLine("Add is false");
-    //    }
-
 
     //}
 
@@ -197,28 +156,5 @@
     //    }
     //}
 
-
-
-    //public class Poster
-    //{
-
-    //    public string Author { get; set; }
-
-    //    public string Post { get; set; }
-
-    //    public string DateFormat { get; set; }
-
-    //    public Poster()
-    //    {
-    //    }
-    //}
-    //public class Comment
-    //{
-    //    public int PostId { get; set; }
-    //    public int Id { get; set; }
-    //    public string Name { get; set; }
-    //    public string Email { get; set; }
-    //    public string Body { get; set; }
-    //}
     
 }

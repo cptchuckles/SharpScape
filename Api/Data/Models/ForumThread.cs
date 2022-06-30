@@ -11,13 +11,13 @@ namespace SharpScape.Api.Models
 
         public int UserId { get; set; }
         [ForeignKey("UserId")]
-        public  User Author { get; set; }
+        public  User? Author { get; set; }
 
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public ForumCategory ForumCategory { get; set; }
 
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public string Body { get; set; } = "";
         public int Votes { get; set; }= 0;
         public int Replies { get; set; } = 0;

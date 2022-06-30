@@ -1,4 +1,4 @@
-@page "/category/{urlName}"
+@page "/category/{urlName}/{fcdId}"
 @inject NavigationManager NavManager
 @inject HttpClient Http
 @inject SharpScape.Shared.Dto.Data Data
@@ -9,26 +9,30 @@
 <div class="background">
     <div class="container">
         <div class="row text-left mb-5">
-            <div class="col-lg-6 mb-3 mb-sm-0">
+
+
+            @*<div class="col-lg-6 mb-3 mb-sm-0">
                 <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" style="width: 100%;">
-                    <select class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                        <option> Categories </option>
-                        <option> Learn </option>
-                        <option> Share </option>
-                        <option> Build </option>
-                    </select>
+                <select class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
+                <option> Categories </option>
+                <option> Learn </option>
+                <option> Share </option>
+                <option> Build </option>
+                </select>
                 </div>
-            </div>
-            <div class="col-lg-6 text-lg-right">
+                </div>*@
+
+
+            @*<div class="col-lg-6 text-lg-right">
                 <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" style="width: 100%;">
-                    <select class="form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                        <option> Filter by </option>
-                        <option> Votes </option>
-                        <option> Replys </option>
-                        <option> Views </option>
-                    </select>
+                <select class="form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" data-toggle="select" tabindex="-98">
+                <option> Filter by </option>
+                <option> Votes </option>
+                <option> Replys </option>
+                <option> Views </option>
+                </select>
                 </div>
-            </div>
+                </div>*@
         </div>
         <div class="title">@UrlName @Data.CategoryId @Data.UserId</div>
         <div class="card">
@@ -49,8 +53,7 @@
         </div>
         @* @foreach (ThreadItem item in TopicList)
         {
-            <Thread
-                Route=@item.Title
+            <Thread Route=@item.Title
                 Title=@item.Title
                 Body=@item.Body
                 Date=@item.Date
@@ -67,7 +70,7 @@
             Title=@thread.Title
             Body=@thread.Body
             Date="Saturday, June 18, 2022"
-            AuthorId=@thread.AuthorId
+            Author=@getUser(thread.AuthorId)
             ThreadId=@thread.Id
             Votes="251"
             Replies="200"
@@ -83,7 +86,6 @@
             <button type="button" class="btn btn-primary" s @onclick="@OpenCreateThread">Create Thread</button>
         </div>
         </div>
-
         @* if(CreateThread){
             <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
                 <div class="modal-dialog">
@@ -117,14 +119,22 @@
         } *@
 </div>
 
-@code{
+@code {
+
     [Parameter]
     public string UrlName { get; set; }
-    public bool CreateThread {get;set;} = false;
+    public bool CreateThread { get; set; } = false;
     [Parameter]
-    public EventCallback<bool> OnClose { get; set; } 
+    public EventCallback<bool> OnClose { get; set; }
     ThreadItem tTopic = new ThreadItem();
+    [Parameter]
+    public string fcdId { get; set; }
+
+
+    List<ForumThreadDto> ThreadsDto = new List<ForumThreadDto>();
     List<ThreadItem> TopicList = new List<ThreadItem>();
+    List<UserInfoDto> users = new List<UserInfoDto>();
+
 
     private IList<ForumThreadDto> allthreads = new List<ForumThreadDto>();
     private IList<ForumThreadDto> threads = new List<ForumThreadDto>();
@@ -133,9 +143,11 @@
     private int itemsPerPage = 4;
     private int totalPages = 1;
     //// methods for pagination
+
     protected override async Task OnInitializedAsync()
     {
-        allthreads = await Http.GetFromJsonAsync<List<ForumThreadDto>>("https://localhost:7193/api/ForumThreads/category"+Data.CategoryId);
+        allthreads = await Http.GetFromJsonAsync<List<ForumThreadDto>>($"https://localhost:7193/api/ForumThreads/category{fcdId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"https://localhost:7193/api/User");
         if (allthreads != null)
         {
             // Initialize the number of "totalPages"
@@ -154,7 +166,7 @@
             threads = allthreads.Skip(skipCount).Take(itemsPerPage).ToList();
         }
     }
-   /// methods for popup modal
+    /// methods for popup modal
     private Task ModalCancel()
     {
         return OnClose.InvokeAsync(false);
@@ -165,8 +177,6 @@
         CreateThread = true;
         StateHasChanged();
     }
-
-
     private void HandleValidSubmit()
     {
         ThreadItem Thread = new ThreadItem();
@@ -178,7 +188,7 @@
         tTopic = new ThreadItem();
         CreateThread= false;
     }
-    private class  ThreadItem
+    private class ThreadItem
     {
 
         public string Title { get; set; }
@@ -186,10 +196,14 @@
 
         public string Body { get; set; }
 
-        public string  Date { get; set; }
+        public string Date { get; set; }
 
         public ThreadItem()
         {
         }
+    }
+    public string getUser(int id)
+    {
+        return users.Find(x => x.Id == id).Username;
     }
 }
