@@ -34,7 +34,7 @@
                 </div>
                 </div>*@
         </div>
-        <div class="title">@UrlName @Data.CategoryId @Data.UserId</div>
+        <div class="title">@UrlName</div>
         <div class="card">
             <div class="row align-items-center">
                 <div class="col-md-8 mb-3 mb-sm-0">
@@ -148,6 +148,11 @@
     {
         allthreads = await Http.GetFromJsonAsync<List<ForumThreadDto>>($"https://localhost:7193/api/ForumThreads/category{fcdId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"https://localhost:7193/api/User");
+        if (users != null && Data.UserId > 0)
+        {
+            Data.UserName = getUser(Data.UserId);
+        }
+        
         if (allthreads != null)
         {
             // Initialize the number of "totalPages"
