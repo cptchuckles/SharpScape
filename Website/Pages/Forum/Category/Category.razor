@@ -10,28 +10,28 @@
         <div class="row text-left mb-5">
 
 
-            @*<div class="col-lg-6 mb-3 mb-sm-0">
+            <div class="col-lg-6 mb-3 mb-sm-0">
                 <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" style="width: 100%;">
-                <select class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                <option> Categories </option>
-                <option> Learn </option>
-                <option> Share </option>
-                <option> Build </option>
-                </select>
+                    <select class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
+                        <option> Categories </option>
+                        <option> Learn </option>
+                        <option> Share </option>
+                        <option> Build </option>
+                    </select>
                 </div>
-                </div>*@
+            </div>
 
 
-            @*<div class="col-lg-6 text-lg-right">
+            <div class="col-lg-6 text-lg-right">
                 <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" style="width: 100%;">
-                <select class="form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                <option> Filter by </option>
-                <option> Votes </option>
-                <option> Replys </option>
-                <option> Views </option>
-                </select>
+                    <select class="form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" data-toggle="select" tabindex="-98">
+                        <option> Filter by </option>
+                        <option> Votes </option>
+                        <option> Replys </option>
+                        <option> Views </option>
+                    </select>
                 </div>
-                </div>*@
+            </div>
         </div>
 
         <div class="title">@UrlName</div>
@@ -60,19 +60,17 @@
                 Replies="222"
                 Views="222" />
         }
-         @foreach (Comment item in comments)
-            {
-            <Thread
-            Route=@item.Name
-            Title=@item.Name
-            Body=@item.Body
-            Date="Saturday, June 18, 2022"
-            Author=@item.Email
-            Votes="4545"
-            Replies="4545"
-            Views="199"
-            />
-            }
+        @foreach (Comment item in comments)
+        {
+            <Thread Route=@item.Name
+                Title=@item.Name
+                Body=@item.Body
+                Date="Saturday, June 18, 2022"
+                Author=@item.Email
+                Votes="4545"
+                Replies="4545"
+                Views="199" />
+        }
 
         <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
                     PageIndex="@pageIndex"
