@@ -23,7 +23,7 @@ public class Crypto
             new Claim("Id", user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, "NA") //TODO: Pull this from a Roles table
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
         var key = new RsaSecurityKey(_rsaKeyProvider.PrivateKey);
