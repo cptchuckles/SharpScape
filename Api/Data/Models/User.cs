@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
+using System.Linq;
 using SharpScape.Shared.Dto;
 
 namespace SharpScape.Api.Models;
@@ -12,8 +13,15 @@ public class User
     public string Username { get; set; }
 
     public string Email { get; set; }
-
-    public string Role { get; set; } = "User";
+    private string _role = UserRole.User;
+    public string Role
+    {
+        get=>_role;
+        set =>_role = typeof(UserRole).GetFields()
+            .Any(f => (string)f.GetRawConstantValue() == value)
+                ? value
+                : throw new Exception("Invalid user role assigned");
+    }
 
     public byte[] PasswordHash { get; set; }
 
@@ -34,7 +42,11 @@ public class User
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;
     }
-
+    public User(string username, string email, string password, string role) : this (username,email,password)
+    {
+        this.Role = role;
+    }
+    
     private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
         using (var hmac = new HMACSHA512())

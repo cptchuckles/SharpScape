@@ -1,22 +1,22 @@
-.forum-item {
+/* .forum-item {
   margin: 0.5rem 0;
   padding: 0.5rem 0 0.5rem;
   border-bottom: 1px solid grey;
-}
+} */
 .views-number {
   font-size: 1rem;
   line-height: 1rem;
   font-weight: 400;
-}
-.forum-container,
-.forum-item small {
   color: white;
 }
-.forum-item .forum-sub-title {
+.forum-container,
+small {
+  color: white;
+}
+.forum-sub-title {
   color: white;
   margin-left: 3.2rem;
 }
-
 .forum-info {
   text-align: center;
 }
@@ -45,9 +45,6 @@ a.forum-item-title:hover {
 }
 .forum-item.active a.forum-item-title {
   color: #1ab394;
-}
-.views-number {
-  color: white;
 }
 @media (max-width: 992px) {
   .forum-info {

@@ -1,6 +1,7 @@
 @page "/category/{urlName}/{fcdId}"
 @inject NavigationManager NavManager
 @inject HttpClient Http
+@inject SharpScape.Shared.Dto.Data Data
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
@@ -33,7 +34,6 @@
                 </div>
             </div>
         </div>
-
         <div class="title">@UrlName</div>
         <div class="card">
             <div class="row align-items-center">
@@ -51,27 +51,32 @@
                 </div>
             </div>
         </div>
-        @foreach (ForumThreadDto item in ThreadsDto)
+        @* @foreach (ThreadItem item in TopicList)
         {
             <Thread Route=@item.Title
                 Title=@item.Title
-                Author=@getUser(item.AuthorId)
-                Votes="222"
-                Replies="222"
-                Views="222" />
-        }
-        @foreach (Comment item in comments)
-        {
-            <Thread Route=@item.Name
-                Title=@item.Name
                 Body=@item.Body
-                Date="Saturday, June 18, 2022"
-                Author=@item.Email
-                Votes="4545"
-                Replies="4545"
-                Views="199" />
+                Date=@item.Date
+                Author="Anonymous"
+                Votes="251"
+                Replies="200"
+                Views="199"
+            />
+        } *@
+        @foreach (ForumThreadDto thread in threads)
+        {
+            <Thread
+            Route=@thread.Title
+            Title=@thread.Title
+            Body=@thread.Body
+            Date="Saturday, June 18, 2022"
+            Author=@getUser(thread.AuthorId)
+            ThreadId=@thread.Id
+            Votes="251"
+            Replies="200"
+            Views="199"
+            />
         }
-
         <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
                     PageIndex="@pageIndex"
                     Radius="3"
@@ -80,40 +85,38 @@
         <div class="row createbutton justify-content-center">
             <button type="button" class="btn btn-primary" s @onclick="@OpenCreateThread">Create Thread</button>
         </div>
-    </div>
-    @*
-
-        @if(CreateThread){
-        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-        <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-        <h4 class="modal-title">Create A Thread</h4>
         </div>
-        <EditForm Model="@tTopic" OnValidSubmit=@HandleValidSubmit>
-        <div class="modal-body">
-        <form model="@tTopic">
-        <div class="form-group">
-        <label for="recipient-name" class="col-form-label">Title:</label>
-        <input type="text" class="form-control" id="recipient-name" />
-        <InputText class="form-control" @bind-Value="tTopic.Title" />
-        </div>
-        <div class="form-group">
-        <label for="message-text" class="col-form-label">Content:</label>
-        <textarea class="form-control" id="message-text"></textarea>
-        <InputTextArea class="form-control" id="testing1" @bind-Value="tTopic.Body" />
-        </div>
-        </form>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
-        <button type="submit" class="btn btn-primary">Create</button>
-        </div>
-        </EditForm>
-        </div>
-        </div>
-        </div>
-        }*@
+        @* if(CreateThread){
+            <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Create A Thread</h4>
+                        </div>
+                            <EditForm Model="@tTopic" OnValidSubmit=@HandleValidSubmit>
+                        <div class="modal-body">
+                            <form model="@tTopic"> 
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Title:</label>
+                                    <input type="text" class="form-control" id="recipient-name" /> 
+                                <InputText class="form-control" @bind-Value="tTopic.Title" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Content:</label>
+                                    <textarea class="form-control" id="message-text"></textarea> 
+                                    <InputTextArea class="form-control" id="testing1" @bind-Value="tTopic.Body" />
+                                </div>
+                            </form> 
+                        </div>
+                        <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
+                                <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                                </EditForm>
+                    </div>
+                </div>
+            </div>
+        } *@
 </div>
 
 @code {
@@ -133,40 +136,39 @@
     List<UserInfoDto> users = new List<UserInfoDto>();
 
 
-
+    private IList<ForumThreadDto> allthreads = new List<ForumThreadDto>();
+    private IList<ForumThreadDto> threads = new List<ForumThreadDto>();
     //// pagination stuff and dummy data
     private int pageIndex = 1;
-    private int itemsPerPage = 10;
+    private int itemsPerPage = 4;
     private int totalPages = 1;
-
-    private IEnumerable<Comment> allComments = null;
-    private IEnumerable<Comment> comments = Enumerable.Empty<Comment>();
     //// methods for pagination
 
     protected override async Task OnInitializedAsync()
     {
-
-        ThreadsDto = await Http.GetFromJsonAsync<List<ForumThreadDto>>($"https://localhost:7193/api/ForumThreads/category{fcdId}");
-
+        allthreads = await Http.GetFromJsonAsync<List<ForumThreadDto>>($"https://localhost:7193/api/ForumThreads/category{fcdId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"https://localhost:7193/api/User");
-
-        allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
-        if (allComments != null)
+        if (users != null && Data.UserId > 0)
+        {
+            Data.UserName = getUser(Data.UserId);
+        }
+        
+        if (allthreads != null)
         {
             // Initialize the number of "totalPages"
-            totalPages = (int)(allComments.Count() / itemsPerPage);
+            totalPages = (int)(allthreads.Count() / itemsPerPage);
 
             // Initialize the "comments" which will be displayed when the page loaded first time.
-            comments = allComments.Skip(0).Take(itemsPerPage);
+            threads = allthreads.Skip(0).Take(itemsPerPage).ToList();
         }
     }
     private void SelectedPage(int selectedPageIndex)
     {
-        if (allComments != null)
+        if (allthreads != null)
         {
             pageIndex = selectedPageIndex;
             var skipCount = itemsPerPage * (pageIndex - 1);
-            comments = allComments.Skip(skipCount).Take(itemsPerPage);
+            threads = allthreads.Skip(skipCount).Take(itemsPerPage).ToList();
         }
     }
     /// methods for popup modal
@@ -180,18 +182,16 @@
         CreateThread = true;
         StateHasChanged();
     }
-
-
     private void HandleValidSubmit()
     {
         ThreadItem Thread = new ThreadItem();
-        Thread.Title = tTopic.Title;
+        Thread.Title= tTopic.Title;
         Thread.Body = tTopic.Body;
         Thread.Date = Convert.ToDateTime(DateTime.Now).ToString("D");
 
         TopicList.Add(Thread);
         tTopic = new ThreadItem();
-        CreateThread = false;
+        CreateThread= false;
     }
     private class ThreadItem
     {
@@ -207,19 +207,8 @@
         {
         }
     }
-    public class Comment
-    {
-        public int PostId { get; set; }
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Body { get; set; }
-    }
-
-
     public string getUser(int id)
     {
         return users.Find(x => x.Id == id).Username;
     }
-
 }
