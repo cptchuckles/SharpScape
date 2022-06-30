@@ -92,7 +92,28 @@ namespace SharpScape.Api.Controllers
             });
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetForumPost", new { id = fp.Id }, fp);
+            var fpl = await _context.ForumPosts.Where(x => x.ThreadId == fp.ThreadId).ToListAsync();
+
+            List<ForumPostDto> forumPostDtos = new List<ForumPostDto>();
+            foreach (var forumPost in fpl)
+            {
+                forumPostDtos.Add(new ForumPostDto()
+                {
+                    Id = forumPost.Id,
+                    AuthorId = forumPost.AuthorId,
+                    Body = forumPost.Body,
+                    Created = forumPost.Created,
+                    ThreadId = forumPost.ThreadId
+                });
+
+
+            }
+
+            //return CreatedAtAction("GetForumPost", new { id = fp.Id }, fp);
+
+            //return CreatedAtAction("GetForumPosts", forumPostDtos);
+
+            return Ok(forumPostDtos);
         }
 
         // DELETE: api/ForumPosts/5

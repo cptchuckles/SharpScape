@@ -15,6 +15,7 @@ namespace SharpScape.Shared.Dto
 
         public int CategoryId { get; set; }
         public string Title { get; set; }
+        public string Body{ get; set; }
         public int Votes { get; set; }
         public int Replies { get; set; }
         public int Views { get; set; }
