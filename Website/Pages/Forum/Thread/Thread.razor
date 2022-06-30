@@ -2,6 +2,7 @@
 @inject NavigationManager NavManager
 @inject HttpClient Http
 @inject SharpScape.Shared.Dto.Data Data
+@using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
@@ -45,16 +46,16 @@
                                 </div>
                             </div>
                         </div>
-                        @foreach (Comment item in comments)
+                       @foreach (ForumPostDto post in posts)
                         {
                             <Post
-                            Author=@item.Email
-                            Date="Saturday, June 18, 2022"
-                            Body=@item.Body
+                            Author=@post.AuthorId
+                            Date=@post.Created.ToString("D")
+                            Body=@post.Body
                             Image="images/Avatar.png"
                         />    
                         }
-                        @foreach (var c in Com)
+                        @* @foreach (var c in Com)
                         {
                             <Post
                                 Author=@c.Author
@@ -62,30 +63,21 @@
                                 Body=@c.Post
                                 Image="images/Avatar.png"
                             />
-                        }
-                        <div class="pagination_background">
+                        }*@
+                       @* <div class="pagination_background">
                             <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
                                         PageIndex="@pageIndex"
                                         Radius="3"
                                         OnSelectedPage="@SelectedPage">
                             </Pagination>
-                        </div>
+                        </div>*@
                     </div>
                     <div class="demo-section">
-                    <EditForm model="@tPoster" OnValidSubmit="@HandleValidSubmit" style="background-color: #04133C">
-                        <div class="form-group row" style="padding-left: 30px">
-                            <label class="col-sm2 col-form-label" for="Author" style="color: white">FIRST NAME:</label>
-                            <div class="col-sm-5">
-                                <InputText class="form-control" @bind-Value="tPoster.Author" />
-                            </div>
-                        </div>
+                    <EditForm model="@tempPost" OnValidSubmit="@HandleValidSubmit" style="background-color: #04133C">
                         <div class="form-group row" style="padding-left: 30px">
                             <label class="col-sm2 col-form-label" for="Post" style="color: white">COMMENT:</label>
                             <div class="col-sm-5">
-
-                                
-                                <InputTextArea class="form-control" id="testing1" @bind-Value="tPoster.Post" />
-                                
+                                <InputTextArea class="form-control" id="Post" @bind-Value="tempPost.Body" />
                             </div>
                         </div>
                         <div class="col-sm2 col-form-label" style="padding-left: 30px">
@@ -107,71 +99,126 @@
     public string Body { get; set; } = "";
     [Parameter]
     public string Date { get; set; } = "";
-    Poster tPoster = new Poster();
+    ForumPostDto tempPost = new ForumPostDto();
 
     //not sure if I'll use this later
     bool SubmitResult = false;
-    
-    List<Poster> Com = new List<Poster>();
-    void HandleValidSubmit()
-    {
-        Poster p = new Poster();
-        p.Author = tPoster.Author;
-        p.Post = tPoster.Post;
-        p.DateFormat = Convert.ToDateTime(DateTime.Now).ToString("MMMMM dd, yyyy");
 
-        Com.Add(p);
+    List<ForumPostDto> posts = new List<ForumPostDto>();
+    private async void HandleValidSubmit()
+    {
+
+        if (Data.UserId > 0 && Data.ThreadId != null && tempPost.Body != "")
+        {
+            SubmitResult = true;
+        }
+
+        if (SubmitResult)
+        {
+            ForumPostDto post = new ForumPostDto();
+            post.AuthorId = Data.UserId;
+            post.ThreadId = Data.ThreadId;
+            post.Body = tempPost.Body;
+            post.Created = Convert.ToDateTime(DateTime.Now);//.ToString("MMMMM dd, yyyy");
+
+            posts.Add(post);
+
+            var result = await Http.PostAsJsonAsync("https://localhost:7193/api/ForumPosts", post);
+
+            if (result.IsSuccessStatusCode)
+            {
+                
+                posts = await result.Content.ReadAsAsync<List<ForumPostDto>>();
+               
+            }
+            else
+            {
+                await result.Content.ReadAsStringAsync();
+            }
+
+        }
+
+        //Com.Add(p);
     }
+
+    // private async void Save(CommentorInfoDto p)
+    //{
+    //    if (add == true)
+    //    {
+    //        Console.WriteLine("Start");
+    //        //tempForum.Id =Guid.NewGuid();
+    //        await Http.PostAsJsonAsync("https://localhost:7193/api/Commentors", p);
+    //        //comments.Add(p);
+
+    //        //await Http.DeleteAsync("https://localhost:7193/api/Commentors/" + p.PostId);
+    //        //await Http.DeleteAsync("https://localhost:7193/api/Commentors/" + 4);
+            
+
+    //        comments = await Http.GetFromJsonAsync<List<CommentorInfoDto>>("https://localhost:7193/api/Commentors");
+    //        Console.WriteLine("End");
+    //        add = false;
+    //        StateHasChanged();
+    //    }
+    //    else
+    //    {
+    //        Console.WriteLine("Add is false");
+    //    }
+
+
+    //}
 
     // pagination stuff and dummy data
-    private int pageIndex = 1;
-    private int itemsPerPage = 10;
-    private int totalPages = 1;
-    private IEnumerable<Comment> allComments = null;
-    private IEnumerable<Comment> comments = Enumerable.Empty<Comment>(); 
+    //private int pageIndex = 1;
+    //private int itemsPerPage = 10;
+    //private int totalPages = 1;
+    //private IEnumerable<Comment> allComments = null;
+    //private IEnumerable<Comment> comments = Enumerable.Empty<Comment>(); 
 
     // methods for pagination
-    protected override async Task OnInitializedAsync()
-    {
-        allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
-        if (allComments != null)
-        {
-            // Initialize the number of "totalPages"
-            totalPages = (int)(allComments.Count() / itemsPerPage);
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
+    //    if (allComments != null)
+    //    {
+    //        // Initialize the number of "totalPages"
+    //        totalPages = (int)(allComments.Count() / itemsPerPage);
 
-            // Initialize the "comments" which will be displayed when the page loaded first time.
-            comments = allComments.Skip(0).Take(itemsPerPage);
-        }
-    }
-    private void SelectedPage(int selectedPageIndex)
-    {
-        if (allComments != null)
-        {
-            pageIndex = selectedPageIndex;
-            var skipCount = itemsPerPage * (pageIndex - 1);
-            comments = allComments.Skip(skipCount).Take(itemsPerPage);
-        }
-    }
-    public class Poster
-    {
+    //        // Initialize the "comments" which will be displayed when the page loaded first time.
+    //        comments = allComments.Skip(0).Take(itemsPerPage);
+    //    }
+    //}
+    //private void SelectedPage(int selectedPageIndex)
+    //{
+    //    if (allComments != null)
+    //    {
+    //        pageIndex = selectedPageIndex;
+    //        var skipCount = itemsPerPage * (pageIndex - 1);
+    //        comments = allComments.Skip(skipCount).Take(itemsPerPage);
+    //    }
+    //}
 
-        public string Author { get; set; }
 
-        public string Post { get; set; }
 
-        public string DateFormat { get; set; }
+    //public class Poster
+    //{
 
-        public Poster()
-        {
-        }
-    }
-    public class Comment
-    {
-        public int PostId { get; set; }
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Body { get; set; }
-    }
+    //    public string Author { get; set; }
+
+    //    public string Post { get; set; }
+
+    //    public string DateFormat { get; set; }
+
+    //    public Poster()
+    //    {
+    //    }
+    //}
+    //public class Comment
+    //{
+    //    public int PostId { get; set; }
+    //    public int Id { get; set; }
+    //    public string Name { get; set; }
+    //    public string Email { get; set; }
+    //    public string Body { get; set; }
+    //}
     
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharpScape.Shared.Dto
 {
-    public class ForumPostDto { 
+    public class ForumPostDto {
         public int Id { get; set; }
         public int ThreadId { get; set; }
         
