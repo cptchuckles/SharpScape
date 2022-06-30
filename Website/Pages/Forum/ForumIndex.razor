@@ -22,7 +22,7 @@
                                 <i class="fa fa-globe text-navy mid-icon"></i>
                             </div>
                             <h2>SharpScape's Forum</h2>
-                            <span>Feel free to choose topic you're interested in.</span>
+                            <span>Feel free to choose a category you're interested in.</span>
                         </div>
                     </div>
                     <div class="ibox-content forum-container">
@@ -76,6 +76,4 @@
         forums =  await Http.GetFromJsonAsync<List<ForumCategoryDto>>("https://localhost:7193/api/ForumCategories");
         loading = false;
     }
-    public ForumCategoryDto tempForum = new ForumCategoryDto();
-    public List<ForumCategoryDto> _forums= new List<ForumCategoryDto>();
 }
