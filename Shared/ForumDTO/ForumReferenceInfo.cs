@@ -1,6 +1,6 @@
-namespace SharpScape.Shared.Dto
+namespace SharpScape.Website.Services
 {
-    public class Data
+    public class ForumReferenceInfo
     {
         public int CategoryId { get; set; } = 0;
         public int ThreadId { get; set; } = 0;
