@@ -16,7 +16,8 @@
 <div class="form-section">
     <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
         <h1>Login</h1>
-
+          <span> "Admin" "StrongPassword12345"</span>
+  
         @if (requestError is not null)
         {
             <p class="text-danger">@requestError</p>

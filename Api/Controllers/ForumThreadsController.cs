@@ -48,7 +48,7 @@ namespace SharpScape.Api.Controllers
             return Ok(forumThreadDto);
         }
 
-      
+
 
         // GET: api/ForumThreads/5
         [HttpGet("category{id}")]
@@ -109,14 +109,14 @@ namespace SharpScape.Api.Controllers
             });
         }
 
-       
+
 
         // POST: api/ForumThreads
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ForumThreadDto>> PostForumThread(ForumThreadDto forumThreadDto)
         {
-            ForumThread forumThread = new ForumThread() { Author = _context.Users.Find(forumThreadDto.AuthorId), UserId = forumThreadDto.AuthorId, ForumCategory = _context.ForumCategories.Find(forumThreadDto.CategoryId), Body = "", CategoryId = forumThreadDto.CategoryId, Created = DateTime.Now, Title = forumThreadDto.Title };
+            ForumThread forumThread = new ForumThread() { Author = _context.Users.Find(forumThreadDto.AuthorId), UserId = forumThreadDto.AuthorId, ForumCategory = _context.ForumCategories.Find(forumThreadDto.CategoryId), Body = forumThreadDto.Body, CategoryId = forumThreadDto.CategoryId, Created = DateTime.Now, Title = forumThreadDto.Title, Replies = 0, Views = 0, Votes = 0 };
             if (_context.ForumThreads == null)
             {
                 return Problem("Entity set 'AppDbContext.ForumThreads'  is null.");
@@ -124,7 +124,29 @@ namespace SharpScape.Api.Controllers
             _context.ForumThreads.Add(forumThread);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetForumThread", new { id = forumThread.Id }, forumThread);
+
+
+
+            var ftl = await _context.ForumThreads.Where(x => x.CategoryId == forumThreadDto.CategoryId).ToListAsync();
+
+            List<ForumThreadDto> forumThreadDtos = new List<ForumThreadDto>();
+            foreach (var ft in ftl)
+            {
+                forumThreadDtos.Add(new ForumThreadDto()
+                {
+                    Id = ft.Id,
+                    AuthorId = ft.UserId,
+                    CategoryId = ft.CategoryId,
+                    Title = ft.Title,
+                    Body = ft.Body,
+                    Votes = ft.Votes,
+                    Replies = ft.Replies,
+                    Views = ft.Views
+                });
+
+
+            }
+            return Ok(forumThreadDtos);
         }
 
         // DELETE: api/ForumThreads/5
