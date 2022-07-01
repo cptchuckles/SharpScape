@@ -3,7 +3,7 @@
 
 <div class=@Status>
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="forum-icon">
                 <i class=@Icon></i>
             </div>
@@ -14,18 +14,10 @@
         </div>
         <div class="col-md-1 forum-info">
             <span class="views-number">
-                @ViewsNumber
+                @ThreadsNumber
             </span>
             <div>
-                <small>Views</small>
-            </div>
-        </div>
-        <div class="col-md-1 forum-info">
-            <span class="views-number">
-                @TopicsNumber
-            </span>
-            <div>
-                <small>Topics</small>
+                <small>Threads</small>
             </div>
         </div>
         <div class="col-md-1 forum-info">
@@ -55,7 +47,7 @@
     [Parameter]
     public string ViewsNumber { get; set; } = "vn";
     [Parameter]
-    public string TopicsNumber { get; set; } = "tn";
+    public string ThreadsNumber { get; set; } = "tn";
     [Parameter]
     public string PostsNumber{get;set;} = "pn";
     [Parameter]
