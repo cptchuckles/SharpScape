@@ -1,8 +1,8 @@
 ﻿@page "/Categories"
+@inject ForumReferenceProvider Data
 @inject IForumCategoryServices ForumCategoryServices
 @using SharpScape.Shared.Dto
 @inject HttpClient Http
-
 <div style="color: yellow">
 <h3>Categories List</h3>
 @if (forums == null)
@@ -11,29 +11,29 @@
 }
 else
 {
-
-
-   <div >
-            @if (forums != null)
-            {
-                foreach (var forumCategory in forums)
-                {
-                    
-                    string x= forumCategory.Id.ToString();
-                   
-                        <SharpScape.Website.Components.Forum.Category Title=@forumCategory.Name SubTitle=@forumCategory.Description Status="---" fcdId=@x Route=@forumCategory.Name >
-                           
-                        </SharpScape.Website.Components.Forum.Category>
-                      
-                        
-                }
-            }
-           
-
+<div >
+    @if (forums != null)
+    {
+        foreach (var forumCategory in forums)
+        {
+            string x= forumCategory.Id.ToString();
+                <SharpScape.Website.Components.Forum.Category 
+                    Title=@forumCategory.Name 
+                    SubTitle=@forumCategory.Description 
+                    fcdId=@x 
+                    Route=@forumCategory.Name 
+                />
+        }
+        @if (loading)
+        {
+            <tr>
+                <td colspan="4" class="text-center">
+                    <span class="spinner-border spinner-border-lg align-center"></span>
+                </td>
+            </tr>
+        }
+    }
 </div>
-
-
-
 }
 </div>
 

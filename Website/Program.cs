@@ -13,6 +13,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>();
 builder.Services.AddScoped<IForumCategoryServices , ForumCategoryServices>();
+builder.Services.AddSingleton<SharpScape.Website.Services.ForumReferenceProvider>();
+
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 

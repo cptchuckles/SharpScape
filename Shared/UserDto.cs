@@ -41,3 +41,10 @@ public class UserLoginDto
     [Required]
     public string Password { get; set; }
 }
+public class UserLoginResponseDto
+{
+    public int Id { get; set; }
+
+    public string Username { get; set; }
+    public string accessToken {get;set;}
+}

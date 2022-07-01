@@ -1,10 +1,10 @@
 @namespace SharpScape.Website.Components.Forum
-
+@inject SharpScape.Website.Services.ForumReferenceProvider Data
 <div class="card">
     <div class="row align-items-center">
         <div class="col-md-8 mb-3 mb-sm-0">
             <h5>
-                <a href="thread/@Author/@Route/@Body/@Date" class="text-primary">@Title</a>
+                <a href="thread/@Author/@Route/@Body/@Date" class="text-primary" onclick="@UpdateId">@Title</a>
             </h5>
             <p class="text-sm">
                 <span class="op-6">Posted</span> 
@@ -39,11 +39,17 @@
     [Parameter]
     public string Date{ get; set; }
     [Parameter]
-    public string? Author { get; set; }
+    public string Author { get; set; }
+    [Parameter]
+    public int ThreadId{ get; set; }
     [Parameter]
     public string? Votes { get; set; }
     [Parameter]
     public string? Replies { get; set; }
     [Parameter]
-    public string? Views { get; set; }
+    public string Views { get; set; }
+    private void UpdateId()
+    {
+        Data.ThreadId = ThreadId;
+    }
 }
