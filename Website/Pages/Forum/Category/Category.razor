@@ -63,7 +63,7 @@
                 Views="199"
             />
         } *@
-        @foreach (ForumThreadDto thread in threads)
+        @foreach (ForumThreadDto thread in allthreads)
         {
             <Thread
             Route=@thread.Title
@@ -202,9 +202,10 @@
 
         var result = await Http.PostAsJsonAsync("https://localhost:7193/api/ForumThreads", tempThread);
 
-            allthreads = await result.Content.ReadAsAsync<List<ForumThreadDto>>(); 
         if (result.IsSuccessStatusCode)
         {
+            allthreads = await result.Content.ReadAsAsync<List<ForumThreadDto>>(); 
+            StateHasChanged();
         }
             else
             {
