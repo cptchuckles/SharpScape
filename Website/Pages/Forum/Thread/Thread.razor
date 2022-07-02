@@ -93,9 +93,12 @@
                     </EditForm>
                     </div> *@
                 </div>
-                <div class="row createbutton justify-content-center">
-                    <button type="button" class="btn btn-primary"  @onclick="@OpenCreateThread">Make a post</button>
-                </div>
+                @if (Data.UserId > 0)
+                {
+                    <div class="row createbutton justify-content-center">
+                        <button type="button" class="btn btn-primary"  @onclick="@OpenCreateThread">Make a post</button>
+                    </div>
+                }
             </div>
         </div>
     </div>

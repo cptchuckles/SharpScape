@@ -46,9 +46,12 @@
                     Radius="3"
                     OnSelectedPage="@SelectedPage">
         </Pagination>
-        <div class="row createbutton justify-content-center">
-            <button type="button" class="btn btn-primary"  @onclick="@OpenCreateThread">Create Thread</button>
-        </div>
+        @if (Data.UserId>0)
+        {
+            <div class="row createbutton justify-content-center">
+                <button type="button" class="btn btn-primary"  @onclick="@OpenCreateThread">Create Thread</button>
+            </div>
+        }
         </div>
         @if(CreateThread){
             <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
