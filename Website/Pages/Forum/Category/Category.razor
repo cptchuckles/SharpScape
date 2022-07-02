@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-        @foreach (ForumThreadDto thread in allthreads)
+        @foreach (ForumThreadDto thread in threads)
         {
             <Thread
             Route=@thread.Title
@@ -37,13 +37,10 @@
             Author=@getUser(thread.AuthorId)
             ThreadId=@thread.Id
             Votes="251"
-            Replies=@postCounts[index].ToString()
+            Replies=@thread.Replies.ToString()
             />
-            index++;
-            if(index == allthreads.Count){
-                index = 0;
-            }
         }
+
         <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
                     PageIndex="@pageIndex"
                     Radius="3"
@@ -90,7 +87,6 @@
 </div>
 
 @code {
-
     [Parameter]
     public string UrlName { get; set; }
     public bool CreateThread { get; set; } = false;
@@ -99,14 +95,9 @@
     [Parameter]
     public string fcdId { get; set; }
     public List<ForumPostDto> posts { get; set; }
-    public int index = 0;
     ForumThreadDto tTopic = new ForumThreadDto();
-    public List<int> postCounts = new List<int>();
     List<ForumThreadDto> ThreadsDto = new List<ForumThreadDto>();
-
     List<UserInfoDto> users = new List<UserInfoDto>();
-
-
     private IList<ForumThreadDto> allthreads = new List<ForumThreadDto>();
     private IList<ForumThreadDto> threads = new List<ForumThreadDto>();
     //// pagination stuff and dummy data
@@ -121,20 +112,18 @@
         foreach (var thread in allthreads)
         {
             posts =  await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/Thread{thread.Id}");
-            postCounts.Add(posts.Count);
+            thread.Replies = posts.Count;
         }
         if (users != null && Data.UserId > 0)
         {
             Data.UserName = getUser(Data.UserId);
         }
-
         if (allthreads != null)
         {
             // Initialize the number of "totalPages"
-            totalPages = (int)(allthreads.Count() / itemsPerPage);
-
+            totalPages = (int)Math.Ceiling((double)allthreads.Count() / itemsPerPage);
             // Initialize the "comments" which will be displayed when the page loaded first time.
-            threads = allthreads.Skip(0).Take(itemsPerPage).ToList();
+            threads = allthreads.Reverse().Skip(0).Take(itemsPerPage).ToList();
         }
     }
     private void SelectedPage(int selectedPageIndex)
@@ -143,7 +132,7 @@
         {
             pageIndex = selectedPageIndex;
             var skipCount = itemsPerPage * (pageIndex - 1);
-            threads = allthreads.Skip(skipCount).Take(itemsPerPage).ToList();
+            threads = allthreads.Reverse().Skip(skipCount).Take(itemsPerPage).ToList();
         }
     }
     /// methods for popup modal
@@ -181,12 +170,25 @@
         if (result.IsSuccessStatusCode)
         {
             allthreads = await result.Content.ReadAsAsync<List<ForumThreadDto>>(); 
+            foreach (var thread in allthreads)
+            {
+                posts =  await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/Thread{thread.Id}");
+                thread.Replies = posts.Count;
+            }
+            if (allthreads != null)
+            {
+                // Initialize the number of "totalPages"
+                totalPages = (int)Math.Ceiling((double)allthreads.Count() / itemsPerPage);
+                // Initialize the "comments" which will be displayed when the page loaded first time.
+                threads = allthreads.Reverse().Skip(0).Take(itemsPerPage).ToList();
+            }
+            SelectedPage(1);
             StateHasChanged();
         }
-            else
-            {
-                await result.Content.ReadAsStringAsync();
-            }
+        else
+        {
+            await result.Content.ReadAsStringAsync();
+        }
     }
     public string getUser(int id)
     {
