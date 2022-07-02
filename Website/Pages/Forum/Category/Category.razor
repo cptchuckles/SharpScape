@@ -40,6 +40,9 @@
             Replies=@postCounts[index].ToString()
             />
             index++;
+            if(index == allthreads.Count){
+                index = 0;
+            }
         }
         <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
                     PageIndex="@pageIndex"
