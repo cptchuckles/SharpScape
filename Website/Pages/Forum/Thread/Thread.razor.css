@@ -19,6 +19,10 @@
   color: white;
 }
 
+.createbutton {
+  padding-left: 30%;
+  padding-right: 30%;
+}
 .comment-widgets .comment-row:hover {
   background: #2b4080;
   cursor: pointer;

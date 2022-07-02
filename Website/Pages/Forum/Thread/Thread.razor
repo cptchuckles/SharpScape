@@ -30,7 +30,7 @@
                                 <div class="col-md-1">
                                 <div class="row">
                                         <div class="col"> <a href="#"><i class="oi oi-thumb-up"></i></a><span class="d-block text-sm">20</span> </div>
-                                        <div class="col"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> @posts.Capacity</span> </div>
+                                        <div class="col"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> @posts.Count</span> </div>
                                 </div>
                                 <span class="action-icons"></span>
                                 </div>
@@ -53,7 +53,33 @@
                             </Pagination>
                         </div>*@
                     </div>
-                    <div class="demo-section">
+                    @if(CreateThread){
+                        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Create A Post</h4>
+                                    </div>
+                                    <EditForm Model="@tempPost" OnValidSubmit=@HandleValidSubmit>
+                                        <div class="modal-body">
+                                            <form model="@tempPost"> 
+                                                <div class="form-group">
+                                                    <label for="message-text" class="col-form-label">Comment:</label>
+                                                @*  <textarea class="form-control" id="message-text"></textarea> *@
+                                                    <InputTextArea class="form-control" id="testing1" @bind-Value="tempPost.Body" />
+                                                </div>
+                                            </form> 
+                                        </div>
+                                        <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
+                                                <button type="submit" class="btn btn-primary">Post</button>
+                                        </div>
+                                    </EditForm>
+                                </div>
+                            </div>
+                        </div>
+                    } 
+                    @* <div class="demo-section">
                     <EditForm model="@tempPost" OnValidSubmit="@HandleValidSubmit" style="background-color: #04133C">
                         <div class="form-group row" style="padding-left: 30px">
                             <label class="col-sm2 col-form-label" for="Post" style="color: white">COMMENT:</label>
@@ -65,7 +91,10 @@
                             <input type="submit" class="btn btn-primary" value="Post" style="width: 100px"/>
                         </div>
                     </EditForm>
-                    </div>
+                    </div> *@
+                </div>
+                <div class="row createbutton justify-content-center">
+                    <button type="button" class="btn btn-primary"  @onclick="@OpenCreateThread">Make a post</button>
                 </div>
             </div>
         </div>
@@ -87,6 +116,8 @@
     public string ThreadId { get; set; }
     [Parameter]
     public string TitleT { get; set; }
+    public bool CreateThread { get; set; } = false;
+    public EventCallback<bool> OnClose { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -106,6 +137,7 @@
             post.Body = tempPost.Body;
             post.Created = Convert.ToDateTime(DateTime.Now);
             posts.Add(post);
+            CreateThread = false;
             var result = await Http.PostAsJsonAsync("https://localhost:7193/api/ForumPosts", post);
             if (result.IsSuccessStatusCode)
             {
@@ -117,7 +149,21 @@
             }
         }
     }
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
 
+    private void OpenCreateThread()
+    {
+        CreateThread = true;
+        StateHasChanged();
+    }
+    private void CloseCreateThread()
+    {
+        CreateThread = false;
+        StateHasChanged();
+    }
     //}
 
     // pagination stuff and dummy data
