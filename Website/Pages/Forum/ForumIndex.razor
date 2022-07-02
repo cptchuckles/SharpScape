@@ -28,7 +28,7 @@
                     <div class="ibox-content forum-container">
                         <div class="forum-title">
                             <div class="pull-right forum-desc">
-                                <samll>Total posts: 320,800</samll>
+                                <samll>Total posts: @totalPosts</samll>
                             </div>
                             <h3>General subjects</h3>
                         </div>
@@ -37,13 +37,15 @@
                             foreach (var forumCategory in forums)
                             {
                                 string x= forumCategory.Id.ToString();
-                                    <Category 
-                                        Title=@forumCategory.Name 
-                                        SubTitle=@forumCategory.Description 
-                                        fcdId=@x 
-                                        Route=@forumCategory.Name 
-                                        Icon=@Icons[forumCategory.Id-1]
-                                    />
+                                <Category 
+                                    Title=@forumCategory.Name 
+                                    SubTitle=@forumCategory.Description 
+                                    fcdId=@x 
+                                    Route=@forumCategory.Name 
+                                    Icon=@Icons[forumCategory.Id-1]
+                                    ThreadsNumber=@threadCounts[forumCategory.Id-1].ToString()
+                                    PostsNumber=@postCounts[forumCategory.Id-1].ToString()
+                                />
                             }
                             @if (loading)
                             {
@@ -54,12 +56,6 @@
                                 </tr>
                             }
                         }
-                        <div class="forum-title">
-                            <div class="pull-right forum-desc">
-                                <samll>Total posts: 17,800,600</samll>
-                            </div>
-                            <h3>Other subjects</h3>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -68,12 +64,31 @@
 </div>
 @code {
     public List<ForumCategoryDto> forums{ get; set; }
-    string[] Icons = {"fa fa-shield","fa fa-bolt", "fa fa-calendar","fa fa-star","fa fa-clock-o","fa fa-bomb","fa fa-bookmark","fa fa-ambulance"};
+    public List<ForumThreadDto> threads{ get; set; }
+    public List<ForumPostDto> posts { get; set; }
+    public List<int> threadCounts = new List<int>();
+    public List<int> postCounts = new List<int>();
+    public string[] Icons = {"fa fa-shield","fa fa-bolt", "fa fa-calendar","fa fa-star","fa fa-clock-o","fa fa-bomb","fa fa-bookmark","fa fa-ambulance"};
+    public int totalPosts = 0; 
     private bool loading;
+
     protected override async Task OnInitializedAsync()
     {
         loading = true;
         forums =  await Http.GetFromJsonAsync<List<ForumCategoryDto>>("https://localhost:7193/api/ForumCategories");
+        foreach (var category in forums)
+        {
+            int sum = 0;
+            threads =  await Http.GetFromJsonAsync<List<ForumThreadDto>>($"https://localhost:7193/api/ForumThreads/category{category.Id}");
+            threadCounts.Add(threads.Count);
+            foreach (var thread in threads)
+            {
+                posts =  await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/Thread{thread.Id}");
+                sum += posts.Count;
+                totalPosts += posts.Count;
+            }
+            postCounts.Add(sum);
+        }
         loading = false;
     }
 }
