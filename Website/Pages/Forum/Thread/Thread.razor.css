@@ -3,7 +3,6 @@
   left: 0;
   top: 0;
   width: 100%;
-  height: 100vh;
   padding: 2rem;
   background-image: url("images/Background.png");
   background-size: cover;
@@ -20,6 +19,11 @@
   color: white;
 }
 
+.createbutton {
+  padding-top: 1.5rem;
+  padding-left: 30%;
+  padding-right: 30%;
+}
 .comment-widgets .comment-row:hover {
   background: #2b4080;
   cursor: pointer;

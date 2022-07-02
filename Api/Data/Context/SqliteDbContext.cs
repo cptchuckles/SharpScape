@@ -789,7 +789,7 @@ public class SqliteDbContext : AppDbContext
             List<ForumPost> seedForumPosts = new();
             for (int i = 1; i <= 64; i++)
             {
-                ForumPost post = new ForumPost(i,(i%8)+1,(i%3)+1,"est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et");
+                ForumPost post = new ForumPost(i,i,(i%3)+1,"est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et");
                 seedForumPosts.Add(post);
             }
             x.HasData(
