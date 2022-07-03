@@ -46,7 +46,7 @@ public class Crypto
         using (var hmac = new HMACSHA512(passwordSalt))
         {
             var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return computeHash.SequenceEqual(passwordHash);
+            return CryptographicOperations.FixedTimeEquals(computeHash, passwordHash);
         }
     }
 }
