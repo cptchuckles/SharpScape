@@ -10,8 +10,8 @@ namespace SharpScape.Api.Services;
 public class Crypto
 {
     private IConfiguration _configuration;
-    private IRsaKeyProvider _rsaKeyProvider;
-    public Crypto(IConfiguration configuration, IRsaKeyProvider rsaKeyProvider)
+    private RsaKeyProvider _rsaKeyProvider;
+    public Crypto(IConfiguration configuration, RsaKeyProvider rsaKeyProvider)
     {
         _configuration = configuration;
         _rsaKeyProvider = rsaKeyProvider;
