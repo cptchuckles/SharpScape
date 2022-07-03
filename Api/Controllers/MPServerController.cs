@@ -17,19 +17,26 @@ namespace SharpScape.Api.Controllers;
 [Route("api/game")]
 public class MPServerController : ControllerBase
 {
-    private readonly IRsaKeyProvider _rsaKeyProvider;
+    private readonly RsaKeyProvider _rsaKeyProvider;
     private readonly Crypto _crypto;
     private readonly AppDbContext _context;
 
     private double _payloadMaxAge;
 
-    public MPServerController(IRsaKeyProvider rsaKeyProvider, Crypto crypto, IConfiguration config, AppDbContext context)
+    public MPServerController(RsaKeyProvider rsaKeyProvider, Crypto crypto, IConfiguration config, AppDbContext context)
     {
         _rsaKeyProvider = rsaKeyProvider;
         _crypto = crypto;
         _context = context;
 
         _payloadMaxAge = config.GetValue<int>("MPServer:PayloadMaxAge");
+    }
+
+    [HttpGet("/api/publickey")]
+    [Produces("text/plain")]
+    public ActionResult<string> GetPublicKey()
+    {
+        return Ok(_rsaKeyProvider.PublicKeyPem);
     }
 
     [HttpPost("login")]
