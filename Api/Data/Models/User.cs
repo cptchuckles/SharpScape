@@ -64,6 +64,7 @@ public static class UserDtoExtensions
         dto.Id = user.Id;
         dto.Username = user.Username;
         dto.Email = user.Email;
+        dto.Role = user.Role;
         dto.Created = user.Created;
         return dto;
     }
