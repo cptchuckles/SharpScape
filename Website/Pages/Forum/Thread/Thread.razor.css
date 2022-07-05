@@ -10,6 +10,9 @@
 .pagination_background {
   background-color: #1b2042;
 }
+.card {
+  width: 60vw;
+}
 .card-body {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -19,6 +22,11 @@
   color: white;
 }
 
+.createbutton {
+  padding-top: 1.5rem;
+  padding-left: 30%;
+  padding-right: 30%;
+}
 .comment-widgets .comment-row:hover {
   background: #2b4080;
   cursor: pointer;
