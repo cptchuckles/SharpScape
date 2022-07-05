@@ -17,6 +17,41 @@ public class Crypto
         _rsaKeyProvider = rsaKeyProvider;
     }
 
+    public void GenerateTransientKey(out Guid keyId, out string x509pub)
+    {
+        using (var rsa = new RSACryptoServiceProvider(512))
+        {
+            keyId = Guid.NewGuid();
+            x509pub = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
+            var secret = rsa.ExportRSAPrivateKey();
+            _rsaKeyProvider.StoreTransientSecret(keyId, secret);
+        }
+    }
+
+    public byte[]? TransientKeyDecrypt(Guid keyId, byte[] payload)
+    {
+        _rsaKeyProvider.CheckoutTransientSecret(keyId, out byte[]? secret);
+        if (secret is null)
+        {
+            return null;
+        }
+
+        byte[]? data = null;
+        try
+        {
+            using (var rsa = new RSACryptoServiceProvider())
+            {
+                rsa.ImportRSAPrivateKey(secret, out int _);
+                data = rsa.Decrypt(payload, false);
+            }
+        }
+        catch (CryptographicException)
+        {
+            return null;
+        }
+        return data;
+    }
+
     public string CreateToken(User user)
     {
         var claims = new List<Claim> {
@@ -48,5 +83,14 @@ public class Crypto
             var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return CryptographicOperations.FixedTimeEquals(computeHash, passwordHash);
         }
+    }
+
+    public bool VerifyMPSignature(string data, string signature)
+    {
+        return _rsaKeyProvider.MPServerPublicKey.VerifyHash(
+            SHA256.HashData(Encoding.UTF8.GetBytes(data.TrimEnd())),
+            Convert.FromBase64String(signature),
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1);
     }
 }
