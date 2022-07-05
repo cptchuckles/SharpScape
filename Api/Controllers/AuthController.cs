@@ -4,6 +4,8 @@ using SharpScape.Api.Models;
 using SharpScape.Api.Data;
 using SharpScape.Shared.Dto;
 using SharpScape.Api.Services;
+using System.Security.Claims;
+using SharpScape.Api.Data.Models;
 
 namespace SharpScape.Api.Controllers;
 
@@ -13,11 +15,13 @@ public class AuthController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly Crypto _crypto;
+    private readonly ITokenService _tokenService;
 
-    public AuthController(AppDbContext context, Crypto crypto)
+    public AuthController(AppDbContext context, Crypto crypto, ITokenService tokenService)
     {
         _context = context;
         _crypto = crypto;
+        _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
     }
 
     [AllowAnonymous]
@@ -48,6 +52,22 @@ public class AuthController : ControllerBase
         if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             return BadRequest("Username/Email or Password incorrect");
 
-        return Ok(_crypto.CreateToken(user));
+        //Create the Acess Token and Refresh Token
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, "Manager")
+        };
+        var accessToken = _tokenService.GenerateAccessToken(claims);
+        var refreshToken = _tokenService.GenerateRefreshToken(claims);
+        _context.SaveChanges();
+        return Ok(new AuthenticatedResponse
+        {
+            Token = accessToken,
+            RefreshToken = refreshToken
+        });
+
+
+        //return Ok(_crypto.CreateToken(user));
     }
 }

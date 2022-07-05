@@ -19,6 +19,9 @@ public class User
 
     public byte[] PasswordSalt { get; set; }
 
+    public string? RefreshToken { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
+
     [Editable(false)]
     [DisplayFormat(DataFormatString = "{0:D}")]
     public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
