@@ -44,7 +44,7 @@ public class MPServerController : ControllerBase
             return BadRequest("Timestamp invalid");
         }
         
-        var timestampedPayload = $"{request.Payload}.{request.Timestamp.ToString()}";
+        var timestampedPayload = $"{request.KeyId}.{request.Payload}.{request.Timestamp.ToString()}";
         if (! _crypto.VerifyMPSignature(timestampedPayload, request.Signature)) {
             return BadRequest("Signature invalid");
         }
