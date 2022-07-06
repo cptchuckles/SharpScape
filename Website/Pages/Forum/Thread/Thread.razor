@@ -21,6 +21,7 @@
 
 <div class="background">
 
+    
      @if (loading)
                             {
                                <center>
@@ -28,9 +29,9 @@
          <span style=" color:#99abb4 " >posts are loading</span>
                               </center> 
                             }
-
-   
-
+<center>
+    <a href="category/@fcd.Name/@ftd.CategoryId" class="forum-item-title"><h3> Go to @fcd.Name List </h3> </a>
+    </center>
     <div class="container d-flex justify-content-center mt-100 mb-100">
         <div class="row">
             <div class="col-md-12">
@@ -178,10 +179,16 @@
     public bool CreateThread { get; set; } = false;
     public EventCallback<bool> OnClose { get; set; }
     private bool loading=false ;
+    public ForumThreadDto ftd = new ForumThreadDto();
+    public ForumCategoryDto fcd = new ForumCategoryDto();
+
     protected override async Task OnInitializedAsync()
     {
         loading = true;
         allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
+        ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
+        fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
+
         if (allPosts != null)
         {
             // Initialize the number of "totalPages"
