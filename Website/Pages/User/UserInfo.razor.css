@@ -1,44 +1,68 @@
-body {
-    background: rgb(99, 39, 120)
+.background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100;
+  background-image: url("images/Background.png");
+  background-size: cover;
 }
-
+.container {
+  padding: 12rem 5rem;
+}
+.item {
+  color: red;
+}
+.profile_picture {
+  border: 1px solid white;
+  border-radius: 1rem;
+  color: white;
+  background-color: #1b2042;
+}
+.profile_info {
+  margin-left: 0.5rem;
+  border: 1px solid white;
+  border-radius: 1rem;
+  color: white;
+  background-color: #1b2042;
+}
 .form-control:focus {
-    box-shadow: none;
-    border-color: #BA68C8
+  box-shadow: none;
+  border-color: #ba68c8;
 }
 
 .profile-button {
-    background: rgb(99, 39, 120);
-    box-shadow: none;
-    border: none
+  background: rgb(99, 39, 120);
+  box-shadow: none;
+  border: none;
 }
 
-    .profile-button:hover {
-        background: #682773
-    }
+.profile-button:hover {
+  background: #682773;
+}
 
-    .profile-button:focus {
-        background: #682773;
-        box-shadow: none
-    }
+.profile-button:focus {
+  background: #682773;
+  box-shadow: none;
+}
 
-    .profile-button:active {
-        background: #682773;
-        box-shadow: none
-    }
+.profile-button:active {
+  background: #682773;
+  box-shadow: none;
+}
 
 .back:hover {
-    color: #682773;
-    cursor: pointer
+  color: #682773;
+  cursor: pointer;
 }
 
 .labels {
-    font-size: 11px
+  font-size: 1rem;
 }
 
 .add-experience:hover {
-    background: #BA68C8;
-    color: #fff;
-    cursor: pointer;
-    border: solid 1px #BA68C8
+  background: #ba68c8;
+  color: #fff;
+  cursor: pointer;
+  border: solid 1px #ba68c8;
 }

@@ -1,27 +1,69 @@
-﻿@page "/UserProfile/{id}"
+﻿@* @page "/UserProfile/{id}" *@
+@page "/UserProfile"
 @using SharpScape.Shared.Dto
 @inject HttpClient http
 
 
-<div class="container rounded bg-white mt-5 mb-5">
+@* <div class="container rounded bg-white mt-5 mb-5"> *@
+<div class="background">
 @if (_userinfo is not null)
 {
-    <h1>@_userinfo.Username</h1>
-
-    <div class="row">
-        <div class="col-md-5 border-right">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="text-right">Account Summary Information</h4>
+    <div class="container">
+        <div class="row profile">
+            <div class="col-md-1"></div>
+            <div class="col-md-4 border-right profile_picture">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                <span class="font-weight-bold">@_userinfo.Username</span>
+                <span class="font-weight-bold">@_userinfo.Email</span>
+                @* <span class="text-black-50">@_userinfo.Email</span> *@
+                <div class="mt-5 text-center">
+                    <button class="btn btn-primary profile-button" type="button" @onclick="@OpenCreateThread">Edit Profile</button>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Created</label><div>@_userinfo.Created.ToString()</div></div>
-                    <div class="col-md-6"><label class="labels">Email</label><div>@_userinfo.Email</div></div>
-                </div>
-                
+                @if(CreateThread){
+                    <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Create A Thread</h4>
+                                </div>
+                                    <EditForm Model="@tUser" OnValidSubmit=@HandleValidSubmit>
+                                <div class="modal-body">
+                                    <form model="@tUser"> 
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">UserName:</label>
+                                            <InputText class="form-control" @bind-Value="tUser.Username" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Email:</label>
+                                            <InputText class="form-control" @bind-Value="tUser.Email" />
+                                        </div>
+                                    </form> 
+                                </div>
+                                <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                                        </EditForm>
+                            </div>
+                        </div>
+                    </div>
+                } 
             </div>
+            </div>
+            <div class="col-md-6 border-right profile_info">
+                <div class="p-5 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="">Hello @_userinfo.Username</h4>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12 mt-2"><label class="labels">UserName: @_userinfo.Username</label></div>
+                        <div class="col-md-12 mt-2"><label class="labels">Email: @_userinfo.Email</label></div>
+                        <div class="col-md-12 mt-2"><label class="labels">Joined: @_userinfo.Created</label></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
         </div>
-        
     </div>
 }
 else if (_error is not null)
@@ -45,7 +87,8 @@ else
         try
         {
             _error = null;
-            _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{id}");
+            //_userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{id}");
+            _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/1");
         }
         catch (HttpRequestException e)
         {
@@ -54,4 +97,28 @@ else
     }
     [Parameter]
     public string id { get; set; } = "0";
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+    public bool CreateThread { get; set; } = false;
+    UserInfoDto tUser = new UserInfoDto();
+
+        /// methods for popup modal
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    private void OpenCreateThread()
+    {
+        CreateThread = true;
+        StateHasChanged();
+    }
+    private void CloseCreateThread()
+    {
+        CreateThread = false;
+        StateHasChanged();
+    }
+    private async void HandleValidSubmit()
+    {
+    }
 }
