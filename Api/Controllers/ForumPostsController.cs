@@ -87,7 +87,7 @@ namespace SharpScape.Api.Controllers
                 Id = fp.Id,
                 AuthorId = fp.AuthorId,
                 Body = fp.Body,
-                Created = fp.Created,
+             //   Created = fp.Created,
                 ThreadId = fp.ThreadId
             });
             await _context.SaveChangesAsync();
