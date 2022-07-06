@@ -2,7 +2,7 @@
 
 namespace SharpScape.Api.Models
 {
-    public class ForumCategory
+    public class ForumCategory 
     {
         [Key]
         public int Id { get; set; } 

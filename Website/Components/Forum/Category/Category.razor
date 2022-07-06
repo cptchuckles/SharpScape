@@ -1,31 +1,23 @@
 @namespace SharpScape.Website.Components.Forum
-
+@inject SharpScape.Website.Services.ForumReferenceProvider Data
 
 <div class=@Status>
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="forum-icon">
                 <i class=@Icon></i>
             </div>
-            <a href="category/@Route" class="forum-item-title">
+            <a href="category/@Route/@fcdId" class="forum-item-title" onclick="@UpdateId">
             @Title
             </a>
             <div class="forum-sub-title">@SubTitle</div>
         </div>
         <div class="col-md-1 forum-info">
             <span class="views-number">
-                @ViewsNumber
+                @ThreadsNumber
             </span>
             <div>
-                <small>Views</small>
-            </div>
-        </div>
-        <div class="col-md-1 forum-info">
-            <span class="views-number">
-                @TopicsNumber
-            </span>
-            <div>
-                <small>Topics</small>
+                <small>Threads</small>
             </div>
         </div>
         <div class="col-md-1 forum-info">
@@ -42,19 +34,26 @@
     [Parameter]
     public string Route { get; set; } = "r";
     [Parameter]
-    public string Status{get;set;} = "s";
+    public string Status { get; set; } = "s";
 
     [Parameter]
-    public string Icon{get;set;} = "i";
-    
+    public string Icon { get; set; } = "i";
     [Parameter]
-    public string Title{get;set;} = "t";
+    public string Title { get; set; } = "t";
+    [Parameter]
+    public int Id{get;set;}
     [Parameter]
     public string SubTitle{get;set;} = "st";
     [Parameter]
-    public string ViewsNumber{get;set;} = "vn";
+    public string ViewsNumber { get; set; } = "vn";
     [Parameter]
-    public string TopicsNumber{get;set;} = "tn";
+    public string ThreadsNumber { get; set; } = "tn";
     [Parameter]
     public string PostsNumber{get;set;} = "pn";
+    [Parameter]
+    public string fcdId { get; set; }
+    private void UpdateId()
+    {
+        Data.CategoryId = Id;
+    }
 }

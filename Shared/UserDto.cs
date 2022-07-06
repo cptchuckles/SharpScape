@@ -2,6 +2,12 @@
 
 namespace SharpScape.Shared.Dto;
 
+public static class UserRole
+{
+    public const string Admin = "Admin";
+    public const string User = "User";
+}
+
 public class UserInfoDto
 {
     public int Id { get; set; }
@@ -9,6 +15,8 @@ public class UserInfoDto
     public string Username { get; set; }
 
     public string Email { get; set; }
+
+    public string Role { get; set; }
 
     public DateTime Created { get; set; }
 }
@@ -34,4 +42,11 @@ public class UserLoginDto
 
     [Required]
     public string Password { get; set; }
+}
+public class UserLoginResponseDto
+{
+    public int Id { get; set; }
+
+    public string Username { get; set; }
+    public string accessToken {get;set;}
 }

@@ -1,14 +1,18 @@
 .background {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  padding: 2rem;
-  background-image: url("images/Background.png");
-  background-size: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    padding: 2rem;
+    background-image: url("images/Background.png");
+    background-size: cover;
 }
 .pagination_background {
   background-color: #1b2042;
+}
+.card {
+  width: 60vw;
 }
 .card-body {
   -ms-flex: 1 1 auto;
@@ -19,6 +23,11 @@
   color: white;
 }
 
+.createbutton {
+  padding-top: 1.5rem;
+  padding-left: 30%;
+  padding-right: 30%;
+}
 .comment-widgets .comment-row:hover {
   background: #2b4080;
   cursor: pointer;

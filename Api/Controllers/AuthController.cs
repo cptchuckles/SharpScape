@@ -40,12 +40,28 @@ public class AuthController : ControllerBase
         return Ok(_crypto.CreateToken(user));
     }
 
+    [Authorize(Roles="Admin")]
+    [HttpPost("RegisterAdmin")]
+    public ActionResult<string> RegisterAdmin([FromBody] UserRegisterDto request)
+    {
+        if (_context.Users.Any(u => u.Email.ToLower() == request.Email.ToLower()))
+            return BadRequest($"User with email {request.Email} already exists");
+        if (_context.Users.Any(u => u.Username.ToLower() == request.Username.ToLower()))
+            return BadRequest($"Username {request.Username} already exists");
+
+        var user = new User(request.Username, request.Email, request.Password, UserRole.Admin);
+        _context.Add(user);
+        _context.SaveChanges();
+
+        return Ok(_crypto.CreateToken(user));
+    }
+
     [AllowAnonymous]
     [HttpPost("Login")]
     public ActionResult<string> Login([FromBody] UserLoginDto request)
     {
         var user = _context.Users.FirstOrDefault(u => u.Username.ToLower() == request.Username.ToLower());
-
+        UserLoginResponseDto response = new UserLoginResponseDto();
         if (user is null)
             return BadRequest("Username/Email or Password incorrect");
         
@@ -75,5 +91,9 @@ public class AuthController : ControllerBase
 
 
         //return Ok(_crypto.CreateToken(user));
+        response.accessToken = _crypto.CreateToken(user);
+        response.Id = user.Id;
+        response.Username = user.Username;
+        return Ok(response);
     }
 }

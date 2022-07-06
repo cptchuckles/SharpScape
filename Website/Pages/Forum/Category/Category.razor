@@ -1,161 +1,164 @@
-@page "/category/{urlName}"
+@page "/category/{urlName}/{fcdId}"
 @inject NavigationManager NavManager
 @inject HttpClient Http
+@inject ForumReferenceProvider Data
+@using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
+
+    @if (loading)
+    {
+        <center>
+            <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
+            <span style=" color:#99abb4 ">threads are loading</span>
+        </center>
+    }
+
+
+
+
+
     <div class="container">
-        <div class="row text-left mb-5">
-            <div class="col-lg-6 mb-3 mb-sm-0">
-                <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" style="width: 100%;">
-                    <select class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                        <option> Categories </option>
-                        <option> Learn </option>
-                        <option> Share </option>
-                        <option> Build </option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-lg-6 text-lg-right">
-                <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" style="width: 100%;">
-                    <select class="form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                        <option> Filter by </option>
-                        <option> Votes </option>
-                        <option> Replys </option>
-                        <option> Views </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="title">@UrlName</div>
+        @* <div class="row text-left mb-5">
+
+            </div>*@
+
+
+   <center>
+    <a href="/forum"><h3>Go Back to Categories List</h3> </a>
+    </center>
+
+        <div class="title">@UrlName </div>
         <div class="card">
             <div class="row align-items-center">
-                <div class="col-md-8 mb-3 mb-sm-0">
+                <div class="col-md-9 mb-3 mb-sm-0">
                     <h5>
                         <span>Thread</span>
                     </h5>
                 </div>
-                <div class="col-md-4 op-7">
+                <div class="col-md-3 op-7">
                     <div class="row text-center op-7">
                         <div class="col px-1"> <span class="d-block text-sm">Votes</span> </div>
                         <div class="col px-1"> <span class="d-block text-sm">Replies</span> </div>
-                        <div class="col px-1"> <span class="d-block text-sm">Views</span> </div>
                     </div>
                 </div>
             </div>
         </div>
-        @foreach (ThreadItem item in TopicList)
+        @foreach (ForumThreadDto thread in threads)
         {
-            <Thread
-                Route=@item.Title
-                Title=@item.Title
-                Body=@item.Body
-                Date=@item.Date
-                Author="Anonymous"
+            <Thread Route=@thread.Title
+                Title=@thread.Title
+                Body=@thread.Body
+                Date="Saturday, June 18, 2022"
+                Author=@getUser(thread.AuthorId)
+                ThreadId=@thread.Id
                 Votes="251"
-                Replies="200"
-                Views="199"
-            />
+                Replies=@thread.Replies.ToString() />
         }
-        @foreach (Comment item in comments)
-        {
-            <Thread
-            Route=@item.Name
-            Title=@item.Name
-            Body=@item.Body
-            Date="Saturday, June 18, 2022"
-            Author=@item.Email
-            Votes="251"
-            Replies="200"
-            Views="199"
-        />    
-        }
+
         <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
                     PageIndex="@pageIndex"
                     Radius="3"
                     OnSelectedPage="@SelectedPage">
         </Pagination>
-        <div class="row createbutton justify-content-center">
-            <button type="button" class="btn btn-primary" s @onclick="@OpenCreateThread">Create Thread</button>
-        </div>
-        </div>
-        @*
-
-        @if(CreateThread){
-            <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Create A Thread</h4>
-                        </div>
-                               <EditForm Model="@tTopic" OnValidSubmit=@HandleValidSubmit>
+        @if (Data.UserId > 0)
+        {
+            <div class="row createbutton justify-content-center">
+                <button type="button" class="btn btn-primary" @onclick="@OpenCreateThread">Create Thread</button>
+            </div>
+        }
+    </div>
+    @if (CreateThread)
+    {
+        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create A Thread</h4>
+                    </div>
+                    <EditForm Model="@tTopic" OnValidSubmit=@HandleValidSubmit>
                         <div class="modal-body">
-                             <form model="@tTopic"> 
+                            <form model="@tTopic">
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Title:</label>
-                                     <input type="text" class="form-control" id="recipient-name" /> 
-                                <InputText class="form-control" @bind-Value="tTopic.Title" />
+                                    @*  <input type="text" class="form-control" id="recipient-name" /> *@
+                                    <InputText class="form-control" @bind-Value="tTopic.Title" />
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">Content:</label>
-                                     <textarea class="form-control" id="message-text"></textarea> 
+                                    @*  <textarea class="form-control" id="message-text"></textarea> *@
                                     <InputTextArea class="form-control" id="testing1" @bind-Value="tTopic.Body" />
                                 </div>
-                             </form> 
+                            </form>
                         </div>
                         <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
-                                <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
                         </div>
-                                </EditForm>
-                    </div>
+                    </EditForm>
                 </div>
             </div>
-        }*@
+        </div>
+    }
 </div>
 
-@code{
+@code {
     [Parameter]
     public string UrlName { get; set; }
-    public bool CreateThread {get;set;} = false;
+    public bool CreateThread { get; set; } = false;
     [Parameter]
-    public EventCallback<bool> OnClose { get; set; } 
-    ThreadItem tTopic = new ThreadItem();
-    List<ThreadItem> TopicList = new List<ThreadItem>();
-
-
+    public EventCallback<bool> OnClose { get; set; }
+    [Parameter]
+    public string fcdId { get; set; }
+    public List<ForumPostDto> posts { get; set; }
+    ForumThreadDto tTopic = new ForumThreadDto();
+    List<ForumThreadDto> ThreadsDto = new List<ForumThreadDto>();
+    List<UserInfoDto> users = new List<UserInfoDto>();
+    private IList<ForumThreadDto> allthreads = new List<ForumThreadDto>();
+    private IList<ForumThreadDto> threads = new List<ForumThreadDto>();
     //// pagination stuff and dummy data
     private int pageIndex = 1;
-    private int itemsPerPage = 10;
+    private int itemsPerPage = 4;
     private int totalPages = 1;
-    private IEnumerable<Comment> allComments = null;
-    private IEnumerable<Comment> comments = Enumerable.Empty<Comment>(); 
+    bool loading = false;
     //// methods for pagination
     protected override async Task OnInitializedAsync()
     {
-        allComments = await Http.GetFromJsonAsync<IEnumerable<Comment>>("https://jsonplaceholder.typicode.com/comments");
-        if (allComments != null)
+        loading = true;
+        allthreads = await Http.GetFromJsonAsync<List<ForumThreadDto>>($"/api/ForumThreads/category{fcdId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        foreach (var thread in allthreads)
+        {
+            posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
+            thread.Replies = posts.Count;
+        }
+        if (users != null && Data.UserId > 0)
+        {
+            Data.UserName = getUser(Data.UserId);
+        }
+        if (allthreads != null)
         {
             // Initialize the number of "totalPages"
-            totalPages = (int)(allComments.Count() / itemsPerPage);
-
+            totalPages = (int)Math.Ceiling((double)allthreads.Count() / itemsPerPage);
             // Initialize the "comments" which will be displayed when the page loaded first time.
-            comments = allComments.Skip(0).Take(itemsPerPage);
+            threads = allthreads.Reverse().Skip(0).Take(itemsPerPage).ToList();
         }
+        loading = false;
     }
     private void SelectedPage(int selectedPageIndex)
     {
-        if (allComments != null)
+        if (allthreads != null)
         {
             pageIndex = selectedPageIndex;
             var skipCount = itemsPerPage * (pageIndex - 1);
-            comments = allComments.Skip(skipCount).Take(itemsPerPage);
-       }
+            threads = allthreads.Reverse().Skip(skipCount).Take(itemsPerPage).ToList();
+        }
     }
-   /// methods for popup modal
+    /// methods for popup modal
     private Task ModalCancel()
-   {
+    {
         return OnClose.InvokeAsync(false);
     }
 
@@ -164,39 +167,52 @@
         CreateThread = true;
         StateHasChanged();
     }
-
-
-    private void HandleValidSubmit()
+    private void CloseCreateThread()
     {
-       ThreadItem Thread = new ThreadItem();
-        Thread.Title= tTopic.Title;
-        Thread.Body = tTopic.Body;
-       Thread.Date = Convert.ToDateTime(DateTime.Now).ToString("D");
-
-       TopicList.Add(Thread);
-      tTopic = new ThreadItem();
-       CreateThread= false;
+        CreateThread = false;
+        StateHasChanged();
     }
-    private class  ThreadItem
+    ForumThreadDto tempThread = new ForumThreadDto();
+
+    private async void HandleValidSubmit()
     {
 
-        public string Title { get; set; }
-       public string Author { get; set; }
+        tempThread.Title = tTopic.Title;
+        tempThread.Body = tTopic.Body;
+        tempThread.CategoryId = Convert.ToInt32(fcdId);
+        // tempThread.Id = 0;
+        tempThread.Views = 0;
+        tempThread.Votes = 0;
+        tempThread.AuthorId = Data.UserId;
+        tempThread.Replies = 0;
+        CreateThread = false;
+        var result = await Http.PostAsJsonAsync("/api/ForumThreads", tempThread);
 
-        public string Body { get; set; }
-
-        public string  Date { get; set; }
-
-        public ThreadItem()
+        if (result.IsSuccessStatusCode)
         {
+            allthreads = await result.Content.ReadAsAsync<List<ForumThreadDto>>();
+            foreach (var thread in allthreads)
+            {
+                posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
+                thread.Replies = posts.Count;
+            }
+            if (allthreads != null)
+            {
+                // Initialize the number of "totalPages"
+                totalPages = (int)Math.Ceiling((double)allthreads.Count() / itemsPerPage);
+                // Initialize the "comments" which will be displayed when the page loaded first time.
+                threads = allthreads.Reverse().Skip(0).Take(itemsPerPage).ToList();
+            }
+            SelectedPage(1);
+            StateHasChanged();
+        }
+        else
+        {
+            await result.Content.ReadAsStringAsync();
         }
     }
-    public class Comment
+    public string getUser(int id)
     {
-       public int PostId { get; set; }
-        public int Id { get; set; }
-      public string Name { get; set; }
-      public string Email { get; set; }
-       public string Body { get; set; }
+        return users.Find(x => x.Id == id).Username;
     }
 }
