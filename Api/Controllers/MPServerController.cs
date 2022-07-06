@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
 using SharpScape.Api.Services;
@@ -43,7 +44,7 @@ public class MPServerController : ControllerBase
             return BadRequest("Timestamp invalid");
         }
         
-        var timestampedPayload = $"{request.Payload}.{request.Timestamp.ToString()}";
+        var timestampedPayload = $"{request.KeyId}.{request.Payload}.{request.Timestamp.ToString()}";
         if (! _crypto.VerifyMPSignature(timestampedPayload, request.Signature)) {
             return BadRequest("Signature invalid");
         }
@@ -60,20 +61,36 @@ public class MPServerController : ControllerBase
             return BadRequest("Login request body malformed");
         }
 
-        var user = _context.Users.FirstOrDefault(u => u.Username.ToLower() == loginRequest.Username.ToLower());
+        var user = _context.Users
+            .Where(u => u.Username.ToLower() == loginRequest.Username.ToLower())
+            .Include(u => u.GameAvatar)
+            .FirstOrDefault();
         if (user is null) {
             return BadRequest("Username/Email or Password invalid");
         }
-        
         if (! _crypto.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt)) {
             return BadRequest("Username/Email or Password invalid");
         }
 
+        GameAvatar gameAvatar;
+        if (user.GameAvatar is null)
+        {
+            gameAvatar = new GameAvatar() { UserId = user.Id };
+            user.GameAvatar = gameAvatar;
+            _context.Entry(user).State = EntityState.Modified;
+            _context.Add<GameAvatar>(gameAvatar);
+            _context.SaveChanges();
+        }
+        else
+        {
+            gameAvatar = user.GameAvatar;
+        }
+
         return Ok(new GameAvatarInfoDto() {
             UserInfo = new UserInfoDto().FromUser(user),
-            Avatar = "Whatever", // TODO: Make models for avatars and stuff
-            GlobalPositionX = 47,
-            GlobalPositionY = 92
+            SpriteName = gameAvatar.SpriteName,
+            GlobalPositionX = gameAvatar.GlobalPositionX,
+            GlobalPositionY = gameAvatar.GlobalPositionY
         });
     }
 

@@ -10,9 +10,8 @@ public class MPServerMessageDto
 
 public class GameAvatarInfoDto
 {
-    // TODO: Make a robust model for this kind of shit
     public UserInfoDto UserInfo { get; set; }
-    public string Avatar { get; set; }
+    public string SpriteName { get; set; }
     public float GlobalPositionX { get; set; }
     public float GlobalPositionY { get; set; }
 }
