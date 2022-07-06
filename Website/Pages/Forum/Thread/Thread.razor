@@ -5,19 +5,13 @@
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
+
 @*  login imports *@
-@using SharpScape.Shared.Dto
 @inject ForumReferenceProvider Data
 @inject HttpClient Http
 @inject IAuthTokenProvider TokenProvider
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
-
-
-
-
-
-
 
 
 
@@ -27,16 +21,17 @@
 
 <div class="background">
 
+    
      @if (loading)
                             {
                                <center>
-       <span class="spinner-border spinner-border-lg align-center" style=" color:yellow "></span>
-         <span style=" color:yellow " >posts are loading</span>
+       <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
+         <span style=" color:#99abb4 " >posts are loading</span>
                               </center> 
                             }
-
-   
-
+<center>
+    <a href="category/@fcd.Name/@ftd.CategoryId" class="forum-item-title"><h3> Go to @fcd.Name List </h3> </a>
+    </center>
     <div class="container d-flex justify-content-center mt-100 mb-100">
         <div class="row">
             <div class="col-md-12">
@@ -130,23 +125,24 @@
                             </EditForm>
                              }
 
-
-                                    
-                                    <EditForm Model="@tempPost" OnValidSubmit=@HandleValidSubmit>
-                                        <div class="modal-body">
-                                            <form model="@tempPost">
-                                                <div class="form-group">
-                                                    <label for="message-text" class="col-form-label">Comment:</label>
-                                                    @*  <textarea class="form-control" id="message-text"></textarea> *@
-                                                    <InputTextArea class="form-control" id="testing1" @bind-Value="tempPost.Body" />
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
-                                            <button type="submit" class="btn btn-primary">Post</button>
-                                        </div>
-                                    </EditForm>
+                             @if (Data.UserId != 0)
+                                    {
+                                        <EditForm Model="@tempPost" OnValidSubmit=@HandleValidSubmit>
+                                            <div class="modal-body">
+                                                <form model="@tempPost">
+                                                    <div class="form-group">
+                                                        <label for="message-text" class="col-form-label">Comment:</label>
+                                                        @*  <textarea class="form-control" id="message-text"></textarea> *@
+                                                        <InputTextArea class="form-control" id="testing1" @bind-Value="tempPost.Body" />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
+                                                <button type="submit" class="btn btn-primary">Post</button>
+                                            </div>
+                                        </EditForm>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -183,10 +179,16 @@
     public bool CreateThread { get; set; } = false;
     public EventCallback<bool> OnClose { get; set; }
     private bool loading=false ;
+    public ForumThreadDto ftd = new ForumThreadDto();
+    public ForumCategoryDto fcd = new ForumCategoryDto();
+
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/Thread{ThreadId}");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
+        ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
+        fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
+
         if (allPosts != null)
         {
             // Initialize the number of "totalPages"
@@ -215,7 +217,7 @@
             post.Created = Convert.ToDateTime(DateTime.Now);
             posts.Add(post);
             CreateThread = false;
-            var result = await Http.PostAsJsonAsync("https://localhost:7193/api/ForumPosts", post);
+            var result = await Http.PostAsJsonAsync("/api/ForumPosts", post);
             if (result.IsSuccessStatusCode)
             {
                 allPosts = await result.Content.ReadAsAsync<List<ForumPostDto>>();
@@ -249,10 +251,8 @@
 
     private void OpenCreateThread()
     {
-       // if (Data.UserId == 0)
-       //     NavManager.NavigateTo("/login");
 
-
+       tempPost.Body = "";
         CreateThread = true;
         StateHasChanged();
     }

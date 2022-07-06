@@ -11,6 +11,11 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+#if !DEBUG
+Environment.SetEnvironmentVariable("DATABASE_CONNECTION", "RemoteTesting");
+#endif
+
 // Add services to the container.
 if (Environment.GetEnvironmentVariable("DATABASE_CONNECTION") == "RemoteTesting")
 {
@@ -18,6 +23,7 @@ if (Environment.GetEnvironmentVariable("DATABASE_CONNECTION") == "RemoteTesting"
     builder.Services.AddDbContext<AppDbContext, PgDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("RemoteTestingConnection")));
 }
+
 else
 {
     Console.WriteLine("USING SQLITE TESTING CONNECTION");
@@ -27,7 +33,26 @@ else
     });
 }
 
-builder.Services.AddSingleton<RsaKeyProvider>();
+
+
+//// Add services to the container.
+//if (Environment.GetEnvironmentVariable("DATABASE_CONNECTION") == "RemoteTesting")
+//{
+//    Console.WriteLine("USING REMOTE TESTING CONNECTION");
+//    builder.Services.AddDbContext<AppDbContext, PgDbContext>(options =>
+//        options.UseNpgsql(builder.Configuration.GetConnectionString("RemoteTestingConnection")));
+//}
+//else
+//{
+//    Console.WriteLine("USING SQLITE TESTING CONNECTION");
+//    builder.Services.AddDbContext<AppDbContext, SqliteDbContext>(options => {
+//        options.EnableSensitiveDataLogging();
+//        options.UseSqlite(builder.Configuration.GetConnectionString("LocalDevelopmentConnection"));
+//    });
+//}
+
+builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>();
+
 builder.Services.AddScoped<Crypto>();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
