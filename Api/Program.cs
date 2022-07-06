@@ -29,6 +29,7 @@ else
 
 builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>();
 builder.Services.AddScoped<Crypto>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

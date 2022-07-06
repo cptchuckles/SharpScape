@@ -24,21 +24,33 @@ namespace SharpScape.Api.Controllers
         {
             if (tokenApiModel is null)
                 return BadRequest("Invalid client request");
-            string accessToken = tokenApiModel.AccessToken;
+            // string accessToken = tokenApiModel.AccessToken;
             string refreshToken = tokenApiModel.RefreshToken;
-            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(refreshToken);
             var username = principal.Identity.Name; //this is mapped to the Name claim by default
+
             var user = _context.Users.SingleOrDefault(u => u.Username == username);
-            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                return BadRequest("Invalid client request");
+
+            // if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            //     return BadRequest("Invalid client request");
+
+            if (user == null)
+                return BadRequest("no user");
+            if (user.RefreshToken != refreshToken)
+                return BadRequest("something wrong with refresh token");
+            if (user.RefreshTokenExpiryTime <= DateTime.Now)
+                return BadRequest(user.RefreshTokenExpiryTime);
+
             var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
-            var newRefreshToken = _tokenService.GenerateRefreshToken(principal.Claims);
-            user.RefreshToken = newRefreshToken;
+            // var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            // user.RefreshToken = newRefreshToken;
             _context.SaveChanges();
             return Ok(new AuthenticatedResponse()
             {
-                Token = newAccessToken,
-                RefreshToken = newRefreshToken
+                AccessToken = newAccessToken,
+                RefreshToken = refreshToken
             });
         }
         [HttpPost, Authorize]

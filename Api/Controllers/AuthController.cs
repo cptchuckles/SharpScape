@@ -60,10 +60,16 @@ public class AuthController : ControllerBase
         };
         var accessToken = _tokenService.GenerateAccessToken(claims);
         var refreshToken = _tokenService.GenerateRefreshToken(claims);
+
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(15);
+
+        _context.Users.Update(user);
+
         _context.SaveChanges();
         return Ok(new AuthenticatedResponse
         {
-            Token = accessToken,
+            AccessToken = accessToken,
             RefreshToken = refreshToken
         });
 
