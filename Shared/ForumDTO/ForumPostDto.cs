@@ -12,6 +12,6 @@ namespace SharpScape.Shared.Dto
         
         public int AuthorId { get; set; }
         public string Body { get; set; }
-        public DateTime Created { get; set; } 
+        public DateTime Created { get; set; }
     }
 }
