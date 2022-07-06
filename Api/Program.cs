@@ -51,7 +51,7 @@ else
 //    });
 //}
 
-builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>();
+builder.Services.AddSingleton<RsaKeyProvider>();
 
 builder.Services.AddScoped<Crypto>();
 
