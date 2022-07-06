@@ -116,7 +116,18 @@ namespace SharpScape.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ForumThreadDto>> PostForumThread(ForumThreadDto forumThreadDto)
         {
-            ForumThread forumThread = new ForumThread() { Author = _context.Users.Find(forumThreadDto.AuthorId), UserId = forumThreadDto.AuthorId, ForumCategory = _context.ForumCategories.Find(forumThreadDto.CategoryId), Body = forumThreadDto.Body, CategoryId = forumThreadDto.CategoryId, Created = DateTime.Now, Title = forumThreadDto.Title, Replies = 0, Views = 0, Votes = 0 };
+            ForumThread forumThread = new ForumThread()
+            {
+                Author = _context.Users.Find(forumThreadDto.AuthorId),
+                UserId = forumThreadDto.AuthorId,
+                ForumCategory = _context.ForumCategories.Find(forumThreadDto.CategoryId),
+                Body = forumThreadDto.Body,
+                CategoryId = forumThreadDto.CategoryId,
+                Title = forumThreadDto.Title,
+                Replies = 0,
+                Views = 0,
+                Votes = 0
+            };
             if (_context.ForumThreads == null)
             {
                 return Problem("Entity set 'AppDbContext.ForumThreads'  is null.");

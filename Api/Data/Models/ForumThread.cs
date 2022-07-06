@@ -25,6 +25,6 @@ namespace SharpScape.Api.Models
 
         [Editable(false)]
         [DisplayFormat(DataFormatString = "{0:D}")]
-        public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
+        public DateTime Created { get; set; } = DateTime.UtcNow;
     }
 }
