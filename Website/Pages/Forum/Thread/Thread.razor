@@ -98,9 +98,9 @@
                         {
                             <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
                                 
-
+                                <center>
                                 <span> "Admin" "StrongPassword12345"</span>
-
+                                </center>
                                 @if (requestError is not null)
                                 {
                                     <p class="text-danger">@requestError</p>
