@@ -1,11 +1,12 @@
 .background {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  padding: 2rem;
-  background-image: url("images/Background.png");
-  background-size: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    padding: 2rem;
+    background-image: url("images/Background.png");
+    background-size: cover;
 }
 .container {
   border: 1px solid;
