@@ -12,24 +12,16 @@
 @inject IAuthTokenProvider TokenProvider
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
-
-
-
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-
-
-
 <div class="background">
-
-    
-     @if (loading)
-                            {
-                               <center>
-       <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
-         <span style=" color:#99abb4 " >posts are loading</span>
-                              </center> 
-                            }
-<center>
+    @if (loading)
+    {
+        <center>
+            <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
+            <span style=" color:#99abb4 " >posts are loading</span>
+        </center> 
+    }
+    <center>
     <a href="category/@fcd.Name/@ftd.CategoryId" class="forum-item-title"><h3> Go to @fcd.Name List </h3> </a>
     </center>
     <div class="container d-flex justify-content-center mt-100 mb-100">
@@ -64,9 +56,10 @@
                         @foreach (ForumPostDto post in posts)
                         {
                             <Post Author=@Data.UserName
-                              Date=@post.Created.ToString("D")
-                              Body=@post.Body
-                              Image="images/Avatar.png" />
+                                Date=@post.Created.ToString("D")
+                                Body=@post.Body
+                                Image="images/Avatar.png" 
+                            />
                         }
                         <div class="pagination_background">
                             <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
@@ -76,63 +69,49 @@
                             </Pagination>
                         </div>
                     </div>
-                   
-                    
-                    
-                    
                     @if (CreateThread)
                     {
-                      
-
-
-
-
                         <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title">Create A Post</h4>
                                     </div>
-                                    
-                                      @if (Data.UserId == 0)
-                        {
-                            <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
-                                
-                                <center>
-                                <span> "Admin" "StrongPassword12345"</span>
-                                </center>
-                                @if (requestError is not null)
-                                {
-                                    <p class="text-danger">@requestError</p>
-                                }
-
-                                <DataAnnotationsValidator />
-
-                                <div class="modal-body">
-                                    <label for="username" class="col-form-label">Username:</label>
-                                    <InputText class="form-control" id="username" @bind-Value="@userLoginDto.Username" />
-                                    <ValidationMessage For="() => userLoginDto.Username" />
-                                </div>
-                                <div class="modal-body">
-                                    <label for="password" class="col-form-label">Password:</label>
-                                    <InputText class="form-control" type="password" id="password" @bind-Value="@userLoginDto.Password" />
-                                    <ValidationMessage For="() => userLoginDto.Password" />
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Login</button>
-                                    <a href="/register">Create an account</a>
-                                </div>
-                            </EditForm>
-                             }
-
-                             @if (Data.UserId != 0)
+                                    @if (Data.UserId == 0)
+                                    {
+                                        <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
+                                            
+                                            <center>
+                                            <span> "Admin" "StrongPassword12345"</span>
+                                            </center>
+                                            @if (requestError is not null)
+                                            {
+                                                <p class="text-danger">@requestError</p>
+                                            }
+                                            <DataAnnotationsValidator />
+                                            <div class="modal-body">
+                                                <label for="username" class="col-form-label">Username:</label>
+                                                <InputText class="form-control" id="username" @bind-Value="@userLoginDto.Username" />
+                                                <ValidationMessage For="() => userLoginDto.Username" />
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="password" class="col-form-label">Password:</label>
+                                                <InputText class="form-control" type="password" id="password" @bind-Value="@userLoginDto.Password" />
+                                                <ValidationMessage For="() => userLoginDto.Password" />
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Login</button>
+                                                <a href="/register">Create an account</a>
+                                            </div>
+                                        </EditForm>
+                                    }
+                                    @if (Data.UserId != 0)
                                     {
                                         <EditForm Model="@tempPost" OnValidSubmit=@HandleValidSubmit>
                                             <div class="modal-body">
                                                 <form model="@tempPost">
                                                     <div class="form-group">
                                                         <label for="message-text" class="col-form-label">Comment:</label>
-                                                        @*  <textarea class="form-control" id="message-text"></textarea> *@
                                                         <InputTextArea class="form-control" id="testing1" @bind-Value="tempPost.Body" />
                                                     </div>
                                                 </form>
@@ -148,16 +127,12 @@
                         </div>
                     }
                 </div>
-                @*    @if (Data.UserId > 0)
-                    {*@
                 <div class="row createbutton justify-content-center">
                     <button type="button" class="btn btn-primary" @onclick="@OpenCreateThread">Make a post</button>
                 </div>
-                @* }*@
             </div>
         </div>
     </div>
-    
 </div>
 @code {
     [Parameter]
@@ -200,16 +175,8 @@
     }
     private async void HandleValidSubmit()
     {
-        if (Data.UserId > 0    //&& Data.ThreadId != null 
-            && tempPost.Body != "")
+        if (Data.UserId > 0 && tempPost.Body != "")
         {
-            //       SubmitResult = true;
-            //   }
-
-
-
-            //   if (SubmitResult)
-            //  {
             ForumPostDto post = new ForumPostDto();
             post.AuthorId = Data.UserId;
             post.ThreadId = Data.ThreadId;
@@ -241,18 +208,13 @@
     {
         return OnClose.InvokeAsync(false);
     }
-
-
     // pagination stuff and dummy data
     private int pageIndex = 1;
     private int itemsPerPage = 4;
     private int totalPages = 1;
-
-
     private void OpenCreateThread()
     {
-
-       tempPost.Body = "";
+        tempPost.Body = "";
         CreateThread = true;
         StateHasChanged();
     }
@@ -261,7 +223,6 @@
         CreateThread = false;
         StateHasChanged();
     }
-
     private void SelectedPage(int selectedPageIndex)
     {
         if (allPosts != null)
@@ -271,10 +232,9 @@
             posts = allPosts.Skip(skipCount).Take(itemsPerPage).ToList();
         }
     }
-
     /////////////////////////// login /////////////////////////////////////
 
-     private UserLoginDto userLoginDto = new();
+    private UserLoginDto userLoginDto = new();
     private string? requestError;
 
     private async Task TryLogin()
@@ -289,13 +249,10 @@
             Data.UserId = response.Id;
             
             await AuthStateProvider.GetAuthenticationStateAsync();
-          
         }
         else
         {
             requestError = await result.Content.ReadAsStringAsync();
         }
     }
-
-
 }
