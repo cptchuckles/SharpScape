@@ -159,7 +159,7 @@ else
         }else{
             tUser.ProfilePicDataUrl = ProfilePicDataUrl;
         }
-        var result = await http.PostAsJsonAsync($"https://localhost:7193/api/User/{UserId}",tUser);
+        var result = await http.PostAsJsonAsync($"/api/User/{UserId}",tUser);
         if(result.IsSuccessStatusCode)
         {
             UserInfoDto userinfo = new UserInfoDto();
