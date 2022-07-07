@@ -37,6 +37,7 @@ public class User
     [DisplayFormat(DataFormatString = "{0:D}")]
     public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
 
+    public string ProfilePicDataUrl {get;set;} = "";
     public User() { }
 
     public User(string username, string email, string password)

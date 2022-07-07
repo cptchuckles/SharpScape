@@ -56,7 +56,7 @@ public class Crypto
     {
         var claims = new List<Claim> {
             new Claim("Id", user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Name, user.Username +"," + user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Role, user.Role)
         };

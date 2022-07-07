@@ -13,6 +13,10 @@
 .item {
   color: red;
 }
+.image-uploader {
+  padding-top: 1rem;
+  padding-left: 5rem;
+}
 .profile_picture {
   border: 1px solid white;
   border-radius: 1rem;
@@ -59,7 +63,17 @@
 .labels {
   font-size: 1rem;
 }
-
+.modal-title {
+  color: Black;
+}
+.modal-body label {
+  color: black;
+}
+.item {
+  text-align: left;
+  color: black;
+  padding: 0.5rem 0;
+}
 .add-experience:hover {
   background: #ba68c8;
   color: #fff;

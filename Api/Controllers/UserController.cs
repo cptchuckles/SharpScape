@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
 using SharpScape.Shared.Dto;
+using SharpScape.Api.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,9 +16,11 @@ namespace SharpScape.Api.Controllers
     {
         private readonly AppDbContext _context;
 
-        public UserController(AppDbContext context)
+        private readonly Crypto _crypto;
+        public UserController(AppDbContext context,Crypto crypto)
         {
             _context = context;
+            _crypto = crypto;
         }
 
         // GET: api/<ValuesController>
@@ -40,24 +43,39 @@ namespace SharpScape.Api.Controllers
             }
 
             var userinfo = new UserInfoDto().FromUser(user);
-
+            userinfo.ProfilePicDataUrl = user.ProfilePicDataUrl;
             return Ok(userinfo);
         }
 
         // POST api/<ValuesController>
-        [HttpPost]
-        public async Task<IActionResult> UpdateUser(int id,[FromBody] UserRegisterDto value)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> UpdateUser(int id,[FromBody] UserEditDto request)
         {
             var user = await _context.Users.FindAsync(id);
             if (user is null)
             {
                 return NotFound();
             }
-            var newuser = new User(value.Username, value.Email, value.Password);
-            user.Email = newuser.Email;
-            user.Username = newuser.Username;
-            user.PasswordHash = newuser.PasswordHash;
-            user.PasswordSalt = newuser.PasswordSalt;
+            if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+                return BadRequest("Username/Email or Password incorrect");
+            if(request.ProfilePicDataUrl != "")
+            {
+                user.ProfilePicDataUrl = request.ProfilePicDataUrl;
+            }
+            if(request.Username != "")
+            {
+                user.Username = request.Username;
+            }
+            if(request.Email != "")
+            {
+                user.Email = request.Email;
+            }
+            if(request.NewPassword != "")
+            {
+                var newuser = new User(request.Username, request.Email, request.NewPassword);
+                user.PasswordHash = newuser.PasswordHash;
+                user.PasswordSalt = newuser.PasswordSalt;
+            }
             _context.Entry(user).State=EntityState.Modified;
             try { await _context.SaveChangesAsync(); }
             catch (DbUpdateConcurrencyException)
@@ -68,9 +86,14 @@ namespace SharpScape.Api.Controllers
                 }
                 throw;
             }
-            return NoContent();
+            UserInfoDto response = new UserInfoDto();
+            response.Id = user.Id;
+            response.Username = user.Username;
+            response.Email = user.Email;
+            response.Created = user.Created;
+            response.ProfilePicDataUrl = user.ProfilePicDataUrl;
+            return Ok(response);
         }
-
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
