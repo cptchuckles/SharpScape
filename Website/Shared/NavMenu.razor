@@ -26,7 +26,7 @@
         </div>
         <AuthorizeView>
             <div class="nav-item">
-                <a class="nav-link" href="UserProfile/@context.User.Identity.Name.Split(',')[1]" Match="NavLinkMatch.All">
+                <a class="nav-link" href="UserProfile/@context.User.Claims.First(c => c.Type == "Id").Value" Match="NavLinkMatch.All">
                     <span class="oi oi-person" aria-hidden="true"></span>My Account
                 </a>
             </div>
