@@ -2,7 +2,6 @@
 @page "/UserProfile/{userId}"
 @using SharpScape.Shared.Dto
 @inject HttpClient http
-@inject IJSRuntime JSRuntime
 
 @* <div class="container rounded bg-white mt-5 mb-5"> *@
 <div class="background">
@@ -77,7 +76,6 @@
             <div class="col-md-1"></div>
         </div>
     </div>
-    <p style="width: 800px;overflow-wrap:break-word;">@ProfilePicDataUrl</p>
 }
 else if (_error is not null)
 {
@@ -161,8 +159,6 @@ else
         }else{
             tUser.ProfilePicDataUrl = ProfilePicDataUrl;
         }
-        await JSRuntime.InvokeVoidAsync("console.log","image");
-        await JSRuntime.InvokeVoidAsync("console.log",ProfilePicDataUrl);
         var result = await http.PostAsJsonAsync($"https://localhost:7193/api/User/{UserId}",tUser);
         if(result.IsSuccessStatusCode)
         {
