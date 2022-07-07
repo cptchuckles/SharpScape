@@ -100,7 +100,6 @@ else
         try
         {
             _error = null;
-            //_userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{id}");
             _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{UserId}");
             ProfilePicDataUrl = _userinfo.ProfilePicDataUrl;
         }
