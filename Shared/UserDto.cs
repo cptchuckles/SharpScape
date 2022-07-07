@@ -10,7 +10,7 @@ public static class UserRole
 
 public class UserInfoDto
 {
-    public int Id { get; set; }
+    public int Id { get; set; } 
 
     public string Username { get; set; }
 
@@ -19,6 +19,7 @@ public class UserInfoDto
     public string Role { get; set; }
 
     public DateTime Created { get; set; }
+    public string ProfilePicDataUrl {get;set;}
 }
 
 public class UserRegisterDto
@@ -34,7 +35,16 @@ public class UserRegisterDto
     [MinLength(8)]
     public string Password { get; set; }
 }
+public class UserEditDto
+{
+    public string Username { get; set; }
 
+    public string Email { get; set; }
+
+    public string Password { get; set; }
+    public string NewPassword { get; set; }
+    public string ProfilePicDataUrl { get; set; }
+}
 public class UserLoginDto
 {
     [Required]
