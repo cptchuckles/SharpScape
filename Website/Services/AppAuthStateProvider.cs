@@ -26,7 +26,7 @@ namespace SharpScape.Website.Services
             else
             {
                 identity = new ClaimsIdentity();
-                 _http.DefaultRequestHeaders.Authorization = null;
+                _http.DefaultRequestHeaders.Authorization = null;
             }
 
             var user = new ClaimsPrincipal(identity);

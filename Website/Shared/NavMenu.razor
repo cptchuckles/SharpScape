@@ -1,4 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">SharpScape</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -23,16 +24,18 @@
                 <span class="oi oi-play-circle" aria-hidden="true"></span> Play
             </NavLink>
         </div>
-        <div class="nav-item">
-            <NavLink class="nav-link" href="UserProfile" Match="NavLinkMatch.All">
-                <span class="oi oi-person" aria-hidden="true"></span>My Account
-            </NavLink>
-        </div>
+        <AuthorizeView>
+            <div class="nav-item">
+                <a class="nav-link" href="UserProfile/@context.User.Identity.Name.Split(',')[1]" Match="NavLinkMatch.All">
+                    <span class="oi oi-person" aria-hidden="true"></span>My Account
+                </a>
+            </div>
+        </AuthorizeView>
         <div class="nav-item">
             <AuthorizeView>
                 <Authorized>
                     <NavLink class="nav-link" href="/account" Match="NavLinkMatch.All">
-                        <span class="oi oi-person" aria-hidden="true"></span> @context.User.Identity.Name
+                        <span class="oi oi-person" aria-hidden="true"></span> @context.User.Identity.Name.Split(',')[0]
                     </NavLink>
                 </Authorized>
                 <NotAuthorized>
