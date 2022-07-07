@@ -11,6 +11,10 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#if !DEBUG
+Environment.SetEnvironmentVariable("DATABASE_CONNECTION", "RemoteTesting");
+#endif
+
 // Add services to the container.
 if (Environment.GetEnvironmentVariable("DATABASE_CONNECTION") == "RemoteTesting")
 {
@@ -18,6 +22,7 @@ if (Environment.GetEnvironmentVariable("DATABASE_CONNECTION") == "RemoteTesting"
     builder.Services.AddDbContext<AppDbContext, PgDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("RemoteTestingConnection")));
 }
+
 else
 {
     Console.WriteLine("USING SQLITE TESTING CONNECTION");
@@ -27,7 +32,8 @@ else
     });
 }
 
-builder.Services.AddSingleton<IRsaKeyProvider, RsaKeyProvider>();
+builder.Services.AddSingleton<RsaKeyProvider>();
+
 builder.Services.AddScoped<Crypto>();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
@@ -58,7 +64,6 @@ builder.Services.AddSwaggerGen(options => {
     });
 });
 
-
 builder.Services.AddRazorPages();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -80,12 +85,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new RsaSecurityKey(rsaPublicKey)
         };
     });
-var provider=new FileExtensionContentTypeProvider();
-provider.Mappings.Add(".pck","application/octet-stream");
+
 builder.Services.Configure<StaticFileOptions>(options=>
 {
-    options.ContentTypeProvider=provider;
+    var provider = new FileExtensionContentTypeProvider();
+    provider.Mappings.Add(".pck","application/octet-stream");
+    options.ContentTypeProvider = provider;
 });
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options => options.AddDefaultPolicy(policy => {
+        policy.AllowAnyOrigin();
+        policy.WithMethods(new[] {"GET"});
+    }));
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -94,6 +109,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseWebAssemblyDebugging();
+
+    app.UseCors();
 }
 
 app.UseHttpsRedirection();

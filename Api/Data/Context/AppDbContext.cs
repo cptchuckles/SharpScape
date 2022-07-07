@@ -7,9 +7,10 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions options) : base(options)
     {
-
     }
+
     public DbSet<User> Users { get; set; }
+    public DbSet<GameAvatar> GameAvatars { get; set; }
     
     public DbSet<ForumCategory> ForumCategories { get; set; }
     public DbSet<ForumThread> ForumThreads { get; set; }

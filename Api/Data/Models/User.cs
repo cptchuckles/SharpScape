@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Linq;
 using SharpScape.Shared.Dto;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharpScape.Api.Models;
 
@@ -22,6 +23,8 @@ public class User
                 ? value
                 : throw new Exception("Invalid user role assigned");
     }
+
+    public GameAvatar GameAvatar { get; set; }
 
     public byte[] PasswordHash { get; set; }
 
@@ -65,6 +68,7 @@ public static class UserDtoExtensions
         dto.Id = user.Id;
         dto.Username = user.Username;
         dto.Email = user.Email;
+        dto.Role = user.Role;
         dto.Created = user.Created;
         return dto;
     }
