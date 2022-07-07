@@ -1,27 +1,79 @@
-﻿@page "/UserProfile/{id}"
+@page "/UserProfile/{userId}"
 @using SharpScape.Shared.Dto
 @inject HttpClient http
 
-
-<div class="container rounded bg-white mt-5 mb-5">
+@* <div class="container rounded bg-white mt-5 mb-5"> *@
+<div class="background">
 @if (_userinfo is not null)
 {
-    <h1>@_userinfo.Username</h1>
-
-    <div class="row">
-        <div class="col-md-5 border-right">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="text-right">Account Summary Information</h4>
+    <div class="container">
+        <div class="row profile">
+            <div class="col-md-1"></div>
+            <div class="col-md-4 border-right profile_picture">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                @* <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"> *@
+                <img class="rounded-circle mt-5" width="150px" height="150px" src="@ProfilePicDataUrl">
+                <span class="font-weight-bold">@_userinfo.Username</span>
+                <span class="font-weight-bold">@_userinfo.Email</span>
+                <div class="image-uploader">
+                <InputFile OnChange="@OnInPutFileChanged"></InputFile>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Created</label><div>@_userinfo.Created.ToString()</div></div>
-                    <div class="col-md-6"><label class="labels">Email</label><div>@_userinfo.Email</div></div>
+                <div class="mt-5 text-center">
+                    <button class="btn btn-primary profile-button" type="button" @onclick="@OpenCreateThread">Edit Profile</button>
                 </div>
-                
+                @if(CreateThread){
+                    <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+                        <div class="modal-dialog pt-5">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Edit User</h4>
+                                </div>
+                                    <EditForm Model="@tUser" OnValidSubmit=@HandleValidSubmit>
+                                <div class="modal-body text">
+                                    <form model="@tUser"> 
+                                        <div class="form-group">
+                                            <div class="item">UserName:</div>
+                                            <InputText class="form-control" @bind-Value="tUser.Username"></InputText>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="item">Email:</div>
+                                            <InputText class="form-control" @bind-Value="tUser.Email"></InputText>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="item">Password:</div>
+                                            <InputText class="form-control" type="password" @bind-Value="tUser.Password"></InputText>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="item">New Password:</div>
+                                            <InputText class="form-control" type="password" @bind-Value="tUser.NewPassword"></InputText>
+                                        </div>
+                                    </form> 
+                                </div>
+                                <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
+                                        <button type="submit" class="btn btn-primary">Edit</button>
+                                </div>
+                                        </EditForm>
+                            </div>
+                        </div>
+                    </div>
+                } 
             </div>
+            </div>
+            <div class="col-md-6 border-right profile_info">
+                <div class="p-5 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="">Hello @_userinfo.Username</h4>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12 mt-2"><label class="labels">UserName: @_userinfo.Username</label></div>
+                        <div class="col-md-12 mt-2"><label class="labels">Email: @_userinfo.Email</label></div>
+                        <div class="col-md-12 mt-2"><label class="labels">Joined: @_userinfo.Created</label></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
         </div>
-        
     </div>
 }
 else if (_error is not null)
@@ -37,6 +89,8 @@ else
 
 
 @code {
+    [Parameter]
+    public string UserId{get;set;}
     private UserInfoDto? _userinfo;
     private string? _error;
 
@@ -45,7 +99,8 @@ else
         try
         {
             _error = null;
-            _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{id}");
+            _userinfo = await http.GetFromJsonAsync<UserInfoDto>($"/api/user/{UserId}");
+            ProfilePicDataUrl = _userinfo.ProfilePicDataUrl;
         }
         catch (HttpRequestException e)
         {
@@ -53,5 +108,63 @@ else
         }
     }
     [Parameter]
-    public string id { get; set; } = "0";
+    public EventCallback<bool> OnClose { get; set; }
+    public bool CreateThread { get; set; } = false;
+    UserEditDto tUser = new UserEditDto();
+
+        /// methods for popup modal
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    private void OpenCreateThread()
+    {
+        CreateThread = true;
+        StateHasChanged();
+    }
+    private void CloseCreateThread()
+    {
+        CreateThread = false;
+        StateHasChanged();
+    }
+    public string ProfilePicDataUrl {get;set;}
+    private async Task OnInPutFileChanged(InputFileChangeEventArgs inputFileChangeEvent)
+    {
+        //get the file
+        var file = inputFileChangeEvent.File;
+        //read that file in a byte arrray
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        //convert byte array to base 64 string
+        ProfilePicDataUrl = $"data:image/png;base64,{Convert.ToBase64String(buffer)}";
+
+    }
+    private async void HandleValidSubmit()
+    {
+        CreateThread = false;
+        if(tUser.Username is null){
+            tUser.Username = "";
+        }
+        if(tUser.Email is null){
+            tUser.Email = "";
+        }
+        if(tUser.NewPassword is null){
+            tUser.NewPassword = "";
+        }
+        if(ProfilePicDataUrl is null){
+            ProfilePicDataUrl = "";
+        }else{
+            tUser.ProfilePicDataUrl = ProfilePicDataUrl;
+        }
+        var result = await http.PostAsJsonAsync($"/api/User/{UserId}",tUser);
+        if(result.IsSuccessStatusCode)
+        {
+            UserInfoDto userinfo = new UserInfoDto();
+            userinfo = await result.Content.ReadAsAsync<UserInfoDto>();
+            _userinfo = userinfo;
+            ProfilePicDataUrl = userinfo.ProfilePicDataUrl;
+        }
+        StateHasChanged();
+    }
 }
