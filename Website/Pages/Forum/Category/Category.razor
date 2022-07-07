@@ -7,7 +7,6 @@
 @using SharpScape.Website.Components.Forum.Pagination
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
-
     @if (loading)
     {
         <center>
@@ -15,21 +14,10 @@
             <span style=" color:#99abb4 ">threads are loading</span>
         </center>
     }
-
-
-
-
-
     <div class="container">
-        @* <div class="row text-left mb-5">
-
-            </div>*@
-
-
-   <center>
-    <a href="/forum"><h3>Go Back to Categories List</h3> </a>
-    </center>
-
+        <center>
+        <a href="/forum"><h3>Go Back to Categories List</h3> </a>
+        </center>
         <div class="title">@UrlName </div>
         <div class="card">
             <div class="row align-items-center">
@@ -57,7 +45,6 @@
                 Votes="251"
                 Replies=@thread.Replies.ToString() />
         }
-
         <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
                     PageIndex="@pageIndex"
                     Radius="3"
@@ -83,12 +70,10 @@
                             <form model="@tTopic">
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Title:</label>
-                                    @*  <input type="text" class="form-control" id="recipient-name" /> *@
                                     <InputText class="form-control" @bind-Value="tTopic.Title" />
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">Content:</label>
-                                    @*  <textarea class="form-control" id="message-text"></textarea> *@
                                     <InputTextArea class="form-control" id="testing1" @bind-Value="tTopic.Body" />
                                 </div>
                             </form>
@@ -103,7 +88,6 @@
         </div>
     }
 </div>
-
 @code {
     [Parameter]
     public string UrlName { get; set; }
