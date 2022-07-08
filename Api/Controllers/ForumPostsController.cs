@@ -114,16 +114,18 @@ namespace SharpScape.Api.Controllers
             }
             return Ok(forumPostDtos);
         }
-        // [Authorize]
+        [Authorize]
         [HttpPost("{id}")]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] ForumPostEditDto request)
         {
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value);
+            var role = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
             var post = await _context.ForumPosts.FindAsync(id);
             if (post is null)
             {
-                return BadRequest("There is no post");
+                return NotFound();
             }
-            if (post.AuthorId != request.UserId)
+            if (post.AuthorId != UserId && !String.Equals(role,"Admin"))
             {
                 return BadRequest("You cannot edit other people's post");
             }
@@ -132,23 +134,26 @@ namespace SharpScape.Api.Controllers
             return Ok(post);
         }
         // DELETE: api/ForumPosts/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteForumPost(int id)
         {
-            if (_context.ForumPosts == null)
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value);
+            var role = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+            var post = await _context.ForumPosts.FindAsync(id);
+            if (post == null)
             {
                 return NotFound();
             }
-            var forumPost = await _context.ForumPosts.FindAsync(id);
-            if (forumPost == null)
+            if (post.AuthorId != UserId && !String.Equals(role,"Admin"))
             {
-                return NotFound();
+                return BadRequest("You cannot delete other people's post");
             }
 
-            _context.ForumPosts.Remove(forumPost);
+            _context.ForumPosts.Remove(post);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Successfully Removed post from database");
         }
 
         private bool ForumPostExists(int id)

@@ -64,6 +64,7 @@
                                 Date=@post.Created.ToString("D")
                                 Body=@post.Body
                                 Image="images/Avatar.png" 
+                                RefreshMethod=@Refresh
                             />
                         }
                         <div class="pagination_background">
@@ -169,8 +170,8 @@
     {
         loading = true;
         allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
-        ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
-        fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
+        //ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
+        //fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         if (allPosts != null)
         {
@@ -239,6 +240,19 @@
             var skipCount = itemsPerPage * (pageIndex - 1);
             posts = allPosts.Skip(skipCount).Take(itemsPerPage).ToList();
         }
+    }
+    private async void Refresh(){
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        if (allPosts != null)
+        {
+            // Initialize the number of "totalPages"
+            totalPages = (int)Math.Ceiling((double)allPosts.Count() / itemsPerPage);
+            // Initialize the "comments" which will be displayed when the page loaded first time.
+            posts = allPosts.Skip(0).Take(itemsPerPage).ToList();
+        }
+        loading = false;
+        StateHasChanged();
     }
     /////////////////////////// login /////////////////////////////////////
 
