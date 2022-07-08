@@ -23,7 +23,7 @@
                             <div class="modal-header">
                                 <h4 class="modal-title">Edit</h4>
                             </div>
-                            <EditForm Model="@tPost" OnValidSubmit=@HandleValidSubmit>
+                            <EditForm Model="@tPost" OnValidSubmit=@HandleValidEditSubmit>
                                 <div class="modal-body">
                                     <form model="@tPost">
                                         <div class="form-group">
@@ -34,6 +34,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" @onclick="@CloseEditPost">Close</button>
+                                    <button type="button" class="btn btn-danger" @onclick="@HandleValidDeleteSubmit">Delete</button>
                                     <button type="submit" class="btn btn-primary">Edit</button>
                                 </div>
                             </EditForm>
@@ -61,19 +62,26 @@
     public string Image { get; set; } = "";
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
+    [Parameter]
+    public Action RefreshMethod{ get; set; }
     public bool CreateThread { get; set; } = false;
     ForumPostEditDto tPost = new ForumPostEditDto();
     ForumPostEditDto post = new ForumPostEditDto();
-    private async void HandleValidSubmit()
+    private async void HandleValidEditSubmit()
     {
         CreateThread = false;
-        tPost.UserId = Data.UserId;
         var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/ForumPosts/{PostId}", tPost);
         if(result.IsSuccessStatusCode){
             post = await result.Content.ReadAsAsync<ForumPostEditDto>();
             Body = post.Body;
         }
         StateHasChanged();
+    }
+    private async void HandleValidDeleteSubmit()
+    {
+        CreateThread = false;
+        var result = await Http.DeleteAsync($"https://localhost:7193/api/ForumPosts/{PostId}");
+        RefreshMethod.Invoke();
     }
     /// methods for popup modal
     private Task ModalCancel()
