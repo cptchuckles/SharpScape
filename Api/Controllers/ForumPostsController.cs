@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
 using SharpScape.Shared.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace SharpScape.Api.Controllers
@@ -27,10 +28,10 @@ namespace SharpScape.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ForumPostDto>> GetForumPost(int id)
         {
-          if (_context.ForumPosts == null)
-          {
-              return NotFound();
-          }
+            if (_context.ForumPosts == null)
+            {
+                return NotFound();
+            }
             var fp = await _context.ForumPosts.FindAsync(id);
 
             if (fp == null)
@@ -38,8 +39,14 @@ namespace SharpScape.Api.Controllers
                 return NotFound();
             }
 
-            return new ForumPostDto(){Id=fp.Id, AuthorId=fp.AuthorId, 
-            Body=fp.Body, Created=fp.Created, ThreadId=fp.ThreadId};
+            return new ForumPostDto()
+            {
+                Id = fp.Id,
+                AuthorId = fp.AuthorId,
+                Body = fp.Body,
+                Created = fp.Created,
+                ThreadId = fp.ThreadId
+            };
         }
 
 
@@ -68,7 +75,7 @@ namespace SharpScape.Api.Controllers
 
 
             }
-                return forumPostDtos;
+            return forumPostDtos;
         }
 
 
@@ -78,10 +85,10 @@ namespace SharpScape.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ForumPostDto>> PostForumPost(ForumPostDto fp)
         {
-          if (_context.ForumPosts == null)
-          {
-              return Problem("Entity set 'AppDbContext.ForumPosts'  is null.");
-          }
+            if (_context.ForumPosts == null)
+            {
+                return Problem("Entity set 'AppDbContext.ForumPosts'  is null.");
+            }
             _context.ForumPosts.Add(new ForumPost()
             {
                 Id = fp.Id,
@@ -104,17 +111,26 @@ namespace SharpScape.Api.Controllers
                     Created = forumPost.Created,
                     ThreadId = forumPost.ThreadId
                 });
-
-
             }
-
-            //return CreatedAtAction("GetForumPost", new { id = fp.Id }, fp);
-
-            //return CreatedAtAction("GetForumPosts", forumPostDtos);
-
             return Ok(forumPostDtos);
         }
-
+        // [Authorize]
+        [HttpPost("{id}")]
+        public async Task<IActionResult> UpdatePost(int id, [FromBody] ForumPostEditDto request)
+        {
+            var post = await _context.ForumPosts.FindAsync(id);
+            if (post is null)
+            {
+                return BadRequest("There is no post");
+            }
+            if (post.AuthorId != request.UserId)
+            {
+                return BadRequest("You cannot edit other people's post");
+            }
+            post.Body = request.Body;
+            await _context.SaveChangesAsync();
+            return Ok(post);
+        }
         // DELETE: api/ForumPosts/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteForumPost(int id)
