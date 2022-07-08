@@ -21,3 +21,11 @@
 .action-icons a:hover {
   color: #1976d2;
 }
+
+.modal-title {
+    color: black;
+}
+
+.modal-body label {
+    color: black;
+}
