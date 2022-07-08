@@ -63,7 +63,7 @@
                                 PostId=@post.Id.ToString()
                                 Date=@post.Created.ToString("D")
                                 Body=@post.Body
-                                Image="images/Avatar.png" 
+                                Image=@getProfile(post.AuthorId)
                                 RefreshMethod=@Refresh
                             />
                         }
@@ -170,8 +170,8 @@
     {
         loading = true;
         allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
-        //ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
-        //fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
+        ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
+        fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         if (allPosts != null)
         {
@@ -280,5 +280,9 @@
     public string getUser(int id)
     {
         return users.Find(x => x.Id == id).Username;
+    }
+    public string getProfile(int id)
+    {
+        return users.Find(x => x.Id == id).ProfilePicDataUrl;
     }
 }
