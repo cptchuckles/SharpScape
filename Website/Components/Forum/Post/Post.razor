@@ -1,10 +1,17 @@
 @namespace SharpScape.Website.Components.Forum
-@inject IJSRuntime JSRuntime;
 @inject HttpClient Http
 @inject ForumReferenceProvider Data
 @using SharpScape.Shared.Dto
 <div class="d-flex flex-row comment-row ">
-    <div class="p-2"><span class="round"><img src=@Image alt="user" width="50"></span></div>
+    <div class="p-2">
+        <span class="round">
+        @if(Image.Length > 0){
+            <img src=@Image alt="user" width="50">
+        }else{
+            <img src="images/Avatar.png" alt="user" width="50">
+        }
+        </span>
+    </div>
     <div class="comment-text">
         <h5>@Author</h5>
         <div class="comment-footer">
@@ -74,6 +81,7 @@
         if(result.IsSuccessStatusCode){
             post = await result.Content.ReadAsAsync<ForumPostEditDto>();
             Body = post.Body;
+            Date = post.Created.ToString("D");
         }
         StateHasChanged();
     }

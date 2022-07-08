@@ -18,5 +18,6 @@ namespace SharpScape.Shared.Dto
     public class ForumPostEditDto
     {
         public string Body { get; set; }
+        public DateTime Created { get; set; }
     }
 }

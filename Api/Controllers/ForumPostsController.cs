@@ -114,7 +114,7 @@ namespace SharpScape.Api.Controllers
             }
             return Ok(forumPostDtos);
         }
-        [Authorize(Roles ="Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         [HttpPost("{id}")]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] ForumPostEditDto request)
         {
@@ -125,7 +125,7 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-            if (post.AuthorId == UserId || String.Equals(role,"Admin"))
+            if (post.AuthorId == UserId || String.Equals(role, "Admin"))
             {
                 post.Body = request.Body;
                 await _context.SaveChangesAsync();
@@ -146,7 +146,7 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-            if (post.AuthorId == UserId || String.Equals(role,"Admin"))
+            if (post.AuthorId == UserId || String.Equals(role, "Admin"))
             {
                 _context.ForumPosts.Remove(post);
                 await _context.SaveChangesAsync();
