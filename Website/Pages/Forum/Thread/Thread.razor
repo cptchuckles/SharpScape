@@ -1,4 +1,4 @@
-@page "/thread/{TitleT}/{Author}/{Date}/{Body}/{ThreadId}"
+@page "/thread/{TitleT}/{Author}/{AuthorId}/{Date}/{Body}/{ThreadId}"
 @inject NavigationManager NavManager
 @inject HttpClient Http
 @inject ForumReferenceProvider Data
@@ -39,8 +39,10 @@
                                 <div class="comment-footer">
                                     <span class="date">@Date</span>
                                     <span class="action-icons">
-                                        <a href="#" data-abc="true"><i class="oi oi-pencil"></i></a>
-                                        <a href="#" data-abc="true"><i class="oi oi-rotate-right"></i></a>
+                                        @if(Data.UserId == Convert.ToInt32(AuthorId)){
+                                            <a href="#" data-abc="true"><i class="oi oi-pencil"></i></a>
+                                        }
+                                        @* <a href="#" data-abc="true"><i class="oi oi-rotate-right"></i></a> *@
                                     </span>
                                 </div>
                                 <p>@Body</p>
@@ -55,7 +57,10 @@
                         </div>
                         @foreach (ForumPostDto post in posts)
                         {
-                            <Post Author=@Data.UserName
+                            <Post 
+                                Author=@getUser(post.AuthorId)
+                                AuthorId=@post.AuthorId.ToString()
+                                PostId=@post.Id.ToString()
                                 Date=@post.Created.ToString("D")
                                 Body=@post.Body
                                 Image="images/Avatar.png" 
@@ -138,6 +143,8 @@
     [Parameter]
     public string Author { get; set; } = "";
     [Parameter]
+    public string AuthorId { get; set; } = "";
+    [Parameter]
     public string Title { get; set; } = "";
     [Parameter]
     public string Body { get; set; } = "";
@@ -147,6 +154,7 @@
     bool SubmitResult = false;
     private IList<ForumPostDto> allPosts = new List<ForumPostDto>();
     private IList<ForumPostDto> posts = new List<ForumPostDto>();
+    List<UserInfoDto> users = new List<UserInfoDto>();
     [Parameter]
     public string ThreadId { get; set; }
     [Parameter]
@@ -163,7 +171,7 @@
         allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
         ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
         fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
-
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         if (allPosts != null)
         {
             // Initialize the number of "totalPages"
@@ -254,5 +262,9 @@
         {
             requestError = await result.Content.ReadAsStringAsync();
         }
+    }
+    public string getUser(int id)
+    {
+        return users.Find(x => x.Id == id).Username;
     }
 }
