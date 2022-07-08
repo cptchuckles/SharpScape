@@ -114,7 +114,7 @@ namespace SharpScape.Api.Controllers
             }
             return Ok(forumPostDtos);
         }
-        [Authorize]
+        [Authorize(Roles ="Admin,User")]
         [HttpPost("{id}")]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] ForumPostEditDto request)
         {
@@ -125,17 +125,18 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-            if (post.AuthorId != UserId && !String.Equals(role,"Admin"))
+            if (post.AuthorId == UserId || String.Equals(role,"Admin"))
             {
-                return BadRequest("You cannot edit other people's post");
+                post.Body = request.Body;
+                await _context.SaveChangesAsync();
+                return Ok(post);
             }
-            post.Body = request.Body;
-            await _context.SaveChangesAsync();
-            return Ok(post);
+            return BadRequest("You cannot edit other people's post");
         }
         // DELETE: api/ForumPosts/5
-        [Authorize]
+        [Authorize(Roles = "Admin,User")]
         [HttpDelete("{id}")]
+        // its author or user with admin role can detele a post
         public async Task<IActionResult> DeleteForumPost(int id)
         {
             var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value);
@@ -145,15 +146,13 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-            if (post.AuthorId != UserId && !String.Equals(role,"Admin"))
+            if (post.AuthorId == UserId || String.Equals(role,"Admin"))
             {
-                return BadRequest("You cannot delete other people's post");
+                _context.ForumPosts.Remove(post);
+                await _context.SaveChangesAsync();
+                return Ok("Successfully Removed post from database");
             }
-
-            _context.ForumPosts.Remove(post);
-            await _context.SaveChangesAsync();
-
-            return Ok("Successfully Removed post from database");
+            return BadRequest("You cannot delete other people's post");
         }
 
         private bool ForumPostExists(int id)
