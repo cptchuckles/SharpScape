@@ -32,28 +32,51 @@ public class MPServerController : ControllerBase
     [Produces("application/json")]
     public ActionResult<MPCryptoKey> GetPublicKey()
     {
-        _crypto.GenerateTransientKey(out Guid keyId, out string x509pub);
+        _rsaKeyProvider.GetNewTransientKey(out Guid keyId, out string x509pub);
         return Ok(new MPCryptoKey(keyId, x509pub));
     }
 
     [HttpPost("login")]
-    [Produces("application/json")]
-    public async Task<ActionResult<GameAvatarInfoDto>> Login([FromBody] MPServerMessageDto request)
+    [Produces("application/json", "text/plain")]
+    public async Task<ActionResult<GameAvatarInfoDto>> Login([FromBody] MPServerLoginDto request)
     {
+        // Check timestamp
         if (! VerifyMPTimestamp(request.Timestamp)) {
             return BadRequest("Timestamp invalid");
         }
         
-        var timestampedPayload = $"{request.KeyId}.{request.Payload}.{request.Timestamp.ToString()}";
+        // Verify signature from MP Server
+        var timestampedPayload = $"{request.Payload}.{request.Timestamp.ToString()}";
         if (! _crypto.VerifyMPSignature(timestampedPayload, request.Signature)) {
             return BadRequest("Signature invalid");
         }
+
+        // Get the Unique Secret DTO from the request payload
+        string json = Encoding.UTF8.GetString(Convert.FromBase64String(request.Payload));
+        var uniqueSecret = JsonSerializer.Deserialize<MPUniqueSecret>(json);
+        if (uniqueSecret is null) {
+            return BadRequest("Request payload invalid");
+        }
+
+        // Get transient RSA private key by its id
+        byte[]? rsaKey = _rsaKeyProvider.CheckoutTransientSecret(uniqueSecret.KeyId);
+        if (rsaKey is null) {
+            return BadRequest("Key not found");
+        }
         
-        var data = _crypto.TransientKeyDecrypt(request.KeyId, Convert.FromBase64String(request.Payload));
-        if (data is null || data.Length == 0) {
+        // RSA Decrypt AES key
+        byte[]? aesKey = _crypto.RsaDecrypt(rsaKey, Convert.FromBase64String(uniqueSecret.SecureKey));
+        if (aesKey is null || aesKey.Length == 0) {
             return StatusCode(500);
         }
 
+        // AES Decrypt login credentials
+        byte[]? data = _crypto.AesDecrypt(aesKey, Convert.FromBase64String(uniqueSecret.Payload));
+        if (data is null || data.Length == 0) {
+            return BadRequest("Payload invalid");
+        }
+
+        // Parse login credentials
         var loginRequest = JsonSerializer.Deserialize<UserLoginDto>(
                 Encoding.UTF8.GetString(data),
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
@@ -61,6 +84,7 @@ public class MPServerController : ControllerBase
             return BadRequest("Login request body malformed");
         }
 
+        // Try login
         var user = _context.Users
             .Where(u => u.Username.ToLower() == loginRequest.Username.ToLower())
             .Include(u => u.GameAvatar)
@@ -72,13 +96,14 @@ public class MPServerController : ControllerBase
             return BadRequest("Username/Email or Password invalid");
         }
 
+        // Ensure user has a GameAvatar
         GameAvatar gameAvatar;
         if (user.GameAvatar is null)
         {
             gameAvatar = new GameAvatar() { UserId = user.Id };
             user.GameAvatar = gameAvatar;
+            _context.GameAvatars.Add(gameAvatar);
             _context.Entry(user).State = EntityState.Modified;
-            _context.Add<GameAvatar>(gameAvatar);
             _context.SaveChanges();
         }
         else

@@ -17,39 +17,48 @@ public class Crypto
         _rsaKeyProvider = rsaKeyProvider;
     }
 
-    public void GenerateTransientKey(out Guid keyId, out string x509pub)
+    public byte[]? RsaDecrypt(byte[] key, byte[] payload)
     {
-        using (var rsa = new RSACryptoServiceProvider(512))
-        {
-            keyId = Guid.NewGuid();
-            x509pub = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
-            var secret = rsa.ExportRSAPrivateKey();
-            _rsaKeyProvider.StoreTransientSecret(keyId, secret);
-        }
-    }
-
-    public byte[]? TransientKeyDecrypt(Guid keyId, byte[] payload)
-    {
-        _rsaKeyProvider.CheckoutTransientSecret(keyId, out byte[]? secret);
-        if (secret is null)
-        {
-            return null;
-        }
-
-        byte[]? data = null;
         try
         {
             using (var rsa = new RSACryptoServiceProvider())
             {
-                rsa.ImportRSAPrivateKey(secret, out int _);
-                data = rsa.Decrypt(payload, false);
+                rsa.ImportRSAPrivateKey(key, out int _);
+                return rsa.Decrypt(payload, false);
             }
         }
         catch (CryptographicException)
         {
             return null;
         }
-        return data;
+    }
+
+    public byte[]? AesDecrypt(byte[] key, byte[] secureData)
+    {
+        try
+        {
+            using (var aes = Aes.Create())
+            {
+                byte[] iv = new byte[aes.IV.Length];
+                byte[] payload = new byte[secureData.Length - iv.Length];
+
+                System.Buffer.BlockCopy(secureData, 0, iv, 0, iv.Length);
+                System.Buffer.BlockCopy(secureData, iv.Length, payload, 0, payload.Length);
+
+                using (var ms = new MemoryStream())
+                {
+                    using (var cs = new CryptoStream(ms, aes.CreateDecryptor(key, iv), CryptoStreamMode.Write))
+                    {
+                        cs.Write(payload, 0, payload.Length);
+                    }
+                    return ms.ToArray();
+                }
+            }
+        }
+        catch (CryptographicException)
+        {
+            return null;
+        }
     }
 
     public string CreateToken(User user)
@@ -87,10 +96,17 @@ public class Crypto
 
     public bool VerifyMPSignature(string data, string signature)
     {
-        return _rsaKeyProvider.MPServerPublicKey.VerifyHash(
-            SHA256.HashData(Encoding.UTF8.GetBytes(data.TrimEnd())),
-            Convert.FromBase64String(signature),
-            HashAlgorithmName.SHA256,
-            RSASignaturePadding.Pkcs1);
+        try
+        {
+            return _rsaKeyProvider.MPServerPublicKey.VerifyHash(
+                SHA256.HashData(Encoding.UTF8.GetBytes(data.TrimEnd())),
+                Convert.FromBase64String(signature),
+                HashAlgorithmName.SHA256,
+                RSASignaturePadding.Pkcs1);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }

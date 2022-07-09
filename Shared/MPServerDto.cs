@@ -1,19 +1,17 @@
 namespace SharpScape.Shared.Dto;
 
-public class MPServerMessageDto
+public class MPServerLoginDto
 {
-    public Guid KeyId { get; set; }
     public string Payload { get; set; }
     public int Timestamp { get; set; }
     public string Signature { get; set; }
 }
 
-public class GameAvatarInfoDto
+public class MPUniqueSecret
 {
-    public UserInfoDto UserInfo { get; set; }
-    public string SpriteName { get; set; }
-    public float GlobalPositionX { get; set; }
-    public float GlobalPositionY { get; set; }
+    public Guid KeyId { get; set; }
+    public string SecureKey { get; set; }
+    public string Payload { get; set; }
 }
 
 public class MPCryptoKey
@@ -25,4 +23,12 @@ public class MPCryptoKey
         KeyId = keyId;
         X509Pub = x509pub;
     }
+}
+
+public class GameAvatarInfoDto
+{
+    public UserInfoDto UserInfo { get; set; }
+    public string SpriteName { get; set; }
+    public float GlobalPositionX { get; set; }
+    public float GlobalPositionY { get; set; }
 }
