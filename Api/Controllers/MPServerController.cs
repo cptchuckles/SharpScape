@@ -85,10 +85,10 @@ public class MPServerController : ControllerBase
         }
 
         // Try login
-        var user = _context.Users
+        var user = await _context.Users
             .Where(u => u.Username.ToLower() == loginRequest.Username.ToLower())
             .Include(u => u.GameAvatar)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
         if (user is null) {
             return BadRequest("Username/Email or Password invalid");
         }
@@ -104,7 +104,7 @@ public class MPServerController : ControllerBase
             user.GameAvatar = gameAvatar;
             _context.GameAvatars.Add(gameAvatar);
             _context.Entry(user).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         else
         {
