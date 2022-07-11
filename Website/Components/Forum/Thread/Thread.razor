@@ -4,7 +4,7 @@
     <div class="row align-items-center">
         <div class="col-md-9 mb-3 mb-sm-0">
             <h5>
-                <a href="thread/@Title/@Author/@Date/@Body/@ThreadId" class="text-primary" onclick="@UpdateId">@Title</a>
+                <a href="thread/@Title/@Author/@AuthorId/@Date/@Body/@ThreadId" class="text-primary" onclick="@UpdateId">@Title</a>
             </h5>
             <p class="text-sm">
                 <span class="op-6">Posted</span> 
@@ -35,6 +35,8 @@
     public string Date{ get; set; }
     [Parameter]
     public string Author { get; set; }
+    [Parameter]
+    public string AuthorId { get; set; }
     [Parameter]
     public int ThreadId{ get; set; }
     [Parameter]
