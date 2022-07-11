@@ -38,17 +38,10 @@ public class MPServerController : ControllerBase
 
     [HttpPost("login")]
     [Produces("application/json", "text/plain")]
-    public async Task<ActionResult<GameAvatarInfoDto>> Login([FromBody] MPServerLoginDto request)
+    public async Task<ActionResult<GameAvatarInfoDto>> Login([FromBody] MPServerMessageDto request)
     {
-        // Check timestamp
-        if (! VerifyMPTimestamp(request.Timestamp)) {
-            return BadRequest("Timestamp invalid");
-        }
-        
-        // Verify signature from MP Server
-        var timestampedPayload = $"{request.Payload}.{request.Timestamp.ToString()}";
-        if (! _crypto.VerifyMPSignature(timestampedPayload, request.Signature)) {
-            return BadRequest("Signature invalid");
+        if (! ValidateRequest(request)) {
+            return BadRequest();
         }
 
         // Get the Unique Secret DTO from the request payload
@@ -85,10 +78,9 @@ public class MPServerController : ControllerBase
         }
 
         // Try login
-        var user = await _context.Users
-            .Where(u => u.Username.ToLower() == loginRequest.Username.ToLower())
-            .Include(u => u.GameAvatar)
-            .FirstOrDefaultAsync();
+        var user = await _context.Users.Where(u => u.Username.ToLower() == loginRequest.Username.ToLower())
+                                       .Include(u => u.GameAvatar)
+                                       .FirstOrDefaultAsync();
         if (user is null) {
             return BadRequest("Username/Email or Password invalid");
         }
@@ -103,7 +95,7 @@ public class MPServerController : ControllerBase
             gameAvatar = new GameAvatar() { UserId = user.Id };
             user.GameAvatar = gameAvatar;
             _context.GameAvatars.Add(gameAvatar);
-            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry<User>(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
         else
@@ -117,6 +109,49 @@ public class MPServerController : ControllerBase
             GlobalPositionX = gameAvatar.GlobalPositionX,
             GlobalPositionY = gameAvatar.GlobalPositionY
         });
+    }
+
+    [HttpPut("save")]
+    public async Task<IActionResult> Save(MPServerMessageDto request)
+    {
+        if (! ValidateRequest(request)) {
+            return BadRequest();
+        }
+        
+        var saveInfo = JsonSerializer.Deserialize<GameSaveDto>(Encoding.UTF8.GetString(Convert.FromBase64String(request.Payload)));
+        if (saveInfo is null) {
+            return BadRequest("Couldn't parse request");
+        }
+
+        var user = await _context.Users.Where(u => u.Id == saveInfo.UserId)
+                                       .Include(u => u.GameAvatar)
+                                       .FirstOrDefaultAsync();
+        if (user is null || user.GameAvatar is null) {
+            return BadRequest("User or avatar not found");
+        }
+
+        user.GameAvatar.GlobalPositionX = saveInfo.GlobalPositionX;
+        user.GameAvatar.GlobalPositionY = saveInfo.GlobalPositionY;
+        _context.Entry<GameAvatar>(user.GameAvatar).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private bool ValidateRequest(MPServerMessageDto request)
+    {
+        // Check timestamp
+        if (! VerifyMPTimestamp(request.Timestamp)) {
+            return false;
+        }
+        
+        // Verify signature from MP Server
+        var timestampedPayload = $"{request.Payload}.{request.Timestamp.ToString()}";
+        if (! _crypto.VerifyMPSignature(timestampedPayload, request.Signature)) {
+            return false;
+        }
+
+        return true;
     }
 
     private bool VerifyMPTimestamp(int epochSeconds)
