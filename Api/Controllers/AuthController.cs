@@ -74,26 +74,30 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, "Manager")
         };
-        var accessToken = _tokenService.GenerateAccessToken(claims);
-        var refreshToken = _tokenService.GenerateRefreshToken(claims);
 
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(15);
+
+        
+
+        //return Ok(new AuthenticatedResponse
+        //{
+        //    AccessToken = accessToken,
+        //    RefreshToken = refreshToken
+        //});
+
+
+        //return Ok(_crypto.CreateToken(user));
+
+        response.accessToken = _crypto.CreateToken(user);
+        response.refreshToken = _crypto.CreateRefreshToken(user);
+        response.Id = user.Id;
+        response.Username = user.Username;
+
+        user.RefreshToken = response.refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(30);
 
         _context.Users.Update(user);
 
         _context.SaveChanges();
-        return Ok(new AuthenticatedResponse
-        {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken
-        });
-
-
-        //return Ok(_crypto.CreateToken(user));
-        response.accessToken = _crypto.CreateToken(user);
-        response.Id = user.Id;
-        response.Username = user.Username;
         return Ok(response);
     }
 }

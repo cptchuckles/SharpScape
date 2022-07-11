@@ -12,12 +12,16 @@ namespace SharpScape.Api.Controllers
     public class TokenController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly Crypto _crypto;
         private readonly ITokenService _tokenService;
-        public TokenController(AppDbContext userContext, ITokenService tokenService)
+        public TokenController(AppDbContext userContext, Crypto crypto, ITokenService tokenService)
         {
             this._context = userContext ?? throw new ArgumentNullException(nameof(userContext));
+            this._crypto = crypto;
             this._tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
+
+
         [HttpPost]
         [Route("refresh")]
         public IActionResult Refresh(TokenApiModel tokenApiModel)
@@ -32,8 +36,6 @@ namespace SharpScape.Api.Controllers
 
             var user = _context.Users.SingleOrDefault(u => u.Username == username);
 
-            // if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-            //     return BadRequest("Invalid client request");
 
             if (user == null)
                 return BadRequest("no user");
@@ -42,17 +44,18 @@ namespace SharpScape.Api.Controllers
             if (user.RefreshTokenExpiryTime <= DateTime.Now)
                 return BadRequest(user.RefreshTokenExpiryTime);
 
-            var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
-            // var newRefreshToken = _tokenService.GenerateRefreshToken();
+            var newAccessToken = _crypto.CreateToken(user);
+            //var newRefreshToken = _crypto.CreateRefreshToken(user);
 
-            // user.RefreshToken = newRefreshToken;
             _context.SaveChanges();
             return Ok(new AuthenticatedResponse()
             {
                 AccessToken = newAccessToken,
-                RefreshToken = refreshToken
+                RefreshToken = tokenApiModel.RefreshToken
             });
         }
+
+
         [HttpPost, Authorize]
         [Route("revoke")]
         public IActionResult Revoke()
