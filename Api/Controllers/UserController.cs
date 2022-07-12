@@ -124,12 +124,12 @@ namespace SharpScape.Api.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPut("UpdateRole")]
-        public async Task<IActionResult> UpdateRole(int id, string role)
+        public async Task<IActionResult> UpdateRole(int id, [FromBody] UserRoleDto request)
         {
             var user = await _context.Users.FindAsync(id);
             if (user is null)
                 return NotFound();
-            user.Role = role;
+            user.Role = request.Role;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return Ok();

@@ -27,6 +27,17 @@
         <div class="nav-item">
             <AuthorizeView>
                 <Authorized>
+                    @if(context.User.Claims.First(c=>c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value.Equals("Admin")){
+                        <a class="nav-link" href="admin" Match="NavLinkMatch.All">
+                            <span class="oi oi-person" aria-hidden="true"></span> Admin
+                        </a>
+                    }
+                </Authorized>
+            </AuthorizeView>
+        </div>
+        <div class="nav-item">
+            <AuthorizeView>
+                <Authorized>
                     <a class="nav-link" href="UserProfile/@context.User.Claims.First(c => c.Type == "Id").Value" Match="NavLinkMatch.All">
                         <span class="oi oi-person" aria-hidden="true"></span> @context.User.Identity.Name
                     </a>

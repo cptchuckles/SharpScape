@@ -1,0 +1,31 @@
+.comment-row {
+  border-bottom: 1px solid grey;
+  padding: 1rem;
+  background-color: #1b2042;
+  color: white;
+}
+.comment-row:hover {
+  background: #2b4080;
+  cursor: pointer;
+}
+
+.round img {
+  border-radius: 100%;
+}
+.action-icons a {
+  padding-left: 7px;
+  vertical-align: middle;
+  color: #99abb4;
+}
+
+.action-icons a:hover {
+  color: #1976d2;
+}
+
+.modal-title {
+    color: black;
+}
+
+.modal-body label {
+    color: black;
+}

@@ -45,6 +45,10 @@ public class UserEditDto
     public string NewPassword { get; set; }
     public string ProfilePicDataUrl { get; set; }
 }
+public class UserRoleDto
+{
+    public string Role { get; set; }
+}
 public class UserLoginDto
 {
     [Required]
