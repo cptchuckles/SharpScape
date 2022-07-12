@@ -55,6 +55,7 @@
             //TokenProvider.Token = await result.Content.ReadAsStringAsync();
             var response = await result.Content.ReadAsAsync<UserLoginResponseDto>();
             TokenProvider.Token = response.accessToken;
+            TokenProvider.RefreshToken = response.refreshToken;
             Data.UserId = response.Id;
             
             await AuthStateProvider.GetAuthenticationStateAsync();
