@@ -1,4 +1,4 @@
-@page "/thread/{TitleT}/{Author}/{AuthorId}/{Date}/{Body}/{ThreadId}"
+@page "/user/{userId}"
 @inject NavigationManager NavManager
 @inject HttpClient Http
 @inject ForumReferenceProvider Data
@@ -21,43 +21,17 @@
             <span style=" color:#99abb4 " >posts are loading</span>
         </center> 
     }
-    <center>
-    <a href="category/@fcd.Name/@ftd.CategoryId" class="forum-item-title"><h3> Go to @fcd.Name List </h3> </a>
-    </center>
     <div class="container d-flex justify-content-center mt-100 mb-100">
         <div class="row">
             <div class="col-md-12">
                 <div class="card col-md-5">
                     <div class="card-body">
-                        <h4 class="card-title">@TitleT</h4>
+                        <h4 class="card-title">All Posts</h4>
                     </div>
                     <div class="comment-widgets m-b-20">
-                        <div class="d-flex flex-row comment-row">
-                            <div class="p-2"><span class="round"><img src="images/Avatar.png" alt="user" width="50"></span></div>
-                            <div class="comment-text w-100">
-                                <h5>@Author</h5>
-                                <div class="comment-footer">
-                                    <span class="date">@Date</span>
-                                    <span class="action-icons">
-                                        @if(Data.UserId == Convert.ToInt32(AuthorId)){
-                                            <a href="#" data-abc="true"><i class="oi oi-pencil"></i></a>
-                                        }
-                                        @* <a href="#" data-abc="true"><i class="oi oi-rotate-right"></i></a> *@
-                                    </span>
-                                </div>
-                                <p>@Body</p>
-                                <div class="col-md-1">
-                                    <div class="row">
-                                        <div class="col"> <a href="#"><i class="oi oi-thumb-up"></i></a><span class="d-block text-sm">20</span> </div>
-                                        <div class="col"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> @posts.Count</span> </div>
-                                    </div>
-                                    <span class="action-icons"></span>
-                                </div>
-                            </div>
-                        </div>
                         @foreach (ForumPostDto post in posts)
                         {
-                            <Post 
+                            <UserPost 
                                 Author=@getUser(post.AuthorId)
                                 AuthorId=@post.AuthorId.ToString()
                                 PostId=@post.Id.ToString()
@@ -75,66 +49,6 @@
                             </Pagination>
                         </div>
                     </div>
-                    @if (CreateThread)
-                    {
-                        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Create A Post</h4>
-                                    </div>
-                                    @if (Data.UserId == 0)
-                                    {
-                                        <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
-                                            
-                                            <center>
-                                            <span> "Admin" "StrongPassword12345"</span>
-                                            </center>
-                                            @if (requestError is not null)
-                                            {
-                                                <p class="text-danger">@requestError</p>
-                                            }
-                                            <DataAnnotationsValidator />
-                                            <div class="modal-body">
-                                                <label for="username" class="col-form-label">Username:</label>
-                                                <InputText class="form-control" id="username" @bind-Value="@userLoginDto.Username" />
-                                                <ValidationMessage For="() => userLoginDto.Username" />
-                                            </div>
-                                            <div class="modal-body">
-                                                <label for="password" class="col-form-label">Password:</label>
-                                                <InputText class="form-control" type="password" id="password" @bind-Value="@userLoginDto.Password" />
-                                                <ValidationMessage For="() => userLoginDto.Password" />
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary">Login</button>
-                                                <a href="/register">Create an account</a>
-                                            </div>
-                                        </EditForm>
-                                    }
-                                    @if (Data.UserId != 0)
-                                    {
-                                        <EditForm Model="@tempPost" OnValidSubmit=@HandleValidSubmit>
-                                            <div class="modal-body">
-                                                <form model="@tempPost">
-                                                    <div class="form-group">
-                                                        <label for="message-text" class="col-form-label">Comment:</label>
-                                                        <InputTextArea class="form-control" id="testing1" @bind-Value="tempPost.Body" />
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
-                                                <button type="submit" class="btn btn-primary">Post</button>
-                                            </div>
-                                        </EditForm>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-                <div class="row createbutton justify-content-center">
-                    <button type="button" class="btn btn-primary" @onclick="@OpenCreateThread">Make a post</button>
                 </div>
             </div>
         </div>
@@ -144,7 +58,7 @@
     [Parameter]
     public string Author { get; set; } = "";
     [Parameter]
-    public string AuthorId { get; set; } = "";
+    public string UserId { get; set; } = "";
     [Parameter]
     public string Title { get; set; } = "";
     [Parameter]
@@ -169,9 +83,7 @@
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
-        ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
-        fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/User{UserId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         if (allPosts != null)
         {
@@ -242,7 +154,7 @@
         }
     }
     private async void Refresh(){
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/User{UserId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         if (allPosts != null)
         {

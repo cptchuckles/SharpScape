@@ -3,62 +3,57 @@
 @inject NavigationManager NavManager
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
-
-
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="background">
-     @if (loading)
-                            {
-                               <center>
-       <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
-       <span style=" color:#99abb4 " >categories are loading</span>
-                              </center> 
-                            }
-
-   
-        <div class="container">
-            <div class="col-lg-12">
-                <div class="wrapper wrapper-content animated fadeInRight">
-                    <div class="ibox-content m-b-sm border-bottom">
-                        <div class="p-xs">
-                            <div class="pull-left m-r-md">
-                                <i class="fa fa-globe text-navy mid-icon"></i>
-                            </div>
-                            <h2>SharpScape's Forum</h2>
-                            <span>Feel free to choose a category you're interested in.</span>
+    @if (loading)
+    {
+        <center>
+            <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
+            <span style=" color:#99abb4 " >categories are loading</span>
+        </center> 
+    }
+    <div class="container">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <div class="pull-left m-r-md">
+                            <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
+                        <h2>SharpScape's Forum</h2>
+                        <span>Feel free to choose a category you're interested in.</span>
                     </div>
-                    <div class="ibox-content forum-container">
-                        <div class="forum-title">
-                            <div class="pull-right forum-desc">
-                                <samll>Total posts: @totalPosts</samll>
-                            </div>
-                            <h3>General subjects</h3>
+                </div>
+                <div class="ibox-content forum-container">
+                    <div class="forum-title">
+                        <div class="pull-right forum-desc">
+                            <samll>Total posts: @totalPosts</samll>
                         </div>
-                        @if (forums != null)
+                        <h3>General subjects</h3>
+                    </div>
+                    @if (forums != null)
+                    {
+                        foreach (var forumCategory in forums)
                         {
-                            foreach (var forumCategory in forums)
-                            {
-                                string x= forumCategory.Id.ToString();
-                                <Category 
-                                    Title=@forumCategory.Name 
-                                    SubTitle=@forumCategory.Description 
-                                    fcdId=@x 
-                                    Route=@forumCategory.Name 
-                                    Icon=@Icons[forumCategory.Id-1]
-                                    ThreadsNumber=@threadCounts[forumCategory.Id-1].ToString()
-                                    PostsNumber=@postCounts[forumCategory.Id-1].ToString()
-                                />
-                            }
-                           
+                            string x= forumCategory.Id.ToString();
+                            <Category 
+                                Title=@forumCategory.Name 
+                                SubTitle=@forumCategory.Description 
+                                fcdId=@x 
+                                Route=@forumCategory.Name 
+                                Icon=@Icons[forumCategory.Id-1]
+                                ThreadsNumber=@threadCounts[forumCategory.Id-1].ToString()
+                                PostsNumber=@postCounts[forumCategory.Id-1].ToString()
+                            />
                         }
-                    </div>
+                    }
                 </div>
             </div>
         </div>
-
+    </div>
 </div>
-@code {
+@code 
+{
     public List<ForumCategoryDto> forums{ get; set; }
     public List<ForumThreadDto> threads{ get; set; }
     public List<ForumPostDto> posts { get; set; }
@@ -67,7 +62,6 @@
     public string[] Icons = {"fa fa-shield","fa fa-bolt", "fa fa-calendar","fa fa-star","fa fa-clock-o","fa fa-bomb","fa fa-bookmark","fa fa-ambulance"};
     public int totalPosts = 0; 
     private bool loading=false ;
-
     protected override async Task OnInitializedAsync()
     {
         loading = true;

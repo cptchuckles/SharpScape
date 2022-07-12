@@ -1,21 +1,65 @@
 @namespace SharpScape.Website.Components.Forum
-
-    <div class="d-flex flex-row comment-row ">
-        <div class="p-2"><span class="round"><img src=@Image alt="user" width="50"></span></div>
-        <div class="comment-text">
-            <h5>@Author</h5>
-            <div class="comment-footer">
-                <span class="date">@Date</span>
-                <span class="action-icons active">
-                    <a href="#" data-abc="true"><i class="oi oi-pencil"></i></a>
-                </span>
-            </div>
-            <p class="m-b-5 m-t-10">@Body</p>
-        </div>
+@inject HttpClient Http
+@inject ForumReferenceProvider Data
+@using SharpScape.Shared.Dto
+<div class="d-flex flex-row comment-row ">
+    <div class="p-2">
+        <span class="round">
+        @if(Image.Length > 0){
+            <img src=@Image alt="user" width="50">
+        }else{
+            <img src="images/Avatar.png" alt="user" width="50">
+        }
+        </span>
     </div>
+    <div class="comment-text">
+        <h5>@Author</h5>
+        <div class="comment-footer">
+            <span class="date">@Date</span>
+            <span class="action-icons active">
+                @if(Data.UserId == Convert.ToInt32(AuthorId)){
+                    <a data-abc="true" onclick="@OpenEditPost"><i class="oi oi-pencil"></i></a>
+                    @* <a class="oi oi-pencil btn btn-primary" onclick="@HandleValidSubmit"></a> *@
+                }
+            </span>
+            @if (CreateThread)
+            {
+                <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Edit</h4>
+                            </div>
+                            <EditForm Model="@tPost" OnValidSubmit=@HandleValidEditSubmit>
+                                <div class="modal-body">
+                                    <form model="@tPost">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label">Comment:</label>
+                                            <InputTextArea class="form-control" id="testing1" @bind-Value="tPost.Body" />
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" @onclick="@CloseEditPost">Close</button>
+                                    <button type="button" class="btn btn-danger" @onclick="@HandleValidDeleteSubmit">Delete</button>
+                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                </div>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <p class="m-b-5 m-t-10">@Body</p>
+    </div>
+</div>
 @code{
     [Parameter]
     public string Author { get; set; }
+    [Parameter]
+    public string AuthorId { get; set; }
+    [Parameter]
+    public string PostId { get; set; }
     [Parameter]
     public string Date { get; set; } = "";
 
@@ -23,4 +67,44 @@
     public string Body { get; set; } = "";
     [Parameter]
     public string Image { get; set; } = "";
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+    [Parameter]
+    public Action RefreshMethod{ get; set; }
+    public bool CreateThread { get; set; } = false;
+    ForumPostEditDto tPost = new ForumPostEditDto();
+    ForumPostEditDto post = new ForumPostEditDto();
+    private async void HandleValidEditSubmit()
+    {
+        CreateThread = false;
+        var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/ForumPosts/{PostId}", tPost);
+        if(result.IsSuccessStatusCode){
+            post = await result.Content.ReadAsAsync<ForumPostEditDto>();
+            Body = post.Body;
+            Date = post.Created.ToString("D");
+        }
+        StateHasChanged();
+    }
+    private async void HandleValidDeleteSubmit()
+    {
+        CreateThread = false;
+        var result = await Http.DeleteAsync($"https://localhost:7193/api/ForumPosts/{PostId}");
+        RefreshMethod.Invoke();
+    }
+    /// methods for popup modal
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    private void OpenEditPost()
+    {
+        CreateThread = true;
+        StateHasChanged();
+    }
+    private void CloseEditPost()
+    {
+        CreateThread = false;
+        StateHasChanged();
+    }
 }

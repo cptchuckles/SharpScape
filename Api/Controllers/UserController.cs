@@ -17,7 +17,7 @@ namespace SharpScape.Api.Controllers
         private readonly AppDbContext _context;
 
         private readonly Crypto _crypto;
-        public UserController(AppDbContext context,Crypto crypto)
+        public UserController(AppDbContext context, Crypto crypto)
         {
             _context = context;
             _crypto = crypto;
@@ -27,9 +27,23 @@ namespace SharpScape.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<UserInfoDto>>> Get()
         {
-            var users = await _context.Users.Select(user => new UserInfoDto().FromUser(user)).ToListAsync();
+            // var users = await _context.Users.Select(user => new UserInfoDto().FromUser(user)).ToListAsync();
+            var users = await _context.Users.ToListAsync();
+            List<UserInfoDto> usersList = new List<UserInfoDto>();
+            foreach (var user in users)
+            {
+                usersList.Add(new UserInfoDto()
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    Email = user.Email,
+                    Role = user.Role,
+                    Created = user.Created,
+                    ProfilePicDataUrl = user.ProfilePicDataUrl
+                });
+            }
+            return Ok(usersList);
 
-            return Ok(users);
         }
 
         // GET api/<ValuesController>/5
@@ -49,34 +63,34 @@ namespace SharpScape.Api.Controllers
 
         // POST api/<ValuesController>
         [HttpPost("{id}")]
-        public async Task<IActionResult> UpdateUser(int id,[FromBody] UserEditDto request)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserEditDto request)
         {
             var user = await _context.Users.FindAsync(id);
             if (user is null)
             {
                 return NotFound();
             }
-            if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!_crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
                 return BadRequest("Username/Email or Password incorrect");
-            if(request.ProfilePicDataUrl != "")
+            if (request.ProfilePicDataUrl != "")
             {
                 user.ProfilePicDataUrl = request.ProfilePicDataUrl;
             }
-            if(request.Username != "")
+            if (request.Username != "")
             {
                 user.Username = request.Username;
             }
-            if(request.Email != "")
+            if (request.Email != "")
             {
                 user.Email = request.Email;
             }
-            if(request.NewPassword != "")
+            if (request.NewPassword != "")
             {
                 var newuser = new User(request.Username, request.Email, request.NewPassword);
                 user.PasswordHash = newuser.PasswordHash;
                 user.PasswordSalt = newuser.PasswordSalt;
             }
-            _context.Entry(user).State=EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
             try { await _context.SaveChangesAsync(); }
             catch (DbUpdateConcurrencyException)
             {
@@ -99,7 +113,7 @@ namespace SharpScape.Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if(user is null)
+            if (user is null)
             {
                 return NotFound();
             }
@@ -108,14 +122,14 @@ namespace SharpScape.Api.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateRole")]
-        public async Task<IActionResult> UpdateRole(int id, string role)
+        public async Task<IActionResult> UpdateRole(int id, [FromBody] UserRoleDto request)
         {
-            var user=await _context.Users.FindAsync(id);
-            if(user is null)
+            var user = await _context.Users.FindAsync(id);
+            if (user is null)
                 return NotFound();
-            user.Role = role;
+            user.Role = request.Role;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return Ok();
@@ -123,7 +137,7 @@ namespace SharpScape.Api.Controllers
 
         private bool UserExist(int id)
         {
-            return _context.Users.Any(user => user.Id == id);   
+            return _context.Users.Any(user => user.Id == id);
         }
     }
 }

@@ -24,19 +24,23 @@
                 <span class="oi oi-play-circle" aria-hidden="true"></span> Play
             </NavLink>
         </div>
-        <AuthorizeView>
-            <div class="nav-item">
-                <a class="nav-link" href="UserProfile/@context.User.Claims.First(c => c.Type == "Id").Value" Match="NavLinkMatch.All">
-                    <span class="oi oi-person" aria-hidden="true"></span>My Account
-                </a>
-            </div>
-        </AuthorizeView>
         <div class="nav-item">
             <AuthorizeView>
                 <Authorized>
-                    <NavLink class="nav-link" href="/account" Match="NavLinkMatch.All">
+                    @if(context.User.Claims.First(c=>c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value.Equals("Admin")){
+                        <a class="nav-link" href="admin" Match="NavLinkMatch.All">
+                            <span class="oi oi-person" aria-hidden="true"></span> Admin
+                        </a>
+                    }
+                </Authorized>
+            </AuthorizeView>
+        </div>
+        <div class="nav-item">
+            <AuthorizeView>
+                <Authorized>
+                    <a class="nav-link" href="UserProfile/@context.User.Claims.First(c => c.Type == "Id").Value" Match="NavLinkMatch.All">
                         <span class="oi oi-person" aria-hidden="true"></span> @context.User.Identity.Name
-                    </NavLink>
+                    </a>
                 </Authorized>
                 <NotAuthorized>
                     <NavLink class="nav-link" href="/login" Match="NavLinkMatch.All">

@@ -1,0 +1,63 @@
+.background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  padding: 2rem;
+  background-image: url("images/Background.png");
+  background-size: cover;
+}
+.pagination_background {
+  background-color: #1b2042;
+}
+.card {
+  width: 60vw;
+}
+.card-body {
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 1.25rem;
+  border-color: grey;
+  background-color: #1b2042;
+  color: white;
+}
+
+.createbutton {
+  padding-top: 1.5rem;
+  padding-left: 30%;
+  padding-right: 30%;
+}
+.comment-widgets .comment-row:hover {
+  background: #2b4080;
+  cursor: pointer;
+}
+
+.comment-widgets .comment-row {
+  border-bottom: 1px solid grey;
+  padding: 1rem;
+  background-color: #1b2042;
+  color: white;
+}
+
+.round img {
+  border-radius: 100%;
+}
+
+.action-icons a {
+  padding-left: 7px;
+  vertical-align: middle;
+  color: #99abb4;
+}
+
+.action-icons a:hover {
+  color: #1976d2;
+}
+
+.mt-100 {
+  margin-top: 100px;
+}
+
+.mb-100 {
+  margin-bottom: 100px;
+}

@@ -112,8 +112,10 @@ if (app.Environment.IsDevelopment())
 
     app.UseCors();
 }
-
-app.UseHttpsRedirection();
+else
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
