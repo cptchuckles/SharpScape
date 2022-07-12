@@ -1,0 +1,200 @@
+@page "/user/{userId}"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+@inject ForumReferenceProvider Data
+@using SharpScape.Shared.Dto
+@using SharpScape.Website.Components.Forum
+@using SharpScape.Website.Components.Forum.Pagination
+
+@*  login imports *@
+@inject ForumReferenceProvider Data
+@inject HttpClient Http
+@inject IAuthTokenProvider TokenProvider
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+<div class="background">
+    @if (loading)
+    {
+        <center>
+            <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
+            <span style=" color:#99abb4 " >posts are loading</span>
+        </center> 
+    }
+    <div class="container d-flex justify-content-center mt-100 mb-100">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card col-md-5">
+                    <div class="card-body">
+                        <h4 class="card-title">All Posts</h4>
+                    </div>
+                    <div class="comment-widgets m-b-20">
+                        @foreach (ForumPostDto post in posts)
+                        {
+                            <UserPost 
+                                Author=@getUser(post.AuthorId)
+                                AuthorId=@post.AuthorId.ToString()
+                                PostId=@post.Id.ToString()
+                                Date=@post.Created.ToString("D")
+                                Body=@post.Body
+                                Image=@getProfile(post.AuthorId)
+                                RefreshMethod=@Refresh
+                            />
+                        }
+                        <div class="pagination_background">
+                            <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
+                                        PageIndex="@pageIndex"
+                                        Radius="3"
+                                        OnSelectedPage="@SelectedPage">
+                            </Pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Author { get; set; } = "";
+    [Parameter]
+    public string UserId { get; set; } = "";
+    [Parameter]
+    public string Title { get; set; } = "";
+    [Parameter]
+    public string Body { get; set; } = "";
+    [Parameter]
+    public string Date { get; set; } = "";
+    ForumPostDto tempPost = new ForumPostDto();
+    bool SubmitResult = false;
+    private IList<ForumPostDto> allPosts = new List<ForumPostDto>();
+    private IList<ForumPostDto> posts = new List<ForumPostDto>();
+    List<UserInfoDto> users = new List<UserInfoDto>();
+    [Parameter]
+    public string ThreadId { get; set; }
+    [Parameter]
+    public string TitleT { get; set; }
+    public bool CreateThread { get; set; } = false;
+    public EventCallback<bool> OnClose { get; set; }
+    private bool loading=false ;
+    public ForumThreadDto ftd = new ForumThreadDto();
+    public ForumCategoryDto fcd = new ForumCategoryDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/User{UserId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        if (allPosts != null)
+        {
+            // Initialize the number of "totalPages"
+            totalPages = (int)Math.Ceiling((double)allPosts.Count() / itemsPerPage);
+            // Initialize the "comments" which will be displayed when the page loaded first time.
+            posts = allPosts.Skip(0).Take(itemsPerPage).ToList();
+        }
+        loading = false;
+    }
+    private async void HandleValidSubmit()
+    {
+        if (Data.UserId > 0 && tempPost.Body != "")
+        {
+            ForumPostDto post = new ForumPostDto();
+            post.AuthorId = Data.UserId;
+            post.ThreadId = Data.ThreadId;
+            post.Body = tempPost.Body;
+            post.Created = Convert.ToDateTime(DateTime.Now);
+            posts.Add(post);
+            CreateThread = false;
+            var result = await Http.PostAsJsonAsync("/api/ForumPosts", post);
+            if (result.IsSuccessStatusCode)
+            {
+                allPosts = await result.Content.ReadAsAsync<List<ForumPostDto>>();
+                if (allPosts != null)
+                {
+                    // Initialize the number of "totalPages"
+                    totalPages = (int)Math.Ceiling((double)allPosts.Count() / itemsPerPage);
+                    // Initialize the "comments" which will be displayed when the page loaded first time.
+                    posts = allPosts.Reverse().Skip(0).Take(itemsPerPage).ToList();
+                }
+                SelectedPage(1);
+                StateHasChanged();
+            }
+            else
+            {
+                await result.Content.ReadAsStringAsync();
+            }
+        }
+    }
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+    // pagination stuff and dummy data
+    private int pageIndex = 1;
+    private int itemsPerPage = 4;
+    private int totalPages = 1;
+    private void OpenCreateThread()
+    {
+        tempPost.Body = "";
+        CreateThread = true;
+        StateHasChanged();
+    }
+    private void CloseCreateThread()
+    {
+        CreateThread = false;
+        StateHasChanged();
+    }
+    private void SelectedPage(int selectedPageIndex)
+    {
+        if (allPosts != null)
+        {
+            pageIndex = selectedPageIndex;
+            var skipCount = itemsPerPage * (pageIndex - 1);
+            posts = allPosts.Skip(skipCount).Take(itemsPerPage).ToList();
+        }
+    }
+    private async void Refresh(){
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/User{UserId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        if (allPosts != null)
+        {
+            // Initialize the number of "totalPages"
+            totalPages = (int)Math.Ceiling((double)allPosts.Count() / itemsPerPage);
+            // Initialize the "comments" which will be displayed when the page loaded first time.
+            posts = allPosts.Skip(0).Take(itemsPerPage).ToList();
+        }
+        loading = false;
+        StateHasChanged();
+    }
+    /////////////////////////// login /////////////////////////////////////
+
+    private UserLoginDto userLoginDto = new();
+    private string? requestError;
+
+    private async Task TryLogin()
+    {
+        var result = await Http.PostAsJsonAsync("api/login", userLoginDto);
+
+        if (result.IsSuccessStatusCode)
+        {
+            //TokenProvider.Token = await result.Content.ReadAsStringAsync();
+            var response = await result.Content.ReadAsAsync<UserLoginResponseDto>();
+            TokenProvider.Token = response.accessToken;
+            Data.UserId = response.Id;
+            
+            await AuthStateProvider.GetAuthenticationStateAsync();
+        }
+        else
+        {
+            requestError = await result.Content.ReadAsStringAsync();
+        }
+    }
+    public string getUser(int id)
+    {
+        return users.Find(x => x.Id == id).Username;
+    }
+    public string getProfile(int id)
+    {
+        return users.Find(x => x.Id == id).ProfilePicDataUrl;
+    }
+}

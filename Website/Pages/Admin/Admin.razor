@@ -1,0 +1,44 @@
+@page "/admin"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+@inject ForumReferenceProvider Data
+@using SharpScape.Shared.Dto
+@using SharpScape.Website.Components.Forum
+@using SharpScape.Website.Components.Forum.Pagination
+<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+<div class="background">
+    @if (loading)
+    {
+        <center>
+            <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
+            <span style=" color:#99abb4 ">threads are loading</span>
+        </center>
+    }
+    <div class="container">
+        @foreach (UserInfoDto user in users)
+        {
+            <User
+                Id=@user.Id.ToString()
+                Username=@user.Username
+                Date=@user.Created.ToString("D")
+                Email=@user.Email
+                Role=@user.Role
+                RefreshMethod=@Refresh
+            />
+        }
+    </div>
+</div>
+@code {
+    private bool loading=false ;
+    List<UserInfoDto> users = new List<UserInfoDto>();
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        loading = false;
+    }
+    private async void Refresh(){
+    users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+    StateHasChanged();
+    }
+}
