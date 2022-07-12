@@ -78,6 +78,29 @@ namespace SharpScape.Api.Controllers
             return forumPostDtos;
         }
 
+        // GET: api/Threads/5
+        [HttpGet("User{id}")]
+        public async Task<ActionResult<List<ForumPostDto>>> GetForumPostbyUserId(int id)
+        {
+            if (_context.ForumPosts == null)
+            {
+                return NotFound();
+            }
+            var fpl = await _context.ForumPosts.Where(x => x.AuthorId == id).ToListAsync();
+            List<ForumPostDto> forumPostDtos = new List<ForumPostDto>();
+            foreach (var fp in fpl)
+            {
+                forumPostDtos.Add(new ForumPostDto()
+                {
+                    Id = fp.Id,
+                    AuthorId = fp.AuthorId,
+                    Body = fp.Body,
+                    Created = fp.Created,
+                    ThreadId = fp.ThreadId
+                });
+            }
+            return forumPostDtos;
+        }
 
 
         // POST: api/ForumPosts
