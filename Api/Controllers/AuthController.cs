@@ -57,6 +57,17 @@ public class AuthController : ControllerBase
     public ActionResult<string> Login([FromBody] UserLoginDto request)
     {
         var user = _context.Users.FirstOrDefault(u => u.Username.ToLower() == request.Username.ToLower());
+        if(user.Banned.HasValue){
+            DateTime dt = user.Banned.Value; 
+            int result = DateTime.Compare(dt,DateTime.Now.ToUniversalTime());
+            if(result > 0)
+            {
+                return StatusCode(500,"Oh no! you still banned");
+            }else{
+                user.Banned = null;
+                _context.SaveChanges();
+            }
+        }
         UserLoginResponseDto response = new UserLoginResponseDto();
         if (user is null)
             return BadRequest("Username/Email or Password incorrect");

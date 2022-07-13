@@ -34,6 +34,8 @@ public class User
     [DisplayFormat(DataFormatString = "{0:D}")]
     public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
 
+    [DisplayFormat(DataFormatString = "{0:D}")]
+    public DateTime? Banned { get; set; } = null;
     public string ProfilePicDataUrl {get;set;} = "";
     public User() { }
 

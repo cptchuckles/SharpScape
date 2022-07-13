@@ -108,6 +108,20 @@ namespace SharpScape.Api.Controllers
             response.ProfilePicDataUrl = user.ProfilePicDataUrl;
             return Ok(response);
         }
+        // POST Ban a user api/<ValuesController>
+        [HttpPost("ban/{id}")]
+        public async Task<IActionResult> BanUser(int id, [FromBody] UserBanDto request)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user is null)
+            {
+                return NotFound();
+            }
+            DateTime BannedTill = DateTime.Now.ToUniversalTime().AddDays(Convert.ToInt32(request.days));
+            user.Banned = BannedTill;
+            await _context.SaveChangesAsync();
+            return Ok(user);
+        }
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

@@ -20,37 +20,63 @@
             <div class="row text-center op-7">
                 <div class="col px-1"> <i class="oi oi-credit-card icon-1x like"></i> <span class="d-block text-sm">@Id</span> </div>
                 <div class="col px-1"> <i onclick="@OpenCreateThread" class="oi oi-key icon-1x"></i> <span class="d-block text-sm">@Role</span> </div>
+                <div class="col px-1"> <i onclick="@OpenBannedModal" class="oi oi-ban icon-1x"></i> <span class="d-block text-sm">Ban</span> </div>
             </div>
         </div>
     </div>
 </div>
-@if (CreateThread)
-    {
-        <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Update Role</h4>
-                    </div>
-                    <EditForm Model="@tUser" OnValidSubmit=@UpdateRole>
-                        <div class="modal-body">
-                            <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" style="width: 100%;">
-                                <select @bind="@tRole" class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                                    <option value=""></option>
-                                    <option value="User">User</option>
-                                    <option value="Admin">Admin</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
-                            <button type="submit" class="btn btn-primary">Create</button>
-                        </div>
-                    </EditForm>
+
+@if (BanUser)
+{
+    <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ban an User</h4>
                 </div>
+                <EditForm Model="@bannedUser" OnValidSubmit=@BanAnUser>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Duration(days):</label>
+                            <InputTextArea class="form-control" id="testing1" @bind-Value="bannedUser.days" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="@CloseBannedModal">Close</button>
+                        <button type="submit" class="btn btn-primary">Ban</button>
+                    </div>
+                </EditForm>
             </div>
         </div>
-    }
+    </div>
+}
+@if (CreateThread)
+{
+    <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Update Role</h4>
+                </div>
+                <EditForm Model="@tUser" OnValidSubmit=@UpdateRole>
+                    <div class="modal-body">
+                        <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" style="width: 100%;">
+                            <select @bind="@tRole" class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
+                                <option value=""></option>
+                                <option value="User">User</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="@CloseCreateThread">Close</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
 @code{
     [Parameter]
     public string Route { get; set; }
@@ -71,8 +97,10 @@
     [Parameter]
     public Action RefreshMethod{ get; set; }
     public bool CreateThread { get; set; } = false;
+    public bool BanUser { get; set; } = false;
     public string tRole {get;set;}
     UserRoleDto tUser = new UserRoleDto();
+    UserBanDto bannedUser = new UserBanDto();
     private async void UpdateRole()
     {
         await JSRuntime.InvokeVoidAsync("console.log",tRole);
@@ -81,19 +109,36 @@
         var result = await Http.PutAsJsonAsync($"https://localhost:7193/api/User/UpdateRole?id={Id}",tUser);
         RefreshMethod.Invoke();
     }
-    /// methods for popup modal
-    private Task ModalCancel()
+    private async void BanAnUser()
     {
-        return OnClose.InvokeAsync(false);
+        await JSRuntime.InvokeVoidAsync("console.log",bannedUser.days);
+        CreateThread = false;
+        var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/User/ban/{Id}",bannedUser);
+        RefreshMethod.Invoke();
+    }
+    /// methods for popup modal
+    private void OpenBannedModal()
+    {
+        BanUser = true;
+        StateHasChanged();
     }
     private void OpenCreateThread()
     {
         CreateThread = true;
         StateHasChanged();
     }
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
     private void CloseCreateThread()
     {
         CreateThread = false;
+        StateHasChanged();
+    }
+    private void CloseBannedModal()
+    {
+        BanUser = false;
         StateHasChanged();
     }
 }

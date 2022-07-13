@@ -49,6 +49,10 @@ public class UserRoleDto
 {
     public string Role { get; set; }
 }
+public class UserBanDto
+{
+    public string days { get; set; }
+}
 public class UserLoginDto
 {
     [Required]

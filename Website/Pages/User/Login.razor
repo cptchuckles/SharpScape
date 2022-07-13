@@ -48,7 +48,6 @@
     private async Task TryLogin()
     {
         var result = await Http.PostAsJsonAsync("api/login", userLoginDto);
-
         if (result.IsSuccessStatusCode)
         {
             //TokenProvider.Token = await result.Content.ReadAsStringAsync();
