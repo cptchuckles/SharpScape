@@ -1,6 +1,6 @@
 @page "/login"
 @using SharpScape.Shared.Dto
-@inject ForumReferenceProvider Data
+
 @inject HttpClient Http
 @inject IAuthTokenProvider TokenProvider
 @inject AuthenticationStateProvider AuthStateProvider
@@ -16,7 +16,7 @@
 <div class="form-section">
     <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
         <h1>Login</h1>
-        <span> "Admin" "StrongPassword12345"</span>
+       
         @if (requestError is not null)
         {
             <p class="text-danger">@requestError</p>
@@ -42,6 +42,9 @@
 </div>
 
 @code {
+    [Parameter]
+    public string logedId { get; set; } = "";
+
     private UserLoginDto userLoginDto = new();
     private string? requestError;
 
@@ -54,9 +57,9 @@
             //TokenProvider.Token = await result.Content.ReadAsStringAsync();
             var response = await result.Content.ReadAsAsync<UserLoginResponseDto>();
             TokenProvider.Token = response.accessToken;
-            Data.UserId = response.Id;
+           logedId = response.Id.ToString();
             await AuthStateProvider.GetAuthenticationStateAsync();
-            NavManager.NavigateTo("/");
+            NavManager.NavigateTo($"/{logedId}");
         }
         else
         {

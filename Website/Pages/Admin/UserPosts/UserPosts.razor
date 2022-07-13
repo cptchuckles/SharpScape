@@ -1,14 +1,10 @@
 @page "/user/{userId}"
 @inject NavigationManager NavManager
 @inject HttpClient Http
-@inject ForumReferenceProvider Data
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
-
 @*  login imports *@
-@inject ForumReferenceProvider Data
-@inject HttpClient Http
 @inject IAuthTokenProvider TokenProvider
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
@@ -55,6 +51,9 @@
     </div>
 </div>
 @code {
+     [Parameter]
+    public string logedId{ get; set; }
+
     [Parameter]
     public string Author { get; set; } = "";
     [Parameter]
@@ -96,11 +95,11 @@
     }
     private async void HandleValidSubmit()
     {
-        if (Data.UserId > 0 && tempPost.Body != "")
+        if (logedId.Length > 0 && tempPost.Body != "")
         {
             ForumPostDto post = new ForumPostDto();
-            post.AuthorId = Data.UserId;
-            post.ThreadId = Data.ThreadId;
+            post.AuthorId =Convert.ToInt16(logedId);
+            post.ThreadId =Convert.ToInt16(ThreadId);
             post.Body = tempPost.Body;
             post.Created = Convert.ToDateTime(DateTime.Now);
             posts.Add(post);
@@ -180,7 +179,7 @@
             //TokenProvider.Token = await result.Content.ReadAsStringAsync();
             var response = await result.Content.ReadAsAsync<UserLoginResponseDto>();
             TokenProvider.Token = response.accessToken;
-            Data.UserId = response.Id;
+            logedId = response.Id.ToString();
             
             await AuthStateProvider.GetAuthenticationStateAsync();
         }
