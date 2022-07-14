@@ -11,8 +11,8 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20220712220116_Users_AddColumns_ProfilePic_RefreshToken")]
-    partial class Users_AddColumns_ProfilePic_RefreshToken
+    [Migration("20220714231910_Users_AddColumn_RefreshToken")]
+    partial class Users_AddColumn_RefreshToken
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
