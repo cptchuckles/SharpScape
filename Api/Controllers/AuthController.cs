@@ -66,6 +66,13 @@ public class AuthController : ControllerBase
         response.accessToken = _crypto.CreateToken(user);
         response.Id = user.Id;
         response.Username = user.Username;
+
+        user.RefreshToken = response.refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(30);
+
+        _context.Users.Update(user);
+
+        _context.SaveChanges();
         return Ok(response);
     }
 }

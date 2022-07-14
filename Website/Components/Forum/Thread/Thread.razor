@@ -21,11 +21,13 @@
                 <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@Replies</span> </div>
             </div>
         </div>
-    
+    </div>
 </div>
 @code{
 
      [Parameter]
+    public string logedId { get; set; }
+    [Parameter]
     public string logedId { get; set; }
     [Parameter]
     public string Route { get; set; }
@@ -48,5 +50,5 @@
     public string? Replies { get; set; }
     [Parameter]
     public string Views { get; set; }
-   
+  
 }
