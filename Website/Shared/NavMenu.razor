@@ -16,7 +16,7 @@
         <div class="nav-item">
             <AuthorizeView>
             <Authorized>
-            <a class="nav-link" href="forum/@context.User.Claims.First(c => c.Type == "Id").Value" Match="NavLinkMatch.All">
+            <a class="nav-link" href="/forum" Match="NavLinkMatch.All">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Forum
             </a>
              </Authorized>
@@ -24,7 +24,7 @@
 
              
               <NotAuthorized>
-                   <a class="nav-link" href="forum/0" Match="NavLinkMatch.All">
+                   <a class="nav-link" href="/forum" Match="NavLinkMatch.All">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Forum
             </a>
                 </NotAuthorized>

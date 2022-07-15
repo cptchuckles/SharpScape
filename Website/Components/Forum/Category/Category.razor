@@ -7,7 +7,7 @@
             <div class="forum-icon">
                 <i class=@Icon></i>
             </div>
-           <a href="category/@Route/@fcdId/@CatLogedId" class="forum-item-title">   
+           <a href="category/@Route/@fcdId" class="forum-item-title">   
             @Title
             </a>
             <div class="forum-sub-title">@SubTitle</div>
@@ -31,8 +31,7 @@
     </div>
 </div>
 @code {
-    [Parameter]
-    public string CatLogedId {get; set;}
+   
 
     [Parameter]
     public string Route { get; set; } = "r";

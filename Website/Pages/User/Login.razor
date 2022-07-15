@@ -16,14 +16,14 @@
 <div class="form-section">
     <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
         <h1>Login</h1>
-       
+
         @if (requestError is not null)
         {
             <p class="text-danger">@requestError</p>
         }
 
         <DataAnnotationsValidator />
-        
+
         <div class="form-group row">
             <label for="username" class="col-sm-2 col-form-label">Username:</label>
             <InputText class="form-control mx-2" id="username" @bind-Value="@userLoginDto.Username" />
@@ -57,7 +57,9 @@
             //TokenProvider.Token = await result.Content.ReadAsStringAsync();
             var response = await result.Content.ReadAsAsync<UserLoginResponseDto>();
             TokenProvider.Token = response.accessToken;
-           logedId = response.Id.ToString();
+
+
+            logedId = response.Id.ToString();
             await AuthStateProvider.GetAuthenticationStateAsync();
             NavManager.NavigateTo($"/{logedId}");
         }

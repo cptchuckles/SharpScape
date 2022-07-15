@@ -1,4 +1,4 @@
-@page "/forum/{logedId}"
+@page "/forum"
 @inject HttpClient Http
 @inject NavigationManager NavManager
 @using SharpScape.Shared.Dto
@@ -44,7 +44,7 @@
                                 Icon=@Icons[forumCategory.Id-1]
                                 ThreadsNumber=@threadCounts[forumCategory.Id-1].ToString()
                                 PostsNumber=@postCounts[forumCategory.Id-1].ToString()
-                                CatLogedId=@logedId
+                               
                             />
                         }
                     }
