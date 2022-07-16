@@ -58,8 +58,10 @@
             var response = await result.Content.ReadAsAsync<UserLoginResponseDto>();
             TokenProvider.Token = response.accessToken;
 
-
             logedId = response.Id.ToString();
+
+            TokenProvider.RefreshToken = response.refreshToken;
+
             await AuthStateProvider.GetAuthenticationStateAsync();
             NavManager.NavigateTo($"/{logedId}");
         }
