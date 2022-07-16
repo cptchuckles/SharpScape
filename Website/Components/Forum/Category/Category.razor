@@ -1,5 +1,5 @@
 @namespace SharpScape.Website.Components.Forum
-@inject SharpScape.Website.Services.ForumReferenceProvider Data
+@*@inject SharpScape.Website.Services.ForumReferenceProvider Data*@
 
 <div class=@Status>
     <div class="row">
@@ -7,7 +7,7 @@
             <div class="forum-icon">
                 <i class=@Icon></i>
             </div>
-            <a href="category/@Route/@fcdId" class="forum-item-title" onclick="@UpdateId">
+           <a href="category/@Route/@fcdId" class="forum-item-title">   
             @Title
             </a>
             <div class="forum-sub-title">@SubTitle</div>
@@ -31,6 +31,8 @@
     </div>
 </div>
 @code {
+   
+
     [Parameter]
     public string Route { get; set; } = "r";
     [Parameter]
@@ -52,8 +54,5 @@
     public string PostsNumber{get;set;} = "pn";
     [Parameter]
     public string fcdId { get; set; }
-    private void UpdateId()
-    {
-        Data.CategoryId = Id;
-    }
+    
 }

@@ -1,0 +1,37 @@
+﻿@page "/{logedId}"
+<PageTitle>Welcome to SharpScape</PageTitle>
+
+<div class="grid-container">
+    <div class="item1 col-lg-6 mx-auto">
+        <h1 class="display-4 fw-bold my-5">SharpScape</h1>
+        <p class="lead mb-4">
+            SharpScape is an online multiplayer community.
+            Play and chat with your friends in real-time, or visit the community forums and get engrossed in deep discussions.
+        </p>
+    </div>
+    <div class="item2"></div>
+    <div class="item3">
+        <a href="/GameWorld">
+            <img href="/GameWorld" src="/images/proto.gif" width="240" />
+        </a>
+    </div>
+    <div class="item4">
+        <p>Walk around and talk with other people in realtime. Talk with strangers, find your friends, or make new ones!</p>
+        <a href="/GameWorld" class="btn btn-primary btn-lg px-4 me-sm-3">Play SharpScape</a>
+    </div>
+    <div class="item5">
+        <a href="forum">
+            <img src="/assets/Index/ForumImage.png" width="300" />
+        </a>
+    </div>
+    <div class="item6">
+        <p>Talk to other people on our forum! Chat about our games, general topics, or whateve is popular! Come in and join the fun!</p>
+        <a href="forum" class="btn btn-outline-secondary btn-lg px-4">Secondary</a>
+    </div>
+    <div class="item7"></div>
+</div>
+@code
+{  
+    [Parameter]
+    public string logedId { get; set; }
+}

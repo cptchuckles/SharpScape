@@ -1,6 +1,6 @@
 @namespace SharpScape.Website.Components.Forum
 @inject HttpClient Http
-@inject ForumReferenceProvider Data
+@*@inject ForumReferenceProvider Data*@
 @using SharpScape.Shared.Dto
 <div class="d-flex flex-row comment-row ">
     <div class="p-2">
@@ -17,11 +17,15 @@
         <div class="comment-footer">
             <span class="date">@Date</span>
             <span class="action-icons active">
-                @if(Data.UserId == Convert.ToInt32(AuthorId)){
+            
+                
+                @*@if(AuthorId == Convert.ToInt32(AuthorId)){*@
                     <a data-abc="true" onclick="@OpenEditPost"><i class="oi oi-pencil"></i></a>
                     @* <a class="oi oi-pencil btn btn-primary" onclick="@HandleValidSubmit"></a> *@
-                }
-            </span>
+              
+            
+                
+                </span>
             @if (CreateThread)
             {
                 <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
@@ -54,6 +58,8 @@
     </div>
 </div>
 @code{
+[Parameter]
+    public string logedId { get; set; }
     [Parameter]
     public string Author { get; set; }
     [Parameter]

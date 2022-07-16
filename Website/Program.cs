@@ -12,7 +12,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>();
-builder.Services.AddSingleton<SharpScape.Website.Services.ForumReferenceProvider>();
+//builder.Services.AddSingleton<SharpScape.Website.Services.ForumReferenceProvider>();
 
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();

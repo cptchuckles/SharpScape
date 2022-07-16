@@ -1,7 +1,7 @@
 @page "/admin"
 @inject NavigationManager NavManager
 @inject HttpClient Http
-@inject ForumReferenceProvider Data
+@using SharpScape.Website.Services
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
@@ -37,6 +37,7 @@
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         loading = false;
     }
+
     private async void Refresh(){
     users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
     StateHasChanged();
