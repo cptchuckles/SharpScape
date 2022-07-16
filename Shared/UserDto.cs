@@ -20,6 +20,7 @@ public class UserInfoDto
 
     public DateTime Created { get; set; }
     public string ProfilePicDataUrl {get;set;}
+    public string Banned {get;set;}
 }
 
 public class UserRegisterDto

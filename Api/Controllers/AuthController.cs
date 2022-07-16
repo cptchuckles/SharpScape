@@ -35,7 +35,6 @@ public class AuthController : ControllerBase
 
         return Ok(_crypto.CreateToken(user));
     }
-
     [Authorize(Roles="Admin")]
     [HttpPost("RegisterAdmin")]
     public ActionResult<string> RegisterAdmin([FromBody] UserRegisterDto request)
@@ -62,7 +61,7 @@ public class AuthController : ControllerBase
             int result = DateTime.Compare(dt,DateTime.Now.ToUniversalTime());
             if(result > 0)
             {
-                return StatusCode(500,"Oh no! you still banned");
+                return StatusCode(500,"Oh no! you are banned till " + user.Banned);
             }else{
                 user.Banned = null;
                 _context.SaveChanges();

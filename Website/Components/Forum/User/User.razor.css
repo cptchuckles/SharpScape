@@ -34,3 +34,7 @@ a.text-primary:hover {
 .font-weight-bold {
   font-weight: 700 !important;
 }
+
+.round img {
+  border-radius: 100%;
+}

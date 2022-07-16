@@ -30,8 +30,12 @@ namespace SharpScape.Api.Controllers
             // var users = await _context.Users.Select(user => new UserInfoDto().FromUser(user)).ToListAsync();
             var users = await _context.Users.ToListAsync();
             List<UserInfoDto> usersList = new List<UserInfoDto>();
+            string banned = "";
             foreach (var user in users)
             {
+                if(user.Banned.HasValue){
+                    banned = user.Banned.Value.ToString();
+                }
                 usersList.Add(new UserInfoDto()
                 {
                     Id = user.Id,
@@ -39,8 +43,10 @@ namespace SharpScape.Api.Controllers
                     Email = user.Email,
                     Role = user.Role,
                     Created = user.Created,
-                    ProfilePicDataUrl = user.ProfilePicDataUrl
+                    ProfilePicDataUrl = user.ProfilePicDataUrl,
+                    Banned = banned
                 });
+                banned = "";
             }
             return Ok(usersList);
 
@@ -119,6 +125,18 @@ namespace SharpScape.Api.Controllers
             }
             DateTime BannedTill = DateTime.Now.ToUniversalTime().AddDays(Convert.ToInt32(request.days));
             user.Banned = BannedTill;
+            await _context.SaveChangesAsync();
+            return Ok(user);
+        }
+        [HttpPost("unban/{id}")]
+        public async Task<IActionResult> UnBanUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user is null)
+            {
+                return NotFound();
+            }
+            user.Banned = null;
             await _context.SaveChangesAsync();
             return Ok(user);
         }
