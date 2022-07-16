@@ -9,7 +9,7 @@ public interface IAuthTokenProvider
     public string? Token { get; set; } 
     public ClaimsIdentity? GetClaims();
 
-    public string? Token { get; set; }
+  
     public string? RefreshToken { get; set; }
 
 }
