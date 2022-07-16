@@ -93,7 +93,7 @@ public class AuthController : ControllerBase
         response.Username = user.Username;
 
         user.RefreshToken = response.refreshToken;
-        user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(30);
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(30);
 
         _context.Users.Update(user);
 

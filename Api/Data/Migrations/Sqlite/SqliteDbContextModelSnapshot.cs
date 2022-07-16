@@ -162,7 +162,6 @@ namespace SharpScape.Api.Migrations
                     b.Property<DateTime>("RefreshTokenExpiryTime")
                         .HasColumnType("TEXT");
 
-
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("TEXT");

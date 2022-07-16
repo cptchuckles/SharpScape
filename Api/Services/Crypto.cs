@@ -101,7 +101,7 @@ public class Crypto
             issuer: _configuration.GetSection("Jwt:Issuer").Value,
             audience: _configuration.GetSection("Jwt:Audience").Value,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.UtcNow.AddMinutes(30),
             signingCredentials: cred);
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
