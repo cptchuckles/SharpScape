@@ -101,7 +101,7 @@
 
 @code {
     [Parameter]
-    public string logedId { get; set; }
+    public string logedId { get; set; } = "0";
 
     [Parameter]
     public string UrlName { get; set; }
@@ -148,7 +148,10 @@
             claims = TokenProvider.GetClaims();
             logedId = claims.Claims.ElementAt<Claim>(0).Value;
         }
-        else { Console.WriteLine("category init no token"); }
+        else { 
+            Console.WriteLine("category init no token");
+            logedId = "0";
+        }
 
         if (allthreads != null)
         {
@@ -217,11 +220,15 @@
             }
             SelectedPage(1);
             StateHasChanged();
+
         }
         else
         {
             await result.Content.ReadAsStringAsync();
         }
+
+        tTopic.Title = "";
+        tTopic.Body= "";
     }
     public string getUser(int id)
     {
