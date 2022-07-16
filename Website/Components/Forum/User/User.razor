@@ -79,7 +79,7 @@
         await JSRuntime.InvokeVoidAsync("console.log",tRole);
         tUser.Role = tRole;
         CreateThread = false;
-        var result = await Http.PutAsJsonAsync($"https://localhost:7193/api/User/UpdateRole?id={Id}",tUser);
+        var result = await Http.PutAsJsonAsync($"/api/User/UpdateRole?id={Id}",tUser);
         RefreshMethod.Invoke();
     }
     /// methods for popup modal
