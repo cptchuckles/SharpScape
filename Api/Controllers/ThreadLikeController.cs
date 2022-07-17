@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
 using SharpScape.Shared.Dto;
-
 namespace SharpScape.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -11,12 +10,10 @@ namespace SharpScape.Api.Controllers
     public class ThreadLikeController : ControllerBase
     {
         private readonly AppDbContext _context;
-
         public ThreadLikeController(AppDbContext context)
         {
             _context = context;
         }
-
         // GET: get a list of users that liked the thread based on threadid
         [HttpGet]
         public async Task<ActionResult<List<ThreadLike>>> GetThreadLike()
@@ -73,7 +70,6 @@ namespace SharpScape.Api.Controllers
             }
             return Ok(threadLikeDtos);
         }
-
         // DELETE: remove user from threadlike list based on both threadid and userid
         [HttpPost("unliked/{id}")]
         public async Task<IActionResult> DeleteForumCategory(int id)
@@ -88,10 +84,8 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-
             _context.ThreadLikes.Remove(threadLike[0]);
             await _context.SaveChangesAsync();
-
             var threadLikes = await _context.ThreadLikes.Where(x => x.ThreadId == id).ToListAsync();
             List<ThreadLikeDto> threadLikeDtos = new List<ThreadLikeDto>();
             foreach (var item in threadLikes)

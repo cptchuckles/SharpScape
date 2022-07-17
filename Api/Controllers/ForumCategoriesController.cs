@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
@@ -26,9 +21,6 @@ namespace SharpScape.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ForumCategoryDto>>> GetForumCategories()
         {
-              
-            
-            
             var forumCategories= await _context.ForumCategories.ToListAsync();
             List<ForumCategoryDto> forumCategoriesDto = new List<ForumCategoryDto>();
             
@@ -36,9 +28,6 @@ namespace SharpScape.Api.Controllers
             {
                 forumCategoriesDto.Add(new ForumCategoryDto() { Id=category.Id, Name=category.Name, Description=category.Description });
             }
-                       
-           // forumCategories.ForEach(async category => category.Threads = await _context.ForumThreads.Where(x => x.CategoryId == category.Id).ToListAsync());
-
             return Ok(forumCategoriesDto);
         }
 
@@ -46,10 +35,10 @@ namespace SharpScape.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ForumCategoryDto>> GetForumCategory(int id)
         {
-          if (_context.ForumCategories == null)
-          {
-              return NotFound();
-          }
+            if (_context.ForumCategories == null)
+            {
+                return NotFound();
+            }
             var category = await _context.ForumCategories.FindAsync(id);
             //category.Threads= await _context.ForumThreads.Where(x => x.CategoryId == id).ToListAsync();
 
@@ -60,9 +49,6 @@ namespace SharpScape.Api.Controllers
 
             return new ForumCategoryDto() { Id = category.Id, Name = category.Name, Description = category.Description };
         }
-
-       
-
         // POST: api/ForumCategories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -98,7 +84,6 @@ namespace SharpScape.Api.Controllers
 
             return NoContent();
         }
-
         private bool ForumCategoryExists(int id)
         {
             return (_context.ForumCategories?.Any(e => e.Id == id)).GetValueOrDefault();
