@@ -4,6 +4,8 @@ using SharpScape.Api.Models;
 using SharpScape.Api.Data;
 using SharpScape.Shared.Dto;
 using SharpScape.Api.Services;
+using System.Security.Claims;
+using SharpScape.Api.Data.Models;
 
 namespace SharpScape.Api.Controllers;
 
@@ -13,11 +15,13 @@ public class AuthController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly Crypto _crypto;
+    private readonly ITokenService _tokenService;
 
-    public AuthController(AppDbContext context, Crypto crypto)
+    public AuthController(AppDbContext context, Crypto crypto, ITokenService tokenService)
     {
         _context = context;
         _crypto = crypto;
+        _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
     }
 
     [AllowAnonymous]
@@ -73,9 +77,37 @@ public class AuthController : ControllerBase
         
         if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             return BadRequest("Username/Email or Password incorrect");
+
+        //Create the Acess Token and Refresh Token
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, "Manager")
+        };
+
+
+        
+
+        //return Ok(new AuthenticatedResponse
+        //{
+        //    AccessToken = accessToken,
+        //    RefreshToken = refreshToken
+        //});
+
+
+        //return Ok(_crypto.CreateToken(user));
+
         response.accessToken = _crypto.CreateToken(user);
+        response.refreshToken = _crypto.CreateRefreshToken(user);
         response.Id = user.Id;
         response.Username = user.Username;
+
+        user.RefreshToken = response.refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(30);
+
+        _context.Users.Update(user);
+
+        _context.SaveChanges();
         return Ok(response);
     }
 }

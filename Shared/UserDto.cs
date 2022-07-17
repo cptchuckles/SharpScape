@@ -68,4 +68,5 @@ public class UserLoginResponseDto
 
     public string Username { get; set; }
     public string accessToken {get;set;}
+    public string refreshToken {get;set;}
 }

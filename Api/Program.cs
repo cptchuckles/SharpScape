@@ -35,6 +35,7 @@ else
 builder.Services.AddSingleton<RsaKeyProvider>();
 
 builder.Services.AddScoped<Crypto>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -112,8 +113,10 @@ if (app.Environment.IsDevelopment())
 
     app.UseCors();
 }
-
-app.UseHttpsRedirection();
+else
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
