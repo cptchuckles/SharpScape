@@ -43,7 +43,7 @@
                 Author=@getUser(thread.AuthorId)
                 AuthorId=@thread.AuthorId.ToString()
                 ThreadId=@thread.Id
-                Votes="251"
+                Votes=@thread.Votes.ToString()
                 Replies=@thread.Replies.ToString() />
         }
         <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
@@ -98,6 +98,7 @@
     [Parameter]
     public string fcdId { get; set; }
     public List<ForumPostDto> posts { get; set; }
+    public List<ThreadLikeDto> likes {get;set;}
     ForumThreadDto tTopic = new ForumThreadDto();
     List<ForumThreadDto> ThreadsDto = new List<ForumThreadDto>();
     List<UserInfoDto> users = new List<UserInfoDto>();
@@ -117,7 +118,9 @@
         foreach (var thread in allthreads)
         {
             posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
+            likes = await Http.GetFromJsonAsync<List<ThreadLikeDto>>($"https://localhost:7193/api/ThreadLike/{thread.Id}");
             thread.Replies = posts.Count;
+            thread.Votes = likes.Count;
         }
         if (users != null && Data.UserId > 0)
         {
