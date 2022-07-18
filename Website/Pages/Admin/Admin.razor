@@ -1,10 +1,11 @@
 @page "/admin"
-@inject NavigationManager NavManager
-@inject HttpClient Http
-@inject ForumReferenceProvider Data
 @using SharpScape.Shared.Dto
+@using SharpScape.Website.Services
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
     @if (loading)
@@ -31,6 +32,7 @@
         }
     </div>
 </div>
+
 @code {
     private bool loading=false ;
     List<UserInfoDto> users = new List<UserInfoDto>();
@@ -40,6 +42,7 @@
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         loading = false;
     }
+
     private async void Refresh(){
     users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
     StateHasChanged();

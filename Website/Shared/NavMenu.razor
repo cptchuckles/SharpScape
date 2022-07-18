@@ -14,9 +14,18 @@
             </NavLink>
         </div>
         <div class="nav-item">
-            <NavLink class="nav-link" href="forum" Match="NavLinkMatch.All">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Forum
-            </NavLink>
+            <AuthorizeView>
+                <Authorized>
+                    <a class="nav-link" href="/forum" Match="NavLinkMatch.All">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Forum
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="nav-link" href="/forum" Match="NavLinkMatch.All">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Forum
+                    </a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
         <div class="nav-item">
             <NavLink class="nav-link" href="GameWorld" Match="NavLinkMatch.All">
@@ -26,7 +35,8 @@
         <div class="nav-item">
             <AuthorizeView>
                 <Authorized>
-                    @if(context.User.Claims.First(c=>c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value.Equals("Admin")){
+                    @if (context.User.Claims.First(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value.Equals("Admin"))
+                    {
                         <a class="nav-link" href="admin" Match="NavLinkMatch.All">
                             <span class="oi oi-person" aria-hidden="true"></span> Admin
                         </a>

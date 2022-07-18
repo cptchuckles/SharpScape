@@ -1,6 +1,5 @@
 @namespace SharpScape.Website.Components.Forum
 @inject HttpClient Http
-@inject ForumReferenceProvider Data
 @using SharpScape.Shared.Dto
 <div class="d-flex flex-row comment-row ">
     <div class="p-2">
@@ -47,7 +46,7 @@
     private async void HandleValidDeleteSubmit()
     {
         CreateThread = false;
-        var result = await Http.DeleteAsync($"https://localhost:7193/api/ForumPosts/{PostId}");
+        var result = await Http.DeleteAsync($"/api/ForumPosts/{PostId}");
         RefreshMethod.Invoke();
     }
 }

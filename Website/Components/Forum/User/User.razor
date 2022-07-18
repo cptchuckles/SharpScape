@@ -1,7 +1,8 @@
 @namespace SharpScape.Website.Components.Forum
-@inject SharpScape.Website.Services.ForumReferenceProvider Data
+
 @inject HttpClient Http
 @using SharpScape.Shared.Dto
+@using SharpScape.Website.Services
 @inject IJSRuntime JSRuntime;
 <div class="card">
     <div class="row align-items-center">
@@ -128,7 +129,7 @@
         await JSRuntime.InvokeVoidAsync("console.log",tRole);
         tUser.Role = tRole;
         CreateThread = false;
-        var result = await Http.PutAsJsonAsync($"https://localhost:7193/api/User/UpdateRole?id={Id}",tUser);
+        var result = await Http.PutAsJsonAsync($"/api/User/UpdateRole?id={Id}",tUser);
         RefreshMethod.Invoke();
     }
     private async void BanAUser()

@@ -1,12 +1,9 @@
 @page "/user/{userId}"
-@inject NavigationManager NavManager
-@inject HttpClient Http
-@inject ForumReferenceProvider Data
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
-@*  login imports *@
 @inject HttpClient Http
+
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
     @if (loading)
@@ -49,7 +46,11 @@
         </div>
     </div>
 </div>
+
 @code {
+    [Parameter]
+    public string loggedId{ get; set; }
+
     [Parameter]
     public string Author { get; set; } = "";
     [Parameter]
@@ -72,7 +73,7 @@
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/User{UserId}");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/User{UserId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         if (allPosts != null)
         {
@@ -97,7 +98,7 @@
         }
     }
     private async void Refresh(){
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"https://localhost:7193/api/ForumPosts/User{UserId}");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/User{UserId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         if (allPosts != null)
         {

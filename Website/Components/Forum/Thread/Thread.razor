@@ -1,52 +1,46 @@
 @namespace SharpScape.Website.Components.Forum
-@inject SharpScape.Website.Services.ForumReferenceProvider Data
-<div class="card">
-    <div class="row align-items-center">
-        <div class="col-md-9 mb-3 mb-sm-0">
-            <h5>
-                <a href="thread/@Title/@Author/@AuthorId/@Date/@Body/@ThreadId" class="text-primary" onclick="@UpdateId">@Title</a>
-            </h5>
-            <p class="text-sm">
-                <span class="op-6">Posted</span> 
-                <span class="op-6">by</span> 
-                <a class="text-black" href="#">@Author</a>
-            </p>
-            <div class="text-sm op-5"> 
-                <a class="text-black" href="#">@Date</a> 
-            </div>
-        </div>
-        <div class="col-md-3 op-7">
-            <div class="row text-center op-7">
-                <div class="col px-1"> <i class="oi oi-thumb-up icon-1x like"></i> <span class="d-block text-sm">@Votes</span> </div>
-                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@Replies</span> </div>
-            </div>
+
+<div class="row align-items-center">
+    <div class="col-md-9 mb-3 mb-sm-0">
+        <h5>
+            <a href="thread/@Title/@Author/@AuthorId/@Body/@ThreadId" class="text-primary">@Title</a>
+        </h5>
+        <p class="text-sm">
+            <span class="op-6">Posted</span>
+            <span class="op-6">by</span>
+            <a class="text-black" href="#">@Author</a>
+        </p>
+
+    </div>
+    <div class="col-md-3 op-7">
+        <div class="row text-center op-7">
+            <div class="col px-1"> <i class="oi oi-thumb-up icon-1x like"></i> <span class="d-block text-sm">@Votes</span> </div>
+            <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@Replies</span> </div>
         </div>
     </div>
 </div>
-@code{
+
+
+@code {
     [Parameter]
+    public string loggedId { get; set; }
+    [Parameter]
+
     public string Route { get; set; }
     [Parameter]
     public string Title { get; set; }
     [Parameter]
     public string Body { get; set; }
-
-    [Parameter]
-    public string Date{ get; set; }
     [Parameter]
     public string Author { get; set; }
     [Parameter]
     public string AuthorId { get; set; }
     [Parameter]
-    public int ThreadId{ get; set; }
+    public int ThreadId { get; set; }
     [Parameter]
     public string? Votes { get; set; }
     [Parameter]
     public string? Replies { get; set; }
     [Parameter]
     public string Views { get; set; }
-    private void UpdateId()
-    {
-        Data.ThreadId = ThreadId;
-    }
 }

@@ -1,15 +1,18 @@
 @namespace SharpScape.Website.Components.Forum
-@inject HttpClient Http
-@inject ForumReferenceProvider Data
 @using SharpScape.Shared.Dto
+@inject HttpClient Http
+
 <div class="d-flex flex-row comment-row ">
     <div class="p-2">
         <span class="round">
-        @if(Image.Length > 0){
-            <img src=@Image alt="user" width="50">
-        }else{
-            <img src="images/Avatar.png" alt="user" width="50">
-        }
+            @if (Image.Length > 0)
+            {
+                <img src=@Image alt="user" width="50">
+            }
+            else
+            {
+                <img src="images/Avatar.png" alt="user" width="50">
+            }
         </span>
     </div>
     <div class="comment-text">
@@ -17,7 +20,7 @@
         <div class="comment-footer">
             <span class="date">@Date</span>
             <span class="action-icons active">
-                @if(Data.UserId == Convert.ToInt32(AuthorId)){
+                @if(Convert.ToInt32(loggedId)== Convert.ToInt32(AuthorId)){
                     <a data-abc="true" onclick="@OpenEditPost"><i class="oi oi-pencil"></i></a>
                 }
             </span>
@@ -52,7 +55,11 @@
         <p class="m-b-5 m-t-10">@Body</p>
     </div>
 </div>
-@code{
+
+
+@code {
+    [Parameter]
+    public string loggedId { get; set; }
     [Parameter]
     public string Author { get; set; }
     [Parameter]
@@ -69,15 +76,16 @@
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
     [Parameter]
-    public Action RefreshMethod{ get; set; }
+    public Action RefreshMethod { get; set; }
     public bool CreateThread { get; set; } = false;
     ForumPostEditDto tPost = new ForumPostEditDto();
     ForumPostEditDto post = new ForumPostEditDto();
     private async void HandleValidEditSubmit()
     {
         CreateThread = false;
-        var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/ForumPosts/{PostId}", tPost);
-        if(result.IsSuccessStatusCode){
+        var result = await Http.PostAsJsonAsync($"/api/ForumPosts/{PostId}", tPost);
+        if (result.IsSuccessStatusCode)
+        {
             post = await result.Content.ReadAsAsync<ForumPostEditDto>();
             Body = post.Body;
             Date = post.Created.ToString("D");
@@ -87,7 +95,7 @@
     private async void HandleValidDeleteSubmit()
     {
         CreateThread = false;
-        var result = await Http.DeleteAsync($"https://localhost:7193/api/ForumPosts/{PostId}");
+        var result = await Http.DeleteAsync($"/api/ForumPosts/{PostId}");
         RefreshMethod.Invoke();
     }
     /// methods for popup modal

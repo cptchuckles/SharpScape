@@ -1,29 +1,31 @@
-@page "/thread/{TitleT}/{Author}/{AuthorId}/{Date}/{Body}/{ThreadId}"
-@inject NavigationManager NavManager
-@inject HttpClient Http
-@inject ForumReferenceProvider Data
+@page "/thread/{TitleT}/{Author}/{AuthorId}/{Body}/{ThreadId}"
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
-@inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JSRuntime;
 @*  login imports *@
-@inject ForumReferenceProvider Data
+@using SharpScape.Website.Services
+@using System.Security.Claims
+@inject NavigationManager NavManager
 @inject HttpClient Http
+
+@* login imports *@
 @inject IAuthTokenProvider TokenProvider
 @inject AuthenticationStateProvider AuthStateProvider
-@inject NavigationManager NavManager
+
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
     @if (loading)
     {
         <center>
             <span class="spinner-border spinner-border-lg align-center" style=" color:#99abb4 "></span>
-            <span style=" color:#99abb4 " >posts are loading</span>
-        </center> 
+            <span style=" color:#99abb4 ">posts are loading</span>
+        </center>
     }
     <center>
-    <a href="category/@fcd.Name/@ftd.CategoryId" class="forum-item-title"><h3> Go to @fcd.Name List </h3> </a>
+        <a href="category/@fcd.Name/@ftd.CategoryId" class="forum-item-title">
+            <h3> Go to @fcd.Name List </h3>
+        </a>
     </center>
     <div class="container d-flex justify-content-center mt-100 mb-100">
         <div class="row">
@@ -34,16 +36,21 @@
                     </div>
                     <div class="comment-widgets m-b-20">
                         <div class="d-flex flex-row comment-row">
-                            <div class="p-2"><span class="round"><img src="images/Avatar.png" alt="user" width="50"></span></div>
+                            <div class="p-2">
+                                <span class="round">
+                                    <img src="images/Avatar.png" alt="user" width="50">
+                                </span>
+                            </div>
                             <div class="comment-text w-100">
                                 <h5>@Author</h5>
                                 <div class="comment-footer">
                                     <span class="date">@Date</span>
                                     <span class="action-icons">
-                                        @if(Data.UserId == Convert.ToInt32(AuthorId)){
+                                        @if (loggedId == (AuthorId))
+                                        {
                                             <a href="#" data-abc="true"><i class="oi oi-pencil"></i></a>
                                         }
-                                        @* <a href="#" data-abc="true"><i class="oi oi-rotate-right"></i></a> *@
+                                        <a href="#" data-abc="true"><i class="oi oi-rotate-right"></i></a>
                                     </span>
                                 </div>
                                 <p>@Body</p>
@@ -66,7 +73,7 @@
                         </div>
                         @foreach (ForumPostDto post in posts)
                         {
-                            <Post 
+                            <Post
                                 Author=@getUser(post.AuthorId)
                                 AuthorId=@post.AuthorId.ToString()
                                 PostId=@post.Id.ToString()
@@ -74,13 +81,13 @@
                                 Body=@post.Body
                                 Image=@getProfile(post.AuthorId)
                                 RefreshMethod=@Refresh
-                            />
+                                loggedId=@loggedId />
                         }
                         <div class="pagination_background">
-                            <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
-                                        PageIndex="@pageIndex"
-                                        Radius="3"
-                                        OnSelectedPage="@SelectedPage">
+                            <Pagination
+                                TotalPages="@(totalPages != 0 ? totalPages : 1)"
+                                PageIndex="@pageIndex"
+                                Radius="3" OnSelectedPage="@SelectedPage">
                             </Pagination>
                         </div>
                     </div>
@@ -92,13 +99,9 @@
                                     <div class="modal-header">
                                         <h4 class="modal-title">Create A Post</h4>
                                     </div>
-                                    @if (Data.UserId == 0)
+                                    @if (loggedId == "0")
                                     {
                                         <EditForm Model="@userLoginDto" OnValidSubmit="@TryLogin">
-                                            
-                                            <center>
-                                            <span> "Admin" "StrongPassword12345"</span>
-                                            </center>
                                             @if (requestError is not null)
                                             {
                                                 <p class="text-danger">@requestError</p>
@@ -120,14 +123,15 @@
                                             </div>
                                         </EditForm>
                                     }
-                                    @if (Data.UserId != 0)
+                                    @if (loggedId != "0")
                                     {
                                         <EditForm Model="@tempPost" OnValidSubmit=@HandleValidSubmit>
                                             <div class="modal-body">
                                                 <form model="@tempPost">
                                                     <div class="form-group">
                                                         <label for="message-text" class="col-form-label">Comment:</label>
-                                                        <InputTextArea class="form-control" id="testing1" @bind-Value="tempPost.Body" />
+                                                        <InputTextArea class="form-control" id="testing1"
+                                                    @bind-Value="tempPost.Body" />
                                                     </div>
                                                 </form>
                                             </div>
@@ -149,7 +153,11 @@
         </div>
     </div>
 </div>
+
 @code {
+    [Parameter]
+    public string loggedId { get; set; } = "0";
+
     [Parameter]
     public string Author { get; set; } = "";
     [Parameter]
@@ -172,6 +180,7 @@
     public string TitleT { get; set; }
     public bool CreateThread { get; set; } = false;
     public EventCallback<bool> OnClose { get; set; }
+    public ClaimsIdentity? claims = null;
     private bool loading=false ;
     public bool liked = false;
     public ForumThreadDto ftd = new ForumThreadDto();
@@ -205,9 +214,22 @@
         fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         likes = await Http.GetFromJsonAsync<List<ThreadLikeDto>>($"https://localhost:7193/api/ThreadLike/{ThreadId}");
-        if(likes.Any(x => x.UserId == Data.UserId)){
+        // read Token
+        if (TokenProvider.Token != null)
+        {
+            Console.WriteLine("thread init token");
+            claims = TokenProvider.GetClaims();
+            loggedId = claims.Claims.ElementAt<Claim>(0).Value;
+        }
+        else
+        {
+            Console.WriteLine("thread init no token"); 
+        }
+        if(likes.Any(x => x.UserId == Convert.ToInt32(loggedId))){
             liked = true;
         }
+
+
         if (allPosts != null)
         {
             // Initialize the number of "totalPages"
@@ -215,15 +237,17 @@
             // Initialize the "comments" which will be displayed when the page loaded first time.
             posts = allPosts.Skip(0).Take(itemsPerPage).ToList();
         }
+
         loading = false;
     }
+
     private async void HandleValidSubmit()
     {
-        if (Data.UserId > 0 && tempPost.Body != "")
+        if (loggedId.Length > 0 && tempPost.Body != "")
         {
             ForumPostDto post = new ForumPostDto();
-            post.AuthorId = Data.UserId;
-            post.ThreadId = Data.ThreadId;
+            post.AuthorId = Convert.ToInt16(loggedId);
+            post.ThreadId = Convert.ToInt16(ThreadId);
             post.Body = tempPost.Body;
             post.Created = Convert.ToDateTime(DateTime.Now);
             posts.Add(post);
@@ -248,10 +272,12 @@
             }
         }
     }
+
     private Task ModalCancel()
     {
         return OnClose.InvokeAsync(false);
     }
+
     // pagination stuff and dummy data
     private int pageIndex = 1;
     private int itemsPerPage = 4;
@@ -262,11 +288,13 @@
         CreateThread = true;
         StateHasChanged();
     }
+
     private void CloseCreateThread()
     {
         CreateThread = false;
         StateHasChanged();
     }
+
     private void SelectedPage(int selectedPageIndex)
     {
         if (allPosts != null)
@@ -276,7 +304,9 @@
             posts = allPosts.Skip(skipCount).Take(itemsPerPage).ToList();
         }
     }
-    private async void Refresh(){
+
+    private async void Refresh()
+    {
         allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
         if (allPosts != null)
@@ -289,6 +319,7 @@
         loading = false;
         StateHasChanged();
     }
+
     /////////////////////////// login /////////////////////////////////////
 
     private UserLoginDto userLoginDto = new();
@@ -303,8 +334,8 @@
             //TokenProvider.Token = await result.Content.ReadAsStringAsync();
             var response = await result.Content.ReadAsAsync<UserLoginResponseDto>();
             TokenProvider.Token = response.accessToken;
-            Data.UserId = response.Id;
-            
+            loggedId = response.Id.ToString();
+
             await AuthStateProvider.GetAuthenticationStateAsync();
         }
         else

@@ -46,3 +46,6 @@ a.text-primary:hover {
 .font-weight-bold {
   font-weight: 700 !important;
 }
+.pagination_background {
+    background-color: #1b2042;
+}
