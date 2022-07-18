@@ -60,7 +60,8 @@ namespace SharpScape.Api.Controllers
                     Title = f.Title,
                     Body = f.Body,
                     Views = f.Views,
-                    Votes = f.Votes
+                    Votes = f.Votes,
+                    Created = f.Created
                 });
             }
             return Ok(forumThreadDto);
@@ -86,7 +87,8 @@ namespace SharpScape.Api.Controllers
                 Replies = f.Replies,
                 Title = f.Title,
                 Views = f.Views,
-                Votes = f.Votes
+                Votes = f.Votes,
+                Created = f.Created
             });
         }
         // POST: api/ForumThreads

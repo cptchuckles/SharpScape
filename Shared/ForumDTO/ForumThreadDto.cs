@@ -19,6 +19,6 @@ namespace SharpScape.Shared.Dto
         public int Votes { get; set; }
         public int Replies { get; set; }
         public int Views { get; set; }
-       
+        public DateTime Created { get; set; }
     }
 }
