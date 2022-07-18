@@ -55,6 +55,15 @@ public class User
     {
         this.Role = role;
     }
+
+    public bool IsBanned()
+    {
+        if (! Banned.HasValue)
+            return false;
+
+        int daysRemaining = DateTime.Compare(Banned.Value, DateTime.Now.ToUniversalTime());
+        return daysRemaining > 0;
+    }
     
     private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
