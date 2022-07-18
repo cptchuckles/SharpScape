@@ -1,11 +1,11 @@
 @page "/category/{urlName}/{fcdId}"
-@inject NavigationManager NavManager
-@inject HttpClient Http
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
 @using System.Security.Claims
 @using SharpScape.Website.Services
+@inject NavigationManager NavManager
+@inject HttpClient Http
 @inject IAuthTokenProvider TokenProvider
 @inject AuthenticationStateProvider AuthStateProvider
 
@@ -20,7 +20,9 @@
     }
     <div class="container">
         <center>
-            <a href="/forum"><h3>Go Back to Categories List</h3> </a>
+            <a href="/forum">
+                <h3>Go Back to Categories List</h3>
+            </a>
         </center>
 
         <div class="title">@UrlName </div>
@@ -43,7 +45,8 @@
         <div class="pagination_background">
             @foreach (ForumThreadDto thread in threads)
             {
-                <Thread Route=@thread.Title
+                <Thread
+                    Route=@thread.Title
                     Title=@thread.Title
                     Body=@thread.Body
                     Author=@getUser(thread.AuthorId)
@@ -51,16 +54,17 @@
                     ThreadId=@thread.Id
                     Votes="0"
                     Replies=@thread.Replies.ToString()
-                    logedId=@logedId />
+                    loggedId=@loggedId />
             }
 
-            <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
-                        PageIndex="@pageIndex"
-                        Radius="3"
-                        OnSelectedPage="@SelectedPage">
+            <Pagination
+                TotalPages="@(totalPages != 0 ? totalPages : 1)"
+                PageIndex="@pageIndex"
+                Radius="3"
+                OnSelectedPage="@SelectedPage">
             </Pagination>
         </div>
-        @if (logedId != "0")
+        @if (loggedId != "0")
         {
             <div class="row createbutton justify-content-center">
                 <button type="button" class="btn btn-primary" @onclick="@OpenCreateThread">Create Thread</button>
@@ -101,7 +105,7 @@
 
 @code {
     [Parameter]
-    public string logedId { get; set; } = "0";
+    public string loggedId { get; set; } = "0";
 
     [Parameter]
     public string UrlName { get; set; }
@@ -124,9 +128,7 @@
     bool loading = false;
     //// methods for pagination
 
-
     public ClaimsIdentity? claims = null;
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -140,17 +142,17 @@
             thread.Replies = posts.Count;
         }
 
-
         // read Token
         if (TokenProvider.Token != null)
         {
-            Console.WriteLine("category init  token");
+            Console.WriteLine("category init token");
             claims = TokenProvider.GetClaims();
-            logedId = claims.Claims.ElementAt<Claim>(0).Value;
+            loggedId = claims.Claims.ElementAt<Claim>(0).Value;
         }
-        else { 
+        else
+        {
             Console.WriteLine("category init no token");
-            logedId = "0";
+            loggedId = "0";
         }
 
         if (allthreads != null)
@@ -198,7 +200,7 @@
 
         tempThread.Views = 0;
         tempThread.Votes = 0;
-        tempThread.AuthorId = Convert.ToInt32(logedId);
+        tempThread.AuthorId = Convert.ToInt32(loggedId);
         tempThread.Replies = 0;
         CreateThread = false;
         var result = await Http.PostAsJsonAsync("/api/ForumThreads", tempThread);
@@ -211,6 +213,7 @@
                 posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
                 thread.Replies = posts.Count;
             }
+
             if (allthreads != null)
             {
                 // Initialize the number of "totalPages"
@@ -228,8 +231,9 @@
         }
 
         tTopic.Title = "";
-        tTopic.Body= "";
+        tTopic.Body = "";
     }
+
     public string getUser(int id)
     {
         return users.Find(x => x.Id == id).Username;

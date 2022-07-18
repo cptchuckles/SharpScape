@@ -1,5 +1,4 @@
 @namespace SharpScape.Website.Components.Forum
-@*@inject SharpScape.Website.Services.ForumReferenceProvider Data*@
 
 <div class=@Status>
     <div class="row">
@@ -30,9 +29,9 @@
         </div>
     </div>
 </div>
-@code {
    
 
+@code {
     [Parameter]
     public string Route { get; set; } = "r";
     [Parameter]
@@ -54,5 +53,4 @@
     public string PostsNumber{get;set;} = "pn";
     [Parameter]
     public string fcdId { get; set; }
-    
 }

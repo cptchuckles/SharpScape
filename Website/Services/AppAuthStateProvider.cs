@@ -20,7 +20,7 @@ namespace SharpScape.Website.Services
             ClaimsIdentity identity;
             if (_tokenProvider.Token is not null)
             {
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(_tokenProvider.Token), "jwt");//TODO: 
+                identity = new ClaimsIdentity(ParseClaimsFromJwt(_tokenProvider.Token), "jwt");
                 _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.Token);
             }
             else
@@ -52,9 +52,6 @@ namespace SharpScape.Website.Services
                 return null;
             }
         }
-        
-    
-   
 
         private static byte[] Base64UrlDecode(string encoded)
         {

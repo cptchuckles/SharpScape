@@ -44,7 +44,6 @@
                                 Icon=@Icons[forumCategory.Id-1]
                                 ThreadsNumber=@threadCounts[forumCategory.Id-1].ToString()
                                 PostsNumber=@postCounts[forumCategory.Id-1].ToString()
-                               
                             />
                         }
                     }
@@ -53,11 +52,11 @@
         </div>
     </div>
 </div>
+
 @code 
 {
-      [Parameter]
-    public string logedId { get; set; }
-
+    [Parameter]
+    public string loggedId { get; set; }
 
     public List<ForumCategoryDto> forums{ get; set; }
     public List<ForumThreadDto> threads{ get; set; }
