@@ -5,6 +5,7 @@ using SharpScape.Api.Data;
 using SharpScape.Shared.Dto;
 using SharpScape.Api.Services;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharpScape.Api.Controllers;
 
@@ -38,7 +39,6 @@ public class AuthController : ControllerBase
 
         return Ok(_crypto.CreateToken(user));
     }
-
     [Authorize(Roles="Admin")]
     [HttpPost("RegisterAdmin")]
     public ActionResult<string> RegisterAdmin([FromBody] UserRegisterDto request)
@@ -57,12 +57,25 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("Login")]
-    public ActionResult<string> Login([FromBody] UserLoginDto request)
+    public async Task<ActionResult<string>> Login([FromBody] UserLoginDto request)
     {
-        var user = _context.Users.FirstOrDefault(u => u.Username.ToLower() == request.Username.ToLower());
-        UserLoginResponseDto response = new UserLoginResponseDto();
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == request.Username.ToLower());
+
         if (user is null)
             return BadRequest("Username/Email or Password incorrect");
+
+        if (user.Banned.HasValue)
+        {
+            if (user.IsBanned())
+            {
+                return StatusCode(401, "Oh no! you are banned till " + user.Banned);
+            }
+            else
+            {
+                user.Banned = null;
+                await _context.SaveChangesAsync();
+            }
+        }
         
         if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             return BadRequest("Username/Email or Password incorrect");
@@ -74,6 +87,8 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Role, "Manager")
         };
 
+        UserLoginResponseDto response = new UserLoginResponseDto();
+
         response.accessToken = _crypto.CreateToken(user);
         response.refreshToken = _crypto.CreateRefreshToken(user);
         response.Id = user.Id;
@@ -84,7 +99,7 @@ public class AuthController : ControllerBase
 
         _context.Users.Update(user);
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok(response);
     }
 }

@@ -1,25 +1,50 @@
-﻿.item1 { grid-area: header; }
-.item2 { grid-area: leftSideEmpty; }
-.item3 { grid-area: leftImg; }
-.item4 { grid-area: leftMid; }
-.item5 { grid-area: rightImg; }
-.item6 { grid-area: rightMid; }
-.item7 { grid-area: rightSideEmpty; }
+﻿.item1 {
+  grid-area: header;
+}
+.item2 {
+  grid-area: leftSideEmpty;
+}
+.item3 {
+  grid-area: leftImg;
+}
+.item4 {
+  grid-area: leftMid;
+}
+.item5 {
+  grid-area: rightImg;
+}
+.item6 {
+  grid-area: rightMid;
+}
+.item7 {
+  grid-area: rightSideEmpty;
+}
 
 .grid-container {
-    display: grid;
-    grid-template-areas:
-        'leftSideEmpty header header rightSideEmpty'
-        'leftSideEmpty leftImg rightImg rightSideEmpty'
-        'leftSideEmpty leftMid rightMid rightSideEmpty';
-    grid-row-gap: 10px;
-    grid-column-gap: 100px;
-    /*background-color: #2196F3;*/
-    padding: 10px;
+  display: grid;
+  grid-template-areas:
+    "leftSideEmpty header header rightSideEmpty"
+    "leftSideEmpty leftImg rightImg rightSideEmpty"
+    "leftSideEmpty leftMid rightMid rightSideEmpty";
+  grid-row-gap: 10px;
+  grid-column-gap: 100px;
+  padding: 10px;
 }
 
 .grid-container > div {
-    /*background-color: rgba(255, 255, 255, 0.8);*/
-    text-align: center;
-    padding: 20px;
+  text-align: center;
+  padding: 20px;
+}
+.carouselContainer {
+  padding: 0 10rem;
+}
+.carousel .carousel-item {
+  height: 90vh;
+}
+.carousel-inner .carousel-item img {
+  position: absolute;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+  min-height: 90vh;
 }

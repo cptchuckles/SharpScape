@@ -2,6 +2,8 @@
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
+@inject IJSRuntime JSRuntime;
+@*  login imports *@
 @using SharpScape.Website.Services
 @using System.Security.Claims
 @inject NavigationManager NavManager
@@ -54,14 +56,16 @@
                                 <p>@Body</p>
                                 <div class="col-md-1">
                                     <div class="row">
-                                        <div class="col">
-                                            <a href="#"><i class="oi oi-thumb-up"></i></a>
-                                            <span class="d-block text-sm">20</span>
+                                        <div class="col"> 
+                                            <a onclick="@ToggleLike">
+                                                @if(liked){
+                                                    <i class="oi oi-thumb-up text-primary"></i>
+                                                }else{
+                                                    <i class="oi oi-thumb-up text-secondary"></i>
+                                                }
+                                            </a><span class="d-block text-sm">@likes.Count</span>
                                         </div>
-                                        <div class="col">
-                                            <i class="ion-ios-chatboxes-outline icon-1x"></i>
-                                            <span class="d-block text-sm"> @posts.Count</span>
-                                        </div>
+                                        <div class="col"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> @posts.Count</span> </div>
                                     </div>
                                     <span class="action-icons"></span>
                                 </div>
@@ -169,18 +173,39 @@
     private IList<ForumPostDto> allPosts = new List<ForumPostDto>();
     private IList<ForumPostDto> posts = new List<ForumPostDto>();
     List<UserInfoDto> users = new List<UserInfoDto>();
+    List<ThreadLikeDto> likes = new List<ThreadLikeDto>();
     [Parameter]
     public string ThreadId { get; set; }
     [Parameter]
     public string TitleT { get; set; }
     public bool CreateThread { get; set; } = false;
     public EventCallback<bool> OnClose { get; set; }
-    private bool loading = false;
+    public ClaimsIdentity? claims = null;
+    private bool loading=false ;
+    public bool liked = false;
     public ForumThreadDto ftd = new ForumThreadDto();
     public ForumCategoryDto fcd = new ForumCategoryDto();
-
-    public ClaimsIdentity? claims = null;
-
+    private async void ToggleLike(){
+        liked = !liked;
+        if(liked){
+            await JSRuntime.InvokeVoidAsync("console.log", "add like");
+            var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/ThreadLike/{ThreadId}",liked);
+            if (result.IsSuccessStatusCode)
+            {
+                likes = await result.Content.ReadAsAsync<List<ThreadLikeDto>>();
+            }
+            await JSRuntime.InvokeVoidAsync("console.log", "add like end");
+        }else{
+            await JSRuntime.InvokeVoidAsync("console.log", "remove like");
+            var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/ThreadLike/unliked/{ThreadId}",liked);
+            if (result.IsSuccessStatusCode)
+            {
+                likes = await result.Content.ReadAsAsync<List<ThreadLikeDto>>();
+                await JSRuntime.InvokeVoidAsync("console.log", likes);
+            }
+        }
+        StateHasChanged();
+    }
     protected override async Task OnInitializedAsync()
     {
         loading = true;
@@ -188,9 +213,8 @@
         ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
         fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
-
+        likes = await Http.GetFromJsonAsync<List<ThreadLikeDto>>($"https://localhost:7193/api/ThreadLike/{ThreadId}");
         // read Token
-
         if (TokenProvider.Token != null)
         {
             Console.WriteLine("thread init token");
@@ -201,6 +225,10 @@
         {
             Console.WriteLine("thread init no token"); 
         }
+        if(likes.Any(x => x.UserId == Convert.ToInt32(loggedId))){
+            liked = true;
+        }
+
 
         if (allPosts != null)
         {

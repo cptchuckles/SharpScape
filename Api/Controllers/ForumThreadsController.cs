@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Models;
@@ -42,14 +37,8 @@ namespace SharpScape.Api.Controllers
                     Votes = f.Votes
                 });
             }
-
-
-
             return Ok(forumThreadDto);
         }
-
-
-
         // GET: api/ForumThreads/5
         [HttpGet("category{id}")]
         public async Task<ActionResult<List<ForumThreadDto>>> GetForumThreadbyCategory(int id)
@@ -71,16 +60,12 @@ namespace SharpScape.Api.Controllers
                     Title = f.Title,
                     Body = f.Body,
                     Views = f.Views,
-                    Votes = f.Votes
+                    Votes = f.Votes,
+                    Created = f.Created
                 });
             }
-
-
-
             return Ok(forumThreadDto);
         }
-
-
         // GET: api/ForumThreads/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ForumThreadDto>> GetForumThread(int id)
@@ -89,14 +74,11 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-
             var f = await _context.ForumThreads.FindAsync(id);
-
             if (f == null)
             {
                 return NotFound();
             }
-
             return Ok(new ForumThreadDto()
             {
                 Id = f.Id,
@@ -105,12 +87,10 @@ namespace SharpScape.Api.Controllers
                 Replies = f.Replies,
                 Title = f.Title,
                 Views = f.Views,
-                Votes = f.Votes
+                Votes = f.Votes,
+                Created = f.Created
             });
         }
-
-
-
         // POST: api/ForumThreads
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -134,12 +114,7 @@ namespace SharpScape.Api.Controllers
             }
             _context.ForumThreads.Add(forumThread);
             await _context.SaveChangesAsync();
-
-
-
-
             var ftl = await _context.ForumThreads.Where(x => x.CategoryId == forumThreadDto.CategoryId).ToListAsync();
-
             List<ForumThreadDto> forumThreadDtos = new List<ForumThreadDto>();
             foreach (var ft in ftl)
             {
@@ -154,8 +129,6 @@ namespace SharpScape.Api.Controllers
                     Replies = ft.Replies,
                     Views = ft.Views
                 });
-
-
             }
             return Ok(forumThreadDtos);
         }
@@ -173,13 +146,10 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-
             _context.ForumThreads.Remove(forumThread);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
-
         private bool ForumThreadExists(int id)
         {
             return (_context.ForumThreads?.Any(e => e.Id == id)).GetValueOrDefault();

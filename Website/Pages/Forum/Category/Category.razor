@@ -24,7 +24,6 @@
                 <h3>Go Back to Categories List</h3>
             </a>
         </center>
-
         <div class="title">@UrlName </div>
         <div class="card">
             <div class="row align-items-center">
@@ -36,13 +35,12 @@
 
                 <div class="col-md-3 op-7">
                     <div class="row text-center op-7">
-                        <div class="col px-1"> <span class="d-block text-sm">Votes</span> </div>
+                        <div class="col px-1"> <span class="d-block text-sm">Likes</span> </div>
                         <div class="col px-1"> <span class="d-block text-sm">Replies</span> </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="pagination_background">
             @foreach (ForumThreadDto thread in threads)
             {
                 <Thread
@@ -52,18 +50,17 @@
                     Author=@getUser(thread.AuthorId)
                     AuthorId=@thread.AuthorId.ToString()
                     ThreadId=@thread.Id
-                    Votes="0"
+                    Date=@thread.Created.ToString("D")
+                    Votes=@thread.Votes.ToString()
                     Replies=@thread.Replies.ToString()
                     loggedId=@loggedId />
             }
-
-            <Pagination
-                TotalPages="@(totalPages != 0 ? totalPages : 1)"
-                PageIndex="@pageIndex"
-                Radius="3"
-                OnSelectedPage="@SelectedPage">
-            </Pagination>
-        </div>
+        <Pagination
+            TotalPages="@(totalPages != 0 ? totalPages : 1)"
+            PageIndex="@pageIndex"
+            Radius="3"
+            OnSelectedPage="@SelectedPage">
+        </Pagination>
         @if (loggedId != "0")
         {
             <div class="row createbutton justify-content-center">
@@ -116,6 +113,7 @@
     [Parameter]
     public string fcdId { get; set; }
     public List<ForumPostDto> posts { get; set; }
+    public List<ThreadLikeDto> likes {get;set;}
     ForumThreadDto tTopic = new ForumThreadDto();
     List<ForumThreadDto> ThreadsDto = new List<ForumThreadDto>();
     List<UserInfoDto> users = new List<UserInfoDto>();
@@ -139,7 +137,9 @@
         foreach (var thread in allthreads)
         {
             posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
+            likes = await Http.GetFromJsonAsync<List<ThreadLikeDto>>($"https://localhost:7193/api/ThreadLike/{thread.Id}");
             thread.Replies = posts.Count;
+            thread.Votes = likes.Count;
         }
 
         // read Token

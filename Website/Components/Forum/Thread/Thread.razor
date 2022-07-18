@@ -1,23 +1,28 @@
 @namespace SharpScape.Website.Components.Forum
+<div class="card">
+    <div class="row align-items-center">
+        <div class="col-md-9 mb-3 mb-sm-0">
+            <h5>
+                <a href="thread/@Title/@Author/@AuthorId/@Body/@ThreadId" class="text-primary">@Title</a>
+            </h5>
+            <p class="text-sm">
+                <span class="op-6">Posted</span>
+                <span class="op-6">by</span>
+                <a class="text-black" href="#">@Author</a>
+            </p>
+            <p class="text-sm">
+                <span class="op-6">@Date</span>
+            </p>
 
-<div class="row align-items-center">
-    <div class="col-md-9 mb-3 mb-sm-0">
-        <h5>
-            <a href="thread/@Title/@Author/@AuthorId/@Body/@ThreadId" class="text-primary">@Title</a>
-        </h5>
-        <p class="text-sm">
-            <span class="op-6">Posted</span>
-            <span class="op-6">by</span>
-            <a class="text-black" href="#">@Author</a>
-        </p>
-
-    </div>
-    <div class="col-md-3 op-7">
-        <div class="row text-center op-7">
-            <div class="col px-1"> <i class="oi oi-thumb-up icon-1x like"></i> <span class="d-block text-sm">@Votes</span> </div>
-            <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@Replies</span> </div>
+        </div>
+        <div class="col-md-3 op-7">
+            <div class="row text-center op-7">
+                <div class="col px-1"> <i class="oi oi-thumb-up icon-1x like"></i> <span class="d-block text-sm">@Votes</span> </div>
+                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@Replies</span> </div>
+            </div>
         </div>
     </div>
+
 </div>
 
 
@@ -27,6 +32,8 @@
     [Parameter]
 
     public string Route { get; set; }
+    [Parameter]
+    public string Date { get; set; } = "";
     [Parameter]
     public string Title { get; set; }
     [Parameter]

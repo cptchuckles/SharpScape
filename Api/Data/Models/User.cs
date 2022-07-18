@@ -37,6 +37,8 @@ public class User
     [DisplayFormat(DataFormatString = "{0:D}")]
     public DateTime Created { get; set; } = DateTime.Now.ToUniversalTime();
 
+    [DisplayFormat(DataFormatString = "{0:D}")]
+    public DateTime? Banned { get; set; } = null;
     public string ProfilePicDataUrl {get;set;} = "";
     public User() { }
 
@@ -52,6 +54,15 @@ public class User
     public User(string username, string email, string password, string role) : this (username,email,password)
     {
         this.Role = role;
+    }
+
+    public bool IsBanned()
+    {
+        if (! Banned.HasValue)
+            return false;
+
+        int daysRemaining = DateTime.Compare(Banned.Value, DateTime.Now.ToUniversalTime());
+        return daysRemaining > 0;
     }
     
     private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

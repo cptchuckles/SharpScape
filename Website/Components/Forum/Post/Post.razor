@@ -20,7 +20,9 @@
         <div class="comment-footer">
             <span class="date">@Date</span>
             <span class="action-icons active">
-                <a data-abc="true" onclick="@OpenEditPost"><i class="oi oi-pencil"></i></a>
+                @if(Convert.ToInt32(loggedId)== Convert.ToInt32(AuthorId)){
+                    <a data-abc="true" onclick="@OpenEditPost"><i class="oi oi-pencil"></i></a>
+                }
             </span>
             @if (CreateThread)
             {

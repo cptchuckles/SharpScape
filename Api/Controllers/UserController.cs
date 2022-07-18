@@ -7,7 +7,6 @@ using SharpScape.Shared.Dto;
 using SharpScape.Api.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace SharpScape.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -15,14 +14,12 @@ namespace SharpScape.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _context;
-
         private readonly Crypto _crypto;
         public UserController(AppDbContext context, Crypto crypto)
         {
             _context = context;
             _crypto = crypto;
         }
-
         // GET: api/<ValuesController>
         [HttpGet]
         public async Task<ActionResult<List<UserInfoDto>>> Get()
@@ -30,8 +27,12 @@ namespace SharpScape.Api.Controllers
             // var users = await _context.Users.Select(user => new UserInfoDto().FromUser(user)).ToListAsync();
             var users = await _context.Users.ToListAsync();
             List<UserInfoDto> usersList = new List<UserInfoDto>();
+            string banned = "";
             foreach (var user in users)
             {
+                if(user.Banned.HasValue){
+                    banned = user.Banned.Value.ToString();
+                }
                 usersList.Add(new UserInfoDto()
                 {
                     Id = user.Id,
@@ -39,13 +40,13 @@ namespace SharpScape.Api.Controllers
                     Email = user.Email,
                     Role = user.Role,
                     Created = user.Created,
-                    ProfilePicDataUrl = user.ProfilePicDataUrl
+                    ProfilePicDataUrl = user.ProfilePicDataUrl,
+                    Banned = banned
                 });
+                banned = "";
             }
             return Ok(usersList);
-
         }
-
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserInfoDto>> Get(int id)
@@ -60,7 +61,6 @@ namespace SharpScape.Api.Controllers
             userinfo.ProfilePicDataUrl = user.ProfilePicDataUrl;
             return Ok(userinfo);
         }
-
         // POST api/<ValuesController>
         [HttpPost("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserEditDto request)
@@ -108,6 +108,32 @@ namespace SharpScape.Api.Controllers
             response.ProfilePicDataUrl = user.ProfilePicDataUrl;
             return Ok(response);
         }
+        // POST Ban a user api/<ValuesController>
+        [HttpPost("ban/{id}")]
+        public async Task<IActionResult> BanUser(int id, [FromBody] UserBanDto request)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user is null)
+            {
+                return NotFound();
+            }
+            DateTime BannedTill = DateTime.Now.ToUniversalTime().AddDays(Convert.ToInt32(request.days));
+            user.Banned = BannedTill;
+            await _context.SaveChangesAsync();
+            return Ok(user);
+        }
+        [HttpPost("unban/{id}")]
+        public async Task<IActionResult> UnBanUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user is null)
+            {
+                return NotFound();
+            }
+            user.Banned = null;
+            await _context.SaveChangesAsync();
+            return Ok(user);
+        }
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -121,7 +147,6 @@ namespace SharpScape.Api.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
         [Authorize(Roles = "Admin")]
         [HttpPut("UpdateRole")]
         public async Task<IActionResult> UpdateRole(int id, [FromBody] UserRoleDto request)
@@ -134,7 +159,6 @@ namespace SharpScape.Api.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-
         private bool UserExist(int id)
         {
             return _context.Users.Any(user => user.Id == id);

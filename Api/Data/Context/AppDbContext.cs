@@ -15,4 +15,5 @@ public class AppDbContext : DbContext
     public DbSet<ForumCategory> ForumCategories { get; set; }
     public DbSet<ForumThread> ForumThreads { get; set; }
     public DbSet<ForumPost> ForumPosts { get; set; }
+    public DbSet<ThreadLike> ThreadLikes{ get; set; }
 }
