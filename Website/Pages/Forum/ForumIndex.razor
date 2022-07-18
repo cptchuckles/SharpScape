@@ -52,8 +52,12 @@
         </div>
     </div>
 </div>
+
 @code 
 {
+    [Parameter]
+    public string loggedId { get; set; }
+
     public List<ForumCategoryDto> forums{ get; set; }
     public List<ForumThreadDto> threads{ get; set; }
     public List<ForumPostDto> posts { get; set; }

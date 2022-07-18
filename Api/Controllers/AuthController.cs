@@ -5,7 +5,6 @@ using SharpScape.Api.Data;
 using SharpScape.Shared.Dto;
 using SharpScape.Api.Services;
 using System.Security.Claims;
-using SharpScape.Api.Data.Models;
 
 namespace SharpScape.Api.Controllers;
 
@@ -74,18 +73,6 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, "Manager")
         };
-
-
-        
-
-        //return Ok(new AuthenticatedResponse
-        //{
-        //    AccessToken = accessToken,
-        //    RefreshToken = refreshToken
-        //});
-
-
-        //return Ok(_crypto.CreateToken(user));
 
         response.accessToken = _crypto.CreateToken(user);
         response.refreshToken = _crypto.CreateRefreshToken(user);

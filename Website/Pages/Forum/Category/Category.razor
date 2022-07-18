@@ -1,10 +1,14 @@
 @page "/category/{urlName}/{fcdId}"
-@inject NavigationManager NavManager
-@inject HttpClient Http
-@inject ForumReferenceProvider Data
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Components.Forum
 @using SharpScape.Website.Components.Forum.Pagination
+@using System.Security.Claims
+@using SharpScape.Website.Services
+@inject NavigationManager NavManager
+@inject HttpClient Http
+@inject IAuthTokenProvider TokenProvider
+@inject AuthenticationStateProvider AuthStateProvider
+
 <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 <div class="background">
     @if (loading)
@@ -16,8 +20,11 @@
     }
     <div class="container">
         <center>
-        <a href="/forum"><h3>Go Back to Categories List</h3> </a>
+            <a href="/forum">
+                <h3>Go Back to Categories List</h3>
+            </a>
         </center>
+
         <div class="title">@UrlName </div>
         <div class="card">
             <div class="row align-items-center">
@@ -26,6 +33,7 @@
                         <span>Thread</span>
                     </h5>
                 </div>
+
                 <div class="col-md-3 op-7">
                     <div class="row text-center op-7">
                         <div class="col px-1"> <span class="d-block text-sm">Votes</span> </div>
@@ -34,24 +42,29 @@
                 </div>
             </div>
         </div>
-        @foreach (ForumThreadDto thread in threads)
-        {
-            <Thread Route=@thread.Title
-                Title=@thread.Title
-                Body=@thread.Body
-                Date="Saturday, June 18, 2022"
-                Author=@getUser(thread.AuthorId)
-                AuthorId=@thread.AuthorId.ToString()
-                ThreadId=@thread.Id
-                Votes="251"
-                Replies=@thread.Replies.ToString() />
-        }
-        <Pagination TotalPages="@(totalPages != 0 ? totalPages : 1)"
-                    PageIndex="@pageIndex"
-                    Radius="3"
-                    OnSelectedPage="@SelectedPage">
-        </Pagination>
-        @if (Data.UserId > 0)
+        <div class="pagination_background">
+            @foreach (ForumThreadDto thread in threads)
+            {
+                <Thread
+                    Route=@thread.Title
+                    Title=@thread.Title
+                    Body=@thread.Body
+                    Author=@getUser(thread.AuthorId)
+                    AuthorId=@thread.AuthorId.ToString()
+                    ThreadId=@thread.Id
+                    Votes="0"
+                    Replies=@thread.Replies.ToString()
+                    loggedId=@loggedId />
+            }
+
+            <Pagination
+                TotalPages="@(totalPages != 0 ? totalPages : 1)"
+                PageIndex="@pageIndex"
+                Radius="3"
+                OnSelectedPage="@SelectedPage">
+            </Pagination>
+        </div>
+        @if (loggedId != "0")
         {
             <div class="row createbutton justify-content-center">
                 <button type="button" class="btn btn-primary" @onclick="@OpenCreateThread">Create Thread</button>
@@ -89,9 +102,14 @@
         </div>
     }
 </div>
+
 @code {
     [Parameter]
+    public string loggedId { get; set; } = "0";
+
+    [Parameter]
     public string UrlName { get; set; }
+
     public bool CreateThread { get; set; } = false;
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
@@ -109,20 +127,34 @@
     private int totalPages = 1;
     bool loading = false;
     //// methods for pagination
+
+    public ClaimsIdentity? claims = null;
+
     protected override async Task OnInitializedAsync()
     {
         loading = true;
         allthreads = await Http.GetFromJsonAsync<List<ForumThreadDto>>($"/api/ForumThreads/category{fcdId}");
         users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+
         foreach (var thread in allthreads)
         {
             posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
             thread.Replies = posts.Count;
         }
-        if (users != null && Data.UserId > 0)
+
+        // read Token
+        if (TokenProvider.Token != null)
         {
-            Data.UserName = getUser(Data.UserId);
+            Console.WriteLine("category init token");
+            claims = TokenProvider.GetClaims();
+            loggedId = claims.Claims.ElementAt<Claim>(0).Value;
         }
+        else
+        {
+            Console.WriteLine("category init no token");
+            loggedId = "0";
+        }
+
         if (allthreads != null)
         {
             // Initialize the number of "totalPages"
@@ -165,10 +197,10 @@
         tempThread.Title = tTopic.Title;
         tempThread.Body = tTopic.Body;
         tempThread.CategoryId = Convert.ToInt32(fcdId);
-        // tempThread.Id = 0;
+
         tempThread.Views = 0;
         tempThread.Votes = 0;
-        tempThread.AuthorId = Data.UserId;
+        tempThread.AuthorId = Convert.ToInt32(loggedId);
         tempThread.Replies = 0;
         CreateThread = false;
         var result = await Http.PostAsJsonAsync("/api/ForumThreads", tempThread);
@@ -181,6 +213,7 @@
                 posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
                 thread.Replies = posts.Count;
             }
+
             if (allthreads != null)
             {
                 // Initialize the number of "totalPages"
@@ -190,12 +223,17 @@
             }
             SelectedPage(1);
             StateHasChanged();
+
         }
         else
         {
             await result.Content.ReadAsStringAsync();
         }
+
+        tTopic.Title = "";
+        tTopic.Body = "";
     }
+
     public string getUser(int id)
     {
         return users.Find(x => x.Id == id).Username;

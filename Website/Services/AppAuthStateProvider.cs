@@ -38,12 +38,19 @@ namespace SharpScape.Website.Services
         }
 
         // The following methods shamelessly stolen from SteveSandersonMS as per Patrick God
-        private static IEnumerable<Claim>? ParseClaimsFromJwt(string jwt)
+        public static IEnumerable<Claim>? ParseClaimsFromJwt(string jwt)
         {
-            var body = jwt.Split(".")[1];
-            var bodyJson = Base64UrlDecode(body);
-            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(bodyJson);
-            return keyValuePairs?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!));
+            if (jwt != null)
+            {
+                var body = jwt.Split(".")[1];
+                var bodyJson = Base64UrlDecode(body);
+                var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(bodyJson);
+                return keyValuePairs?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!));
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private static byte[] Base64UrlDecode(string encoded)
