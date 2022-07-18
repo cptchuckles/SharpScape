@@ -1,4 +1,5 @@
 @page "/admin"
+@attribute [Authorize(Roles = "Admin")]
 @using SharpScape.Shared.Dto
 @using SharpScape.Website.Services
 @using SharpScape.Website.Components.Forum
