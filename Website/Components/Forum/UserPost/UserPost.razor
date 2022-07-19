@@ -46,7 +46,7 @@
     private async void HandleValidDeleteSubmit()
     {
         CreateThread = false;
-        var result = await Http.DeleteAsync($"/api/ForumPosts/{PostId}");
+        var result = await Http.DeleteAsync($"api/ForumPosts/{PostId}");
         RefreshMethod.Invoke();
     }
 }

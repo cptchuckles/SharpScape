@@ -189,7 +189,7 @@
         liked = !liked;
         if(liked){
             await JSRuntime.InvokeVoidAsync("console.log", "add like");
-            var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/ThreadLike/{ThreadId}",liked);
+            var result = await Http.PostAsJsonAsync($"api/ThreadLike/{ThreadId}",liked);
             if (result.IsSuccessStatusCode)
             {
                 likes = await result.Content.ReadAsAsync<List<ThreadLikeDto>>();
@@ -197,7 +197,7 @@
             await JSRuntime.InvokeVoidAsync("console.log", "add like end");
         }else{
             await JSRuntime.InvokeVoidAsync("console.log", "remove like");
-            var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/ThreadLike/unliked/{ThreadId}",liked);
+            var result = await Http.PostAsJsonAsync($"api/ThreadLike/unliked/{ThreadId}",liked);
             if (result.IsSuccessStatusCode)
             {
                 likes = await result.Content.ReadAsAsync<List<ThreadLikeDto>>();
@@ -209,11 +209,11 @@
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
-        ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"/api/ForumThreads/{ThreadId}");
-        fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"/api/ForumCategories/{ftd.CategoryId}");
-        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
-        likes = await Http.GetFromJsonAsync<List<ThreadLikeDto>>($"https://localhost:7193/api/ThreadLike/{ThreadId}");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"api/ForumPosts/Thread{ThreadId}");
+        ftd = await Http.GetFromJsonAsync<ForumThreadDto>($"api/ForumThreads/{ThreadId}");
+        fcd = await Http.GetFromJsonAsync<ForumCategoryDto>($"api/ForumCategories/{ftd.CategoryId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"api/User");
+        likes = await Http.GetFromJsonAsync<List<ThreadLikeDto>>($"api/ThreadLike/{ThreadId}");
         // read Token
         if (TokenProvider.Token != null)
         {
@@ -252,7 +252,7 @@
             post.Created = Convert.ToDateTime(DateTime.Now);
             posts.Add(post);
             CreateThread = false;
-            var result = await Http.PostAsJsonAsync("/api/ForumPosts", post);
+            var result = await Http.PostAsJsonAsync("api/ForumPosts", post);
             if (result.IsSuccessStatusCode)
             {
                 allPosts = await result.Content.ReadAsAsync<List<ForumPostDto>>();
@@ -307,8 +307,8 @@
 
     private async void Refresh()
     {
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{ThreadId}");
-        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"api/ForumPosts/Thread{ThreadId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"api/User");
         if (allPosts != null)
         {
             // Initialize the number of "totalPages"

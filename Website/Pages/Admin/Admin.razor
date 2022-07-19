@@ -40,12 +40,12 @@
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"api/User");
         loading = false;
     }
 
     private async void Refresh(){
-    users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+    users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"api/User");
     StateHasChanged();
     }
 

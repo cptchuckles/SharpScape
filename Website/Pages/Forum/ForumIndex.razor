@@ -69,15 +69,15 @@
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        forums =  await Http.GetFromJsonAsync<List<ForumCategoryDto>>("/api/ForumCategories");
+        forums =  await Http.GetFromJsonAsync<List<ForumCategoryDto>>("api/ForumCategories");
         foreach (var category in forums)
         {
             int sum = 0;
-            threads =  await Http.GetFromJsonAsync<List<ForumThreadDto>>($"/api/ForumThreads/category{category.Id}");
+            threads =  await Http.GetFromJsonAsync<List<ForumThreadDto>>($"api/ForumThreads/category{category.Id}");
             threadCounts.Add(threads.Count);
             foreach (var thread in threads)
             {
-                posts =  await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
+                posts =  await Http.GetFromJsonAsync<List<ForumPostDto>>($"api/ForumPosts/Thread{thread.Id}");
                 sum += posts.Count;
                 totalPosts += posts.Count;
             }

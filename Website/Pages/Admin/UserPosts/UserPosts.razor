@@ -73,8 +73,8 @@
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/User{UserId}");
-        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"api/ForumPosts/User{UserId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"api/User");
         if (allPosts != null)
         {
             // Initialize the number of "totalPages"
@@ -98,8 +98,8 @@
         }
     }
     private async void Refresh(){
-        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/User{UserId}");
-        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        allPosts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"api/ForumPosts/User{UserId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"api/User");
         if (allPosts != null)
         {
             // Initialize the number of "totalPages"

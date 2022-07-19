@@ -131,13 +131,13 @@
     protected override async Task OnInitializedAsync()
     {
         loading = true;
-        allthreads = await Http.GetFromJsonAsync<List<ForumThreadDto>>($"/api/ForumThreads/category{fcdId}");
-        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"/api/User");
+        allthreads = await Http.GetFromJsonAsync<List<ForumThreadDto>>($"api/ForumThreads/category{fcdId}");
+        users = await Http.GetFromJsonAsync<List<UserInfoDto>>($"api/User");
 
         foreach (var thread in allthreads)
         {
-            posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
-            likes = await Http.GetFromJsonAsync<List<ThreadLikeDto>>($"https://localhost:7193/api/ThreadLike/{thread.Id}");
+            posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"api/ForumPosts/Thread{thread.Id}");
+            likes = await Http.GetFromJsonAsync<List<ThreadLikeDto>>($"api/ThreadLike/{thread.Id}");
             thread.Replies = posts.Count;
             thread.Votes = likes.Count;
         }
@@ -203,14 +203,14 @@
         tempThread.AuthorId = Convert.ToInt32(loggedId);
         tempThread.Replies = 0;
         CreateThread = false;
-        var result = await Http.PostAsJsonAsync("/api/ForumThreads", tempThread);
+        var result = await Http.PostAsJsonAsync("api/ForumThreads", tempThread);
 
         if (result.IsSuccessStatusCode)
         {
             allthreads = await result.Content.ReadAsAsync<List<ForumThreadDto>>();
             foreach (var thread in allthreads)
             {
-                posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"/api/ForumPosts/Thread{thread.Id}");
+                posts = await Http.GetFromJsonAsync<List<ForumPostDto>>($"api/ForumPosts/Thread{thread.Id}");
                 thread.Replies = posts.Count;
             }
 

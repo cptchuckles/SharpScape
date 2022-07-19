@@ -129,18 +129,18 @@
         await JSRuntime.InvokeVoidAsync("console.log",tRole);
         tUser.Role = tRole;
         CreateThread = false;
-        var result = await Http.PutAsJsonAsync($"/api/User/UpdateRole?id={Id}",tUser);
+        var result = await Http.PutAsJsonAsync($"api/User/UpdateRole?id={Id}",tUser);
         RefreshMethod.Invoke();
     }
     private async void BanAUser()
     {
         BanUser = false;
-        var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/User/ban/{Id}",bannedUser);
+        var result = await Http.PostAsJsonAsync($"api/User/ban/{Id}",bannedUser);
         RefreshMethod.Invoke();
     }
     private async void UnBanAUser()
     {
-        var result = await Http.PostAsJsonAsync($"https://localhost:7193/api/User/unban/{Id}",bannedUser);
+        var result = await Http.PostAsJsonAsync($"api/User/unban/{Id}",bannedUser);
         RefreshMethod.Invoke();
     }
     /// methods for popup modal

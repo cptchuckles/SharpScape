@@ -83,7 +83,7 @@
     private async void HandleValidEditSubmit()
     {
         CreateThread = false;
-        var result = await Http.PostAsJsonAsync($"/api/ForumPosts/{PostId}", tPost);
+        var result = await Http.PostAsJsonAsync($"api/ForumPosts/{PostId}", tPost);
         if (result.IsSuccessStatusCode)
         {
             post = await result.Content.ReadAsAsync<ForumPostEditDto>();
@@ -95,7 +95,7 @@
     private async void HandleValidDeleteSubmit()
     {
         CreateThread = false;
-        var result = await Http.DeleteAsync($"/api/ForumPosts/{PostId}");
+        var result = await Http.DeleteAsync($"api/ForumPosts/{PostId}");
         RefreshMethod.Invoke();
     }
     /// methods for popup modal
