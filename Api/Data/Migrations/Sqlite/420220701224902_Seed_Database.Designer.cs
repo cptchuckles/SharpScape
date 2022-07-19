@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharpScape.Api.Data;
 
@@ -10,9 +11,10 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [Migration("420220701224902_Seed_Database")]
+    partial class Seed_Database
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
@@ -33,7 +35,7 @@ namespace SharpScape.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ForumCategories", (string)null);
+                    b.ToTable("ForumCategories");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumPost", b =>
@@ -61,7 +63,7 @@ namespace SharpScape.Api.Migrations
 
                     b.HasIndex("ThreadId");
 
-                    b.ToTable("ForumPosts", (string)null);
+                    b.ToTable("ForumPosts");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumThread", b =>
@@ -101,34 +103,7 @@ namespace SharpScape.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ForumThreads", (string)null);
-                });
-
-            modelBuilder.Entity("SharpScape.Api.Models.GameAvatar", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<float>("GlobalPositionX")
-                        .HasColumnType("REAL");
-
-                    b.Property<float>("GlobalPositionY")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("SpriteName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("GameAvatars", (string)null);
+                    b.ToTable("ForumThreads");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.User", b =>
@@ -147,16 +122,11 @@ namespace SharpScape.Api.Migrations
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("BLOB");
-
                     b.Property<byte[]>("PasswordHmacKey")
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<string>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProfilePicDataUrl")
+                    b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -170,7 +140,7 @@ namespace SharpScape.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumPost", b =>
@@ -211,26 +181,9 @@ namespace SharpScape.Api.Migrations
                     b.Navigation("ForumCategory");
                 });
 
-            modelBuilder.Entity("SharpScape.Api.Models.GameAvatar", b =>
-                {
-                    b.HasOne("SharpScape.Api.Models.User", "User")
-                        .WithOne("GameAvatar")
-                        .HasForeignKey("SharpScape.Api.Models.GameAvatar", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SharpScape.Api.Models.ForumCategory", b =>
                 {
                     b.Navigation("Threads");
-                });
-
-            modelBuilder.Entity("SharpScape.Api.Models.User", b =>
-                {
-                    b.Navigation("GameAvatar")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

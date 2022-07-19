@@ -788,8 +788,8 @@ namespace SharpScape.Api.Migrations
             foreach (var user in users)
             {
                 migrationBuilder.InsertData("Users",
-                    new[] { "Id", "Username", "Email", "Role", "PasswordHash", "PasswordSalt", "Created" },
-                    new object[] { user.Id, user.Username, user.Email, user.Role, user.PasswordHash, user.PasswordSalt, user.Created });
+                    new[] { "Id", "Username", "Email", "Role", "PasswordHash", "PasswordHmacKey", "PasswordSalt", "Created" },
+                    new object[] { user.Id, user.Username, user.Email, user.Role, user.PasswordHash, user.PasswordHmacKey, user.PasswordSalt, user.Created });
             }
 
             foreach (var forumCategory in forumCategories)

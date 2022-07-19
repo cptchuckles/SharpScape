@@ -11,8 +11,8 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20220701224902_Seed_Database")]
-    partial class Seed_Database
+    [Migration("20220718230129_UsersRenameColumnSalt")]
+    partial class UsersRenameColumnSalt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -106,11 +106,62 @@ namespace SharpScape.Api.Migrations
                     b.ToTable("ForumThreads");
                 });
 
+            modelBuilder.Entity("SharpScape.Api.Models.GameAvatar", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<float>("GlobalPositionX")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("GlobalPositionY")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("SpriteName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("GameAvatars");
+                });
+
+            modelBuilder.Entity("SharpScape.Api.Models.ThreadLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ThreadId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ThreadId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ThreadLikes");
+                });
+
             modelBuilder.Entity("SharpScape.Api.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("Banned")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
@@ -126,6 +177,16 @@ namespace SharpScape.Api.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("BLOB");
+
+                    b.Property<string>("ProfilePicDataUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -178,9 +239,45 @@ namespace SharpScape.Api.Migrations
                     b.Navigation("ForumCategory");
                 });
 
+            modelBuilder.Entity("SharpScape.Api.Models.GameAvatar", b =>
+                {
+                    b.HasOne("SharpScape.Api.Models.User", "User")
+                        .WithOne("GameAvatar")
+                        .HasForeignKey("SharpScape.Api.Models.GameAvatar", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SharpScape.Api.Models.ThreadLike", b =>
+                {
+                    b.HasOne("SharpScape.Api.Models.ForumThread", "ForumThread")
+                        .WithMany()
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharpScape.Api.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ForumThread");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SharpScape.Api.Models.ForumCategory", b =>
                 {
                     b.Navigation("Threads");
+                });
+
+            modelBuilder.Entity("SharpScape.Api.Models.User", b =>
+                {
+                    b.Navigation("GameAvatar")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

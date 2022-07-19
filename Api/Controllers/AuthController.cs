@@ -61,7 +61,7 @@ public class AuthController : ControllerBase
         if (user is null)
             return BadRequest("Username/Email or Password incorrect");
         
-        if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+        if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordSalt, user.PasswordHash, user.PasswordHmacKey))
             return BadRequest("Username/Email or Password incorrect");
         response.accessToken = _crypto.CreateToken(user);
         response.Id = user.Id;

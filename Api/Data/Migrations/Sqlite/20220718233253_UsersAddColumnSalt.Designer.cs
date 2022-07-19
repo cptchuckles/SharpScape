@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharpScape.Api.Data;
 
@@ -10,9 +11,10 @@ using SharpScape.Api.Data;
 namespace SharpScape.Api.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220718233253_UsersAddColumnSalt")]
+    partial class UsersAddColumnSalt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
@@ -33,7 +35,7 @@ namespace SharpScape.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ForumCategories", (string)null);
+                    b.ToTable("ForumCategories");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumPost", b =>
@@ -61,7 +63,7 @@ namespace SharpScape.Api.Migrations
 
                     b.HasIndex("ThreadId");
 
-                    b.ToTable("ForumPosts", (string)null);
+                    b.ToTable("ForumPosts");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumThread", b =>
@@ -101,7 +103,7 @@ namespace SharpScape.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ForumThreads", (string)null);
+                    b.ToTable("ForumThreads");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.GameAvatar", b =>
@@ -128,7 +130,7 @@ namespace SharpScape.Api.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("GameAvatars", (string)null);
+                    b.ToTable("GameAvatars");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.User", b =>
@@ -170,7 +172,7 @@ namespace SharpScape.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SharpScape.Api.Models.ForumPost", b =>

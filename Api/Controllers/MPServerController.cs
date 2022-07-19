@@ -84,7 +84,7 @@ public class MPServerController : ControllerBase
         if (user is null) {
             return BadRequest("Username/Email or Password invalid");
         }
-        if (! _crypto.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt)) {
+        if (! _crypto.VerifyPasswordHash(loginRequest.Password, user.PasswordSalt, user.PasswordHash, user.PasswordHmacKey)) {
             return BadRequest("Username/Email or Password invalid");
         }
 
