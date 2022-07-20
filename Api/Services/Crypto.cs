@@ -109,11 +109,11 @@ public class Crypto
         return jwt;
     }
 
-    public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+    public bool VerifyPasswordHash(string password, string salt, byte[] passwordHash, byte[] hmacKey)
     {
-        using (var hmac = new HMACSHA512(passwordSalt))
+        using (var hmac = new HMACSHA512(hmacKey))
         {
-            var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password+salt));
             return CryptographicOperations.FixedTimeEquals(computeHash, passwordHash);
         }
     }

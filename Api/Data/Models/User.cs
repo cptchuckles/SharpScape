@@ -28,7 +28,9 @@ public class User
 
     public byte[] PasswordHash { get; set; }
 
-    public byte[] PasswordSalt { get; set; }
+    public byte[] PasswordHmacKey { get; set; }
+
+    public string PasswordSalt { get; set; }
 
     public string? RefreshToken { get; set; } = string.Empty;
     public DateTime RefreshTokenExpiryTime { get; set; }
@@ -46,10 +48,12 @@ public class User
     {
         Username = username;
         Email = email;
-
-        CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+        
+        PasswordSalt = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        
+        CreatePasswordHash(password, PasswordSalt, out byte[] passwordHash, out byte[] passwordHmacKey);
         PasswordHash = passwordHash;
-        PasswordSalt = passwordSalt;
+        PasswordHmacKey = passwordHmacKey;
     }
     public User(string username, string email, string password, string role) : this (username,email,password)
     {
@@ -65,12 +69,12 @@ public class User
         return daysRemaining > 0;
     }
     
-    private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+    private static void CreatePasswordHash(string password, string salt, out byte[] passwordHash, out byte[] passwordSalt)
     {
         using (var hmac = new HMACSHA512())
         {
             passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password+salt));
         }
     }
 }

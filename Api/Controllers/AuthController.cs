@@ -81,7 +81,7 @@ public class AuthController : ControllerBase
             }
         }
         
-        if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+        if (! _crypto.VerifyPasswordHash(request.Password, user.PasswordSalt, user.PasswordHash, user.PasswordHmacKey))
             return BadRequest("Username/Email or Password incorrect");
 
         //Create the Acess Token and Refresh Token
