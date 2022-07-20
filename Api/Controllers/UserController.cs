@@ -70,7 +70,7 @@ namespace SharpScape.Api.Controllers
             {
                 return NotFound();
             }
-            if (!_crypto.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!_crypto.VerifyPasswordHash(request.Password, user.PasswordSalt, user.PasswordHash, user.PasswordHmacKey))
                 return BadRequest("Username/Email or Password incorrect");
             if (request.ProfilePicDataUrl != "")
             {

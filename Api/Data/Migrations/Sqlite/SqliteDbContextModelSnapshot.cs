@@ -7,7 +7,7 @@ using SharpScape.Api.Data;
 
 #nullable disable
 
-namespace SharpScape.Api.Migrations
+namespace SharpScape.Api.Data.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteDbContext))]
     partial class SqliteDbContextModelSnapshot : ModelSnapshot
@@ -172,9 +172,13 @@ namespace SharpScape.Api.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<byte[]>("PasswordSalt")
+                    b.Property<byte[]>("PasswordHmacKey")
                         .IsRequired()
                         .HasColumnType("BLOB");
+
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProfilePicDataUrl")
                         .IsRequired()

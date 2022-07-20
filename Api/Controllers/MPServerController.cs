@@ -87,7 +87,7 @@ public class MPServerController : ControllerBase
         if (user.IsBanned()) {
             return BadRequest("User is banned");
         }
-        if (! _crypto.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt)) {
+        if (! _crypto.VerifyPasswordHash(loginRequest.Password, user.PasswordSalt, user.PasswordHash, user.PasswordHmacKey)) {
             return BadRequest("Username/Email or Password invalid");
         }
 
