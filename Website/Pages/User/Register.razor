@@ -40,13 +40,19 @@
             <InputText type="password" class="form-control mx-2" @bind-Value="tUser.Password" />
         </div>
 
-        @* TODO: Add avatar information *@
-        @* <div class="form-group row">
-            <label class="col-sm2 col-form-label" for="Avatar">HERO:</label>
+        <div class="form-group row">
             <div class="col-sm-5">
-                <InputText class="form-control" @bind-Value="tUser.Avatar" />
+                <label class="col-sm2 col-form-label" for="Avatar">Game Avatar:</label>
+                <select @bind="tUser.Avatar" class="form-select" id="Avatar" aria-label="Select your in-game avatar sprite.">
+                    <option selected value="Default">Spaceman</option>
+                    <option value="Cat">Blue Cat</option>
+                    <option value="KitCat">Orange Cat</option>
+                    <option value="Birdie">Birdie</option>
+                    <option value="Rat">Rat</option>
+                    <option value="Worm">Worm</option>
+                </select>
             </div>
-        </div> *@
+        </div>
 
         <div class="d-flex justify-content-between align-items-baseline mt-2">
             <input type="submit" class="btn btn-primary" value="Register" />

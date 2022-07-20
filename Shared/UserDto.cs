@@ -35,6 +35,8 @@ public class UserRegisterDto
     [Required]
     [MinLength(8)]
     public string Password { get; set; }
+
+    public string Avatar { get; set; }
 }
 public class UserEditDto
 {

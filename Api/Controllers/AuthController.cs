@@ -26,16 +26,20 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("Register")]
-    public ActionResult<string> Register([FromBody] UserRegisterDto request)
+    public async Task<ActionResult<string>> Register([FromBody] UserRegisterDto request)
     {
-        if (_context.Users.Any(u => u.Email.ToLower() == request.Email.ToLower()))
+        if (await _context.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower()))
             return BadRequest($"User with email {request.Email} already exists");
-        if (_context.Users.Any(u => u.Username.ToLower() == request.Username.ToLower()))
+        if (await _context.Users.AnyAsync(u => u.Username.ToLower() == request.Username.ToLower()))
             return BadRequest($"Username {request.Username} already exists");
 
         var user = new User(request.Username, request.Email, request.Password);
-        _context.Add(user);
-        _context.SaveChanges();
+        var avatar = new GameAvatar() { SpriteName = request.Avatar, User = user, UserId = user.Id };
+        user.GameAvatar = avatar;
+
+        await _context.Users.AddAsync(user);
+        await _context.GameAvatars.AddAsync(avatar);
+        await _context.SaveChangesAsync();
 
         return Ok(_crypto.CreateToken(user));
     }
