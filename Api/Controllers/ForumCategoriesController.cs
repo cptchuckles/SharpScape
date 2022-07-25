@@ -84,9 +84,9 @@ namespace SharpScape.Api.Controllers
 
             return NoContent();
         }
-        private bool ForumCategoryExists(int id)
+        private async Task<bool> ForumCategoryExistsAsync(int id)
         {
-            return (_context.ForumCategories?.Any(e => e.Id == id)).GetValueOrDefault();
+            return await _context.ForumCategories.AnyAsync(e => e.Id == id);
         }
     }
 }

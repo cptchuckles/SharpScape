@@ -45,16 +45,16 @@ public class AuthController : ControllerBase
     }
     [Authorize(Roles="Admin")]
     [HttpPost("RegisterAdmin")]
-    public ActionResult<string> RegisterAdmin([FromBody] UserRegisterDto request)
+    public async Task<ActionResult<string>> RegisterAdmin([FromBody] UserRegisterDto request)
     {
-        if (_context.Users.Any(u => u.Email.ToLower() == request.Email.ToLower()))
+        if (await _context.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower()))
             return BadRequest($"User with email {request.Email} already exists");
-        if (_context.Users.Any(u => u.Username.ToLower() == request.Username.ToLower()))
+        if (await _context.Users.AnyAsync(u => u.Username.ToLower() == request.Username.ToLower()))
             return BadRequest($"Username {request.Username} already exists");
 
         var user = new User(request.Username, request.Email, request.Password, UserRole.Admin);
         _context.Add(user);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Ok(_crypto.CreateToken(user));
     }

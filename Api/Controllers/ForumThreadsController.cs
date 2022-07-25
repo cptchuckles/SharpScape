@@ -98,9 +98,9 @@ namespace SharpScape.Api.Controllers
         {
             ForumThread forumThread = new ForumThread()
             {
-                Author = _context.Users.Find(forumThreadDto.AuthorId),
+                Author = await _context.Users.FindAsync(forumThreadDto.AuthorId),
                 UserId = forumThreadDto.AuthorId,
-                ForumCategory = _context.ForumCategories.Find(forumThreadDto.CategoryId),
+                ForumCategory = await _context.ForumCategories.FindAsync(forumThreadDto.CategoryId),
                 Body = forumThreadDto.Body,
                 CategoryId = forumThreadDto.CategoryId,
                 Title = forumThreadDto.Title,
@@ -150,9 +150,9 @@ namespace SharpScape.Api.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-        private bool ForumThreadExists(int id)
+        private async Task<bool> ForumThreadExistsAsync(int id)
         {
-            return (_context.ForumThreads?.Any(e => e.Id == id)).GetValueOrDefault();
+            return await _context.ForumThreads.AnyAsync(e => e.Id == id);
         }
     }
 }

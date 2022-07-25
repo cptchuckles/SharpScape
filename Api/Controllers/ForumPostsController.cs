@@ -178,9 +178,9 @@ namespace SharpScape.Api.Controllers
             return BadRequest("You cannot delete other people's post");
         }
 
-        private bool ForumPostExists(int id)
+        private async Task<bool> ForumPostExistsAsync(int id)
         {
-            return (_context.ForumPosts?.Any(e => e.Id == id)).GetValueOrDefault();
+            return await _context.ForumPosts.AnyAsync(e => e.Id == id);
         }
     }
 }

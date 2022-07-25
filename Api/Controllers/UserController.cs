@@ -94,7 +94,7 @@ namespace SharpScape.Api.Controllers
             try { await _context.SaveChangesAsync(); }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExist(id))
+                if (! await UserExistAsync(id))
                 {
                     return NotFound();
                 }
@@ -159,9 +159,9 @@ namespace SharpScape.Api.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        private bool UserExist(int id)
+        private async Task<bool> UserExistAsync(int id)
         {
-            return _context.Users.Any(user => user.Id == id);
+            return await _context.Users.AnyAsync(user => user.Id == id);
         }
     }
 }

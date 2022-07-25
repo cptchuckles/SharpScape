@@ -80,7 +80,7 @@ namespace SharpScape.Api.Controllers
             }
             var userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value);
             var threadLike = await _context.ThreadLikes.Where(x => x.ThreadId == id).Where(x=>x.UserId==userId).ToListAsync();
-            if (threadLike == null)
+            if (threadLike == null || threadLike.Count() == 0)
             {
                 return NotFound();
             }

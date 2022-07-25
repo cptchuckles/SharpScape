@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SharpScape.Api.Data;
 using SharpScape.Api.Data.Models;
 using SharpScape.Api.Services;
@@ -24,7 +25,7 @@ namespace SharpScape.Api.Controllers
 
         [HttpPost]
         [Route("refresh")]
-        public IActionResult Refresh(TokenApiModel tokenApiModel)
+        public async Task<IActionResult> RefreshAsync(TokenApiModel tokenApiModel)
         {
             if (tokenApiModel is null)
                 return BadRequest("Invalid client request");
@@ -34,7 +35,7 @@ namespace SharpScape.Api.Controllers
             var principal = _tokenService.GetPrincipalFromExpiredToken(refreshToken);
             var username = principal.Identity.Name; //this is mapped to the Name claim by default
 
-            var user = _context.Users.SingleOrDefault(u => u.Username == username);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
 
 
             if (user == null)
@@ -47,7 +48,7 @@ namespace SharpScape.Api.Controllers
             var newAccessToken = _crypto.CreateToken(user);
             //var newRefreshToken = _crypto.CreateRefreshToken(user);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(new AuthenticatedResponse()
             {
                 AccessToken = newAccessToken,
@@ -58,13 +59,13 @@ namespace SharpScape.Api.Controllers
 
         [HttpPost, Authorize]
         [Route("revoke")]
-        public IActionResult Revoke()
+        public async Task<IActionResult> RevokeAsync()
         {
             var username = User.Identity.Name;
-            var user = _context.Users.SingleOrDefault(u => u.Username == username);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
             if (user == null) return BadRequest();
             user.RefreshToken = null;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }
