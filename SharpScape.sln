@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpScape.Website", "Websi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpScape.Shared", "Shared\SharpScape.Shared.csproj", "{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{DD5B9159-E6B8-4B4B-B012-0541AF359082}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C33F7DD6-A5E1-40A6-9341-1C150B9B0CFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD5B9159-E6B8-4B4B-B012-0541AF359082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5B9159-E6B8-4B4B-B012-0541AF359082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5B9159-E6B8-4B4B-B012-0541AF359082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5B9159-E6B8-4B4B-B012-0541AF359082}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
