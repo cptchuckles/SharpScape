@@ -1,18 +1,16 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileProviders;
 using SharpScape.Api.Controllers;
 using SharpScape.Api.Data;
-using SharpScape.Api.Models;
 using SharpScape.Api.Services;
 using SharpScape.Shared.Dto;
 using System.Data.Common;
 using System.Net;
 
-namespace API_Tests
+namespace Sharpscape.Tests
 {
-	public class Tests
+	public class AuthControllerTests
 	{
 		AuthController _authController;
 		private Crypto _crypto;
