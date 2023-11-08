@@ -17,7 +17,7 @@ An online multiplayer community
 
 ### Game project
 
-The game will be built using [Godot](https://godotengine.org). The game project repository will be maintained by [caemanswartz](https://github.com/caemanswartz/SharpScapeGodotGame).
+The game will be built using [Godot](https://godotengine.org). The game project repository is located at [cptchuckles/SharpScapeGodotGame](https://github.com/cptchuckles/SharpScapeGodotGame)
 
 ## Contributing
 
